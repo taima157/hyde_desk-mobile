@@ -11,13 +11,18 @@
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.2",
     "@expo-google-fonts/poppins": "^0.2.2",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@jest/schemas": "^29.4.0",
     "@react-native-picker/picker": "^2.4.8",
     "expo": "~47.0.12",
     "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.70.5",
+    "react-native-dropdown-select-list": "^2.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
