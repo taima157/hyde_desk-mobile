@@ -1,17 +1,18 @@
 import { useState } from "react";
 import {  View,  StyleSheet,  Text,  TextInput,  TouchableOpacity,  Image,} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import Header from "../../componentes/header";
+// import Header from "../../componentes/header";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { useForm, Controller } from "react-hook-form";
 
 const schema = yup.object({
   nome: yup.string().required("Digite seu nome"),
-  cpf: yup.string().min(11,"CPF inválido").required("Informe seu CPF")
+  cpf: yup.string().min(11,"CPF inválido").max(11, 'CPF inválido').required("Informe seu CPF")
 })
 
-function Cadastro() {
+
+function Cadastro({navigation}) {
   // const [username, setUsername] = useState('')
   // const [cpf, setCpf] = useState('')
   const [selectedValue, setSelectedValue] = useState('')
@@ -28,12 +29,13 @@ function Cadastro() {
 
   function validar(data) {
     console.log(data);
+    navigation.navigate("cadastroContato")
   }
 
 
   return (
     <View style={styles.container}>
-      <Header />
+      {/* <Header /> */}
       <View style={styles.containerTextCadastro}>
         <Text style={styles.textCadastro}>Cadastro</Text>
       </View>

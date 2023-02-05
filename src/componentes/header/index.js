@@ -17,10 +17,9 @@ export default Header;
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor: "#fff",
         justifyContent: 'center',
         flexDirection: 'row',
-        paddingTop: 30,
+        // paddingTop: 30,
     },
     help: {
         fontSize: 24,

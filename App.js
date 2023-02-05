@@ -1,22 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View} from 'react-native';
-import Cadastro from './src/pages/cadastro';
-import CadastroContato from './src/pages/cadastroContato'
+import { StyleSheet, SafeAreaView} from 'react-native';
+import {StackRoutes} from './src/routes/stack.routes'
+
 
 export default function App() {
-
   return (
-    <View style={styles.container}>
-      <Cadastro />
-      {/* <CadastroContato /> */}
-      <StatusBar style='auto'/>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StackRoutes />
+      <StatusBar barStyle="auto" />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(242,242,242)',
   },
 });

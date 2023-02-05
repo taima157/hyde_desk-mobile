@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import Header from "../../componentes/header";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { useForm, Controller } from "react-hook-form";
@@ -18,7 +17,7 @@ const schema = yup.object({
   senha: yup.string().min(6,"A senha deve conter no mínimo 6 dígitos").required("Digite sua senha")
 })
 
-function Cadastro() {
+function CadastroContato({navigation}) {
 
 
   const {control, handleSubmit, formState: { errors }} = useForm({
@@ -29,9 +28,12 @@ function Cadastro() {
     console.log(data);
   }
 
+  function voltar(){
+    navigation.navigate('cadastro');
+  }
+
   return (
     <View style={styles.container}>
-      <Header />
       <View style={styles.containerTextCadastro}>
         <Text style={styles.textCadastro}>Cadastro</Text>
       </View>
@@ -93,7 +95,7 @@ function Cadastro() {
       </View>
 
       <View style={styles.containerButtonBack}>
-        <TouchableOpacity style={styles.buttonBack}>
+        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
           <Image source={require("../../../assets/arrow.png")} />
         </TouchableOpacity>
       </View>
@@ -101,7 +103,7 @@ function Cadastro() {
   );
 }
 
-export default Cadastro;
+export default CadastroContato;
 
 const styles = StyleSheet.create({
   container: {
