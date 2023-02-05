@@ -1,25 +1,36 @@
 import { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import {  View,  StyleSheet,  Text,  TextInput,  TouchableOpacity,  Image,} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import Header from "../../componentes/header";
+import * as yup from 'yup'
+import {yupResolver} from '@hookform/resolvers/yup'
+import { useForm, Controller } from "react-hook-form";
 
-
+const schema = yup.object({
+  nome: yup.string().required("Digite seu nome"),
+  cpf: yup.string().min(11,"CPF inválido").required("Informe seu CPF")
+})
 
 function Cadastro() {
+  // const [username, setUsername] = useState('')
+  // const [cpf, setCpf] = useState('')
+  const [selectedValue, setSelectedValue] = useState('')
+
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
     { key: "3", value: "Sistema Operacional" },
   ];
 
-  const [selectedValue, setSelectedValue] = useState("");
+  const {control, handleSubmit, formState: { errors }} = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  function validar(data) {
+    console.log(data);
+  }
+
+
   return (
     <View style={styles.container}>
       <Header />
@@ -28,32 +39,54 @@ function Cadastro() {
       </View>
 
       <View style={styles.containerInputs}>
-        <TextInput
-          style={styles.inputs}
-          placeholder="Nome:"
-          placeholderTextColor="#000000"
-        ></TextInput>
-        <TextInput
-          keyboardType="numeric"
-          style={styles.inputs}
-          placeholder="CPF:"
-          placeholderTextColor="#000000"
-          maxLength={11}
-        ></TextInput>
+        <Controller
+          control={control}
+          name="nome"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              style={styles.inputs}
+              placeholder="Nome:"
+              onChangeText={onChange}
+              value={value}
+              placeholderTextColor="#000000"
+            ></TextInput>
+          )}
+        />
+{errors.nome && <Text style={styles.labelError}>{errors.nome?.message}</Text>}
+
+        <Controller
+          control={control}
+          name="cpf"
+          render={({ field: { onChange, value} }) => (
+            <TextInput
+            keyboardType="numeric"
+              style={styles.inputs}
+              placeholder="CPF:"
+              onChangeText={onChange}
+              value={value}
+              placeholderTextColor="#000000"
+            ></TextInput>
+          )}
+        />
+{errors.cpf && <Text style={styles.labelError}>{errors.cpf?.message}</Text>}
 
         <View style={styles.containerSelectList}>
           <SelectList
             data={data}
+            value={selectedValue}
             setSelected={setSelectedValue}
             placeholder="Selecione sua especialidade"
-            boxStyles={{borderWidth: 2, borderColor: 'black', height: 50}}
-            inputStyles={{color:'black', fontSize: 15,}}
+            boxStyles={{ borderWidth: 2, borderColor: "black", height: 50 }}
+            inputStyles={{ color: "black", fontSize: 15, marginLeft: -10 }}
           />
         </View>
       </View>
 
       <View style={styles.containerButtonNext}>
-        <TouchableOpacity style={styles.buttonNext}>
+        <TouchableOpacity
+          style={styles.buttonNext}
+          onPress={handleSubmit(validar)}
+        >
           <Text style={styles.textNext}>Próximo</Text>
         </TouchableOpacity>
       </View>
@@ -97,15 +130,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     justifyContent: "center",
-    marginTop: 41,
-  },
-  picker: {
-    height: 40,
-    width: 350,
-    marginTop: 15,
-    color: "#000000",
-    fontSize: 15,
-    width: "95%",
+    marginTop: "8%",
   },
   buttonNext: {
     backgroundColor: "#000000",
@@ -117,7 +142,7 @@ const styles = StyleSheet.create({
     borderColor: "#23AFFF",
   },
   containerButtonNext: {
-    marginTop: 46,
+    marginTop: "10%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -131,19 +156,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
     justifyContent: "center",
     alignItems: "center",
-    padding: 15,
     borderRadius: 50,
     width: 40,
     height: 40,
     padding: 25,
   },
   containerButtonBack: {
-    marginTop: 70,
+    marginTop: "10%",
     justifyContent: "center",
     alignItems: "center",
   },
   containerSelectList: {
     width: "95%",
-    margin: 15,
+    marginTop: 15,
+  },
+  labelError: {
+    color: '#ff375b',
+    marginTop: 10,
+    marginLeft: 20,
+    fontSize: 16,
+    alignSelf: 'flex-start',
   },
 });
