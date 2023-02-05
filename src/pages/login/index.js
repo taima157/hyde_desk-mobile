@@ -1,13 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
-export default function Login( {navigation} ) {
-  const [nome, setNome] = useState("");
-  function gotToEditar() {
-    navigation.navigate("Editar")
-  }
-  return (
+export default function Login({ navigation }) {
+	const [nome, setNome] = useState();
+
+	let [fontsLoaded] = useFonts({
+		Poppins_700Bold,
+	});
+	if (!fontsLoaded) {
+		return null;
+	}
+
+	function goToCadastrar() {
+		navigation.navigate("Cadastro");
+	}
+
+	return (
 		<View style={styles.container}>
 			<View style={styles.container_login}>
 				<Text style={styles.login}>Login</Text>
@@ -35,7 +45,7 @@ export default function Login( {navigation} ) {
 			<View style={styles.container_link}>
 				<Text>Ainda não é um técnico?</Text>
 
-				<TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
+				<TouchableOpacity style={styles.LinkCadastro} onPress={() => goToCadastrar()}>
 					<Text style={styles.TextoLinkCadastro}>Cadastre-se</Text>
 				</TouchableOpacity>
 			</View>
@@ -45,9 +55,6 @@ export default function Login( {navigation} ) {
 
 				<TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
 					<Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.LinkCadastro} onPress={gotToEditar}>
-					<Text style={styles.TextoLinkCadastro}>T</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -61,17 +68,20 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		// width: "100%",
 	},
+
 	container_login: {
 		display: "flex",
 		alignItems: "center",
 		flexDirection: "row",
 		justifyContent: "flex-start",
-		paddingBottom: 25,
+		paddingBottom: '2%',
+		paddingLeft: '1%'
 	},
 
 	login: {
 		padding: '2%',
 		fontSize: 36,
+		fontFamily: "Poppins_700Bold"
 	},
 
 	container_TextoInput: {
@@ -80,30 +90,30 @@ const styles = StyleSheet.create({
 	},
 
 	TextoInput: {
-		width: 347,
+		width: '95%',
 		height: 52,
 		backgroundColor: "#fff",
 		borderRadius: 10,
 		borderBottomColor: "#000",
 		borderWidth: 2,
-		padding: 10,
+		padding: 15,
 	},
 
 	TextoSenha: {
-		width: 347,
+		width: '95%',
 		height: 52,
 		backgroundColor: "#fff",
 		borderRadius: 10,
 		borderBottomColor: "#000",
 		borderWidth: 2,
-		padding: 10,
+		padding: 15,
 		top: 10,
 	},
 
 	Botao: {
 		backgroundColor: "#000",
 		borderRadius: 10,
-		width: 347,
+		width: '95%',
 		height: 52,
 		top: 25,
 		display: "flex",
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
 	},
 
 	container_link: {
-		paddingTop: 35,
+		paddingTop: '15%',
 		display: "flex",
 		alignItems: "center",
 		flexDirection: "row",
