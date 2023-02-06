@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import { api } from "../../services/api";
 import CardChamados from "../../components/CardChamados";
+import { useFonts, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
+import Header from "../../components/Header";
 
 export default function Chamados() {
   const [chamados, setChamados] = useState([]);
@@ -20,43 +22,57 @@ export default function Chamados() {
     getChamados();
   }, []);
 
+  let [fontsLoaded] = useFonts({
+    Poppins_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <View style={styles.viewTitulo}>
-          <Text style={styles.titulo}>Chamados</Text>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.viewTitulo}>
+        <Text style={styles.titulo}>Chamados</Text>
+      </View>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.viewChamados}>
           {chamados?.map((chamado) => {
             return <CardChamados key={chamado.id_chamado} chamado={chamado} />;
           })}
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    padding: 30,
-  },
   container: {
+    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FFF",
   },
   viewTitulo: {
-    width: "95%",
+    width: "80%",
+    paddingTop: 35,
     paddingBottom: 15,
-    borderBottomColor: "#000",
+    marginBottom: 10,
+    paddingLeft: 50,
+    paddingRight: 50,
+    borderBottomColor: "#818181",
     borderBottomWidth: 1,
     alignItems: "center",
   },
   titulo: {
     fontSize: 26,
+    fontFamily: "Poppins_600SemiBold",
   },
   viewChamados: {
     width: "100%",
-    paddingTop: 50,
+    paddingTop: 30,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 });

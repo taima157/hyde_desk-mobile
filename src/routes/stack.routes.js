@@ -12,6 +12,7 @@ const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
   return (
     <NavigationContainer>
+      <Header />
       <Navigator>
         <Screen
           name="Login"
@@ -24,33 +25,21 @@ export function StackRoutes() {
           name="Cadastro"
           component={Cadastro}
           options={{
-            headerTitle: () => <Header />,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: "rgb(242,242,242)",
-            },
+            headerShown: false
           }}
         />
         <Screen
           name="CadastroContato"
           component={CadastroContato}
           options={{
-            headerTitle: () => <Header />,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: "rgb(242,242,242)",
-            },
+            headerShown: false
           }}
         />
         <Screen
           name="CadastrarFoto"
           component={CadastrarFoto}
           options={{
-            headerTitle: () => <Header />,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: "rgb(242,242,242)",
-            },
+            headerShown: false
           }}
         />
         <Screen

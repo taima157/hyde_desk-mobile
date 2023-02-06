@@ -1,21 +1,31 @@
 import { useState } from "react";
-import {  View,  StyleSheet,  Text,  TextInput,  TouchableOpacity,  Image,} from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 // import Header from "../../componentes/header";
-import * as yup from 'yup'
-import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
 const schema = yup.object({
   nome: yup.string().required("Digite seu nome"),
-  cpf: yup.string().min(11,"CPF inválido").max(11, 'CPF inválido').required("Informe seu CPF")
-})
+  cpf: yup
+    .string()
+    .min(11, "CPF inválido")
+    .max(11, "CPF inválido")
+    .required("Informe seu CPF"),
+});
 
-
-function Cadastro({navigation}) {
+function Cadastro({ navigation }) {
   // const [username, setUsername] = useState('')
   // const [cpf, setCpf] = useState('')
-  const [selectedValue, setSelectedValue] = useState('')
+  const [selectedValue, setSelectedValue] = useState("");
 
   // function goBack() {
   //   navigation.navigate("Login")
@@ -26,15 +36,22 @@ function Cadastro({navigation}) {
     { key: "3", value: "Sistema Operacional" },
   ];
 
-  const {control, handleSubmit, formState: { errors }} = useForm({
-    resolver: yupResolver(schema)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
   });
 
   function validar(data) {
     console.log(data);
-    navigation.navigate("CadastroContato", data)
+    navigation.navigate("CadastroContato", data);
   }
 
+  function voltar() {
+    navigation.navigate("Login");
+  }
 
   return (
     <View style={styles.container}>
@@ -57,14 +74,16 @@ function Cadastro({navigation}) {
             ></TextInput>
           )}
         />
-{errors.nome && <Text style={styles.labelError}>{errors.nome?.message}</Text>}
+        {errors.nome && (
+          <Text style={styles.labelError}>{errors.nome?.message}</Text>
+        )}
 
         <Controller
           control={control}
           name="cpf"
-          render={({ field: { onChange, value} }) => (
+          render={({ field: { onChange, value } }) => (
             <TextInput
-            keyboardType="numeric"
+              keyboardType="numeric"
               style={styles.inputs}
               placeholder="CPF:"
               onChangeText={onChange}
@@ -73,7 +92,9 @@ function Cadastro({navigation}) {
             ></TextInput>
           )}
         />
-{errors.cpf && <Text style={styles.labelError}>{errors.cpf?.message}</Text>}
+        {errors.cpf && (
+          <Text style={styles.labelError}>{errors.cpf?.message}</Text>
+        )}
 
         <View style={styles.containerSelectList}>
           <SelectList
@@ -97,7 +118,7 @@ function Cadastro({navigation}) {
       </View>
 
       <View style={styles.containerButtonBack}>
-        <TouchableOpacity style={styles.buttonBack}>
+        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
           <Image source={require("../../../assets/arrow.png")} />
         </TouchableOpacity>
       </View>
@@ -110,6 +131,7 @@ export default Cadastro;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   textCadastro: {
     fontWeight: "bold",
@@ -176,10 +198,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   labelError: {
-    color: '#ff375b',
+    color: "#ff375b",
     marginTop: 10,
     marginLeft: 20,
     fontSize: 16,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 });

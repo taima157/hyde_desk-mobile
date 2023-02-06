@@ -39,22 +39,22 @@ export default function CadastrarFoto({ navigation, route }) {
     form.append("nome", data.nome);
     form.append("cpf", data.cpf);
     form.append("email", data.email);
-    form.append('telefone', data.telefone)
+    form.append("telefone", data.telefone);
     form.append("especialidade", "Software");
     form.append("senha", data.senha);
     form.append("confirmsenha", data.senha);
-    form.append("anexo", image);
+    form.append("foto", image);
 
-    console.log(image)
+    console.log(image);
 
     try {
-      const response = await api.post("/tecnicos/cadastro", form)
+      const response = await api.post("/tecnicos/cadastro", form);
 
       //const response = await api.get("tecnicos")
 
-      console.log(response)
-    } catch(error) {
-      console.log(error)
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -67,10 +67,10 @@ export default function CadastrarFoto({ navigation, route }) {
     });
 
     if (!result.canceled) {
-      let imageName = result.assets[0].uri.split("/")
-      imageName = imageName[imageName.length - 1]
+      let imageName = result.assets[0].uri.split("/");
+      imageName = imageName[imageName.length - 1];
 
-      let tipo = imageName.split(".")[1]
+      let tipo = imageName.split(".")[1];
 
       setImage({
         uri: result.assets[0].uri,

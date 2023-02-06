@@ -8,7 +8,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
     <StackRoutes />
     <StatusBar barStyle="dark-content"  backgroundColor="#FFF"/>
-    <Footer />
+    {/* <Footer /> */}
   </SafeAreaView>
   );
 }

@@ -1,11 +1,29 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { api } from "../../services/api";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_600SemiBold,
+} from "@expo-google-fonts/poppins";
 
 export default function CardChamados({ chamado }) {
   const [empresa, setEmpresa] = useState([]);
   const [endereco, setEndereco] = useState([]);
+
+  let data = chamado.data.slice(0, 10);
+  data = data.split("-");
+  const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
+
+  console.log(dataChamado);
 
   useEffect(() => {
     async function getFuncionarioEmpresa() {
@@ -20,8 +38,10 @@ export default function CardChamados({ chamado }) {
 
         setEmpresa(empresa.data);
 
-        const endereco = await axios.get(`https://viacep.com.br/ws/${empresa.data.cep}/json/`)
-        setEndereco(endereco.data)
+        const endereco = await axios.get(
+          `https://viacep.com.br/ws/${empresa.data.cep}/json/`
+        );
+        setEndereco(endereco.data);
       } catch (error) {
         console.log(error);
       }
@@ -30,18 +50,69 @@ export default function CardChamados({ chamado }) {
     getFuncionarioEmpresa();
   }, []);
 
+  let [fontsLoaded] = useFonts({
+    Poppins_600SemiBold,
+    Poppins_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.viewCardChamado}>
-      <Text style={styles.nomeEmpresa}>{empresa.nome}</Text>
-      <View style={styles.enderecoData}>
-        <Text style={styles.endereco}>{endereco.logradouro}, {empresa.numero_endereco}</Text>
-        <Text style={styles.data}>04/02 - 22:38</Text>
+    <TouchableOpacity activeOpacity={0.5}>
+      <View style={styles.viewCardChamado}>
+        {empresa.length === 0 && endereco.length === 0 ? (
+          <View style={styles.activityStyle}>
+            <ActivityIndicator size="large" color="#23AFFF" />
+          </View>
+        ) : (
+          <>
+            <Text style={styles.nomeEmpresa}>{empresa.nome}</Text>
+            <View style={styles.enderecoData}>
+              <View style={styles.endereco}>
+                <MaterialCommunityIcons
+                  name="map-marker-outline"
+                  size={20}
+                  color="black"
+                />
+                <Text style={styles.texto}>
+                  {endereco.logradouro}, {empresa.numero_endereco}
+                </Text>
+              </View>
+              <View style={styles.data}>
+                <MaterialCommunityIcons
+                  name="calendar-month"
+                  size={20}
+                  color="black"
+                />
+                <Text style={styles.texto}>{dataChamado}</Text>
+              </View>
+            </View>
+            <View style={styles.problemaPrioridade}>
+              <View style={styles.problema}>
+                <MaterialCommunityIcons
+                  name="desktop-classic"
+                  size={20}
+                  color="black"
+                />
+                <Text style={styles.texto}>{chamado.problema}</Text>
+              </View>
+              <View style={styles.prioridade}>
+                <MaterialCommunityIcons
+                  name="radiobox-marked"
+                  size={20}
+                  color="black"
+                />
+                <Text style={styles.texto}>
+                  Prioridade {chamado.prioridade}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
       </View>
-      <View style={styles.problemaPrioridade}>
-        <Text style={styles.problema}>{chamado.problema}</Text>
-        <Text style={styles.prioridade}>Prioridade {chamado.prioridade}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -49,54 +120,70 @@ const styles = StyleSheet.create({
   viewCardChamado: {
     backgroundColor: "#FFF",
     width: "100%",
-    borderColor: "#1368f1",
+    borderColor: "#23AFFF",
     borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: 20,
     paddingTop: 10,
     paddingBottom: 25,
     alignItems: "center",
     marginBottom: 30,
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
   nomeEmpresa: {
     width: "85%",
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontFamily: "Poppins_600SemiBold",
   },
   enderecoData: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 10
+    paddingTop: 10,
   },
   endereco: {
     width: "50%",
-    paddingLeft: 10,
-    paddingRight: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 15,
   },
   data: {
     width: "50%",
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: 10,
-    paddingRight: 10,
   },
-  problemaPrioridade:{
+  problemaPrioridade: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 10
+    paddingTop: 10,
   },
   problema: {
-    textTransform: "capitalize",
     width: "50%",
-    paddingLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
     paddingRight: 10,
   },
-  prioridade: {
+  texto: {
     textTransform: "capitalize",
+    paddingLeft: 5,
+    fontSize: 12,
+    fontFamily: "Poppins_400Regular",
+  },
+  prioridade: {
     width: "50%",
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: 10,
-    paddingRight: 10,
-  }
+  },
+  activityStyle: {
+    paddingTop: 15,
+    paddingLeft: 50,
+    paddingRight: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
