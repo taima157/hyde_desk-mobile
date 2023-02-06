@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {  View,  StyleSheet,  Text,  TextInput,  TouchableOpacity,  Image,} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-// import Header from "../../componentes/header";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { useForm, Controller } from "react-hook-form";
@@ -13,10 +12,9 @@ const schema = yup.object({
 
 
 function Cadastro({navigation}) {
-  // const [username, setUsername] = useState('')
-  // const [cpf, setCpf] = useState('')
-  const [selectedValue, setSelectedValue] = useState('')
 
+  const [selectedValue, setSelectedValue] = useState('')
+  
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
