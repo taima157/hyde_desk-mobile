@@ -35,24 +35,14 @@ export default function CadastrarFoto({ navigation, route }) {
   async function cadastrar() {
     const form = new FormData();
 
-    console.log(data);
-
     form.append("nome", data.nome);
-    form.append('cnpj', data.cpf)
-    form.append('cep', "0485421")
-    form.append('numero_endereco', "048")
+    form.append("cpf", data.cpf);
+    form.append("email", data.email);
     form.append('telefone', data.telefone)
-    form.append('email', data.email)
-    form.append('senha', data.senha)
-    form.append('confirmsenha', data.senha)
-
-    // form.append("cpf", data.cpf);
-    // form.append("email", data.email);
-    // form.append("especialidade", "Software");
-    // form.append("telefone", data.telefone);
-    // form.append("senha", data.senha);
-    // form.append("confirmsenha", data.senha);
-    // form.append("anexo", image);
+    form.append("especialidade", "Software");
+    form.append("senha", data.senha);
+    form.append("confirmsenha", data.senha);
+    form.append("anexo", image);
 
     console.log(image)
 
@@ -63,16 +53,7 @@ export default function CadastrarFoto({ navigation, route }) {
     }
 
     try {
-      const response = await api.post("/empresas/cadastro", {
-        nome: data.nome,
-        cnpj: data.cpf,
-        cep: "05889220",
-        numero_endereco: "10",
-        telefone: data.telefone,
-        email: data.email,
-        senha: data.senha,
-        confirmarSenha: data.senha
-      })
+      const response = await api.post("/tecnicos/cadastro", form)
 
       console.log(response)
     } catch(error) {
@@ -93,7 +74,7 @@ export default function CadastrarFoto({ navigation, route }) {
 
       setImage({
         uri: result.assets[0].uri,
-        type: result.assets[0].type,
+        type: "image/jpeg",
         name: "teste.jpg",
       });
     }
