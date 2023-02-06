@@ -1,6 +1,6 @@
 import { StyleSheet, SafeAreaView, StatusBar} from 'react-native';
 import {StackRoutes} from './src/routes/stack.routes'
-import Footer from './src/components/Footer';
+import Footer from "./src/components/Footer"
 
 
 export default function App() {

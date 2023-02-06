@@ -11,6 +11,7 @@ import {
   // Keyboard,
 } from "react-native";
 import { api } from "../../services/api";
+import axios from "axios";
 export default function CadastrarFoto({ navigation, route }) {
   const data = route.params;
 
@@ -46,14 +47,10 @@ export default function CadastrarFoto({ navigation, route }) {
 
     console.log(image)
 
-    const headers = {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    }
-
     try {
       const response = await api.post("/tecnicos/cadastro", form)
+
+      //const response = await api.get("tecnicos")
 
       console.log(response)
     } catch(error) {
@@ -70,17 +67,18 @@ export default function CadastrarFoto({ navigation, route }) {
     });
 
     if (!result.canceled) {
-      console.log(result);
+      let imageName = result.assets[0].uri.split("/")
+      imageName = imageName[imageName.length - 1]
+
+      let tipo = imageName.split(".")[1]
 
       setImage({
         uri: result.assets[0].uri,
-        type: "image/jpeg",
-        name: "teste.jpg",
+        type: `image/${tipo}`,
+        name: imageName,
       });
     }
   };
-
-  console.log(image);
 
   const usuarioFoto = {
     uri: image,
