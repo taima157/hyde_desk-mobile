@@ -17,7 +17,8 @@ const schema = yup.object({
   senha: yup.string().min(6,"A senha deve conter no mínimo 6 dígitos").required("Digite sua senha")
 })
 
-function CadastroContato({navigation}) {
+function CadastroContato({navigation, route}) {
+  const dataCad = route.params;
 
   const {control, handleSubmit, formState: { errors }} = useForm({
     resolver: yupResolver(schema)
@@ -25,7 +26,10 @@ function CadastroContato({navigation}) {
 
   function validar(data) {
     console.log(data);
-    navigation.navigate("CadastrarFoto", JSON.stringify(data))
+    navigation.navigate("CadastrarFoto", {
+      ...dataCad,
+      ...data
+    })
   }
 
   function voltar(){

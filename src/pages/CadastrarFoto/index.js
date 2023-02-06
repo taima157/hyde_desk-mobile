@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
 import {
   StyleSheet,
@@ -10,23 +10,74 @@ import {
   TouchableOpacity,
   // Keyboard,
 } from "react-native";
+import { api } from "../../services/api";
 export default function CadastrarFoto({ navigation, route }) {
+  const data = route.params;
 
-  const  data  = route.params
-
-  console.log("Teste" + data)
-
-  function goToEditar(){
-    navigation.navigate('Editar')
+  function goToEditar() {
+    navigation.navigate("Editar");
   }
+
   const [nome, setNome] = useState("");
-  const [image, setImage] = useState();
+  const [image, setImage] = useState({
+    uri: "",
+    type: "",
+    name: "",
+  });
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
   });
   if (!fontsLoaded) {
     return null;
+  }
+
+  async function cadastrar() {
+    const form = new FormData();
+
+    console.log(data);
+
+    form.append("nome", data.nome);
+    form.append('cnpj', data.cpf)
+    form.append('cep', "0485421")
+    form.append('numero_endereco', "048")
+    form.append('telefone', data.telefone)
+    form.append('email', data.email)
+    form.append('senha', data.senha)
+    form.append('confirmsenha', data.senha)
+
+    // form.append("cpf", data.cpf);
+    // form.append("email", data.email);
+    // form.append("especialidade", "Software");
+    // form.append("telefone", data.telefone);
+    // form.append("senha", data.senha);
+    // form.append("confirmsenha", data.senha);
+    // form.append("anexo", image);
+
+    console.log(image)
+
+    const headers = {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+
+    try {
+      const response = await api.post("/empresas/cadastro", {
+        nome: data.nome,
+        cnpj: data.cpf,
+        cep: "05889220",
+        numero_endereco: "10",
+        telefone: data.telefone,
+        email: data.email,
+        senha: data.senha,
+        confirmarSenha: data.senha
+      })
+
+      console.log(response)
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   const ObterImage = async () => {
@@ -38,21 +89,28 @@ export default function CadastrarFoto({ navigation, route }) {
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
+      console.log(result);
+
+      setImage({
+        uri: result.assets[0].uri,
+        type: result.assets[0].type,
+        name: "teste.jpg",
+      });
     }
   };
+
+  console.log(image);
 
   const usuarioFoto = {
     uri: image,
   };
 
-  function voltar(){
-    navigation.navigate('CadastroContato');
+  function voltar() {
+    navigation.navigate("CadastroContato");
   }
 
   return (
     <View style={styles.container}>
-
       <View style={styles.container_CadastrarFoto}>
         <Text style={styles.CadastrarFoto}>Cadastro</Text>
       </View>
@@ -67,8 +125,8 @@ export default function CadastrarFoto({ navigation, route }) {
               <Image
                 style={styles.ImgCamera}
                 source={
-                  image != null
-                    ? { uri: image }
+                  image.uri.length != 0
+                    ? { uri: image.uri }
                     : require("../../../assets/image.png")
                 }
               />
@@ -78,19 +136,16 @@ export default function CadastrarFoto({ navigation, route }) {
       </View>
 
       <View style={styles.containerButtonNext}>
-        <TouchableOpacity style={styles.buttonNext} onPress={goToEditar}>
+        <TouchableOpacity style={styles.buttonNext} onPress={cadastrar}>
           <Text style={styles.textNext}>Finalizar</Text>
         </TouchableOpacity>
       </View>
 
-
-        <View style={styles.containerButtonBack}>        
-          <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
-            <Image source={require("../../../assets/arrow.png")} />
-          </TouchableOpacity>
-        </View>
-
-
+      <View style={styles.containerButtonBack}>
+        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
+          <Image source={require("../../../assets/arrow.png")} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -109,30 +164,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "flex-start",
-    paddingBottom: '1%',
-    paddingLeft: '1%'
+    paddingBottom: "1%",
+    paddingLeft: "1%",
   },
 
   CadastrarFoto: {
-    paddingLeft: '2%',
+    paddingLeft: "2%",
     fontSize: 36,
-    fontFamily: "Poppins_700Bold"
+    fontFamily: "Poppins_700Bold",
   },
 
   container_card: {
-    width: '100%',
+    width: "100%",
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
   },
 
-
   card_AdicionarUsuarios: {
-    width: '80%',
-    height: '80%',
+    width: "80%",
+    height: "80%",
     borderRadius: 10,
-    borderColor: '#000',
+    borderColor: "#000",
     borderWidth: 2,
     display: "flex",
     alignItems: "center",
@@ -146,7 +200,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     display: "flex",
     justifyContent: "center",
-    
   },
 
   container_foto: {
@@ -182,7 +235,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-
   textNext: {
     color: "#fff",
     fontSize: 16,
@@ -205,5 +257,4 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 25,
   },
-  
 });

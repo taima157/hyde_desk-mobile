@@ -1,13 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import Login from "../pages/Login";
-import Editar from "../pages/Editar";
+import Perfil from "../pages/Perfil";
 import Cadastro from "../pages/Cadastro";
-import CadastroContato from "../pages/cadastroContato";
-import Header from "../components/header";
+import CadastroContato from "../pages/CadastroContato";
+import Header from "../components/Header";
 import CadastrarFoto from "../pages/CadastrarFoto";
+import TabRoutes from "./tab.routes";
 
-const { Screen, Navigator } = createNativeStackNavigator()
+const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
   return (
     <NavigationContainer>
@@ -17,7 +18,8 @@ export function StackRoutes() {
           component={Login}
           options={{
             headerShown: false,
-          }} />
+          }}
+        />
         <Screen
           name="Cadastro"
           component={Cadastro}
@@ -25,8 +27,8 @@ export function StackRoutes() {
             headerTitle: () => <Header />,
             headerTitleAlign: "center",
             headerStyle: {
-              backgroundColor: 'rgb(242,242,242)',
-            }
+              backgroundColor: "rgb(242,242,242)",
+            },
           }}
         />
         <Screen
@@ -36,8 +38,8 @@ export function StackRoutes() {
             headerTitle: () => <Header />,
             headerTitleAlign: "center",
             headerStyle: {
-              backgroundColor: 'rgb(242,242,242)'
-            }
+              backgroundColor: "rgb(242,242,242)",
+            },
           }}
         />
         <Screen
@@ -47,19 +49,20 @@ export function StackRoutes() {
             headerTitle: () => <Header />,
             headerTitleAlign: "center",
             headerStyle: {
-              backgroundColor: 'rgb(242,242,242)'
-            }
+              backgroundColor: "rgb(242,242,242)",
+            },
           }}
         />
         <Screen
-          name="Editar"
-          component={Editar}
+          name="Logado"
+          component={TabRoutes}
           options={{
-            // headerShown: false,
-          }} />
+            headerShown: false,
+          }}
+        />
       </Navigator>
     </NavigationContainer>
   );
 }
 
-export default StackRoutes
+export default StackRoutes;
