@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { api } from "../../services/api";
 import CardChamados from "../../components/CardChamados";
 import { useFonts, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
@@ -37,9 +43,23 @@ export default function Chamados() {
       </View>
       <ScrollView style={styles.scrollView}>
         <View style={styles.viewChamados}>
-          {chamados?.map((chamado) => {
-            return <CardChamados key={chamado.id_chamado} chamado={chamado} />;
-          })}
+          {chamados.length === 0 ? (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: 200,
+              }}
+            >
+              <ActivityIndicator size="large" color="#23AFFF" />
+            </View>
+          ) : (
+            chamados?.map((chamado) => {
+              return (
+                <CardChamados key={chamado.id_chamado} chamado={chamado} />
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </View>

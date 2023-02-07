@@ -62,7 +62,7 @@ export default function CardChamados({ chamado }) {
   return (
     <TouchableOpacity activeOpacity={0.5}>
       <View style={styles.viewCardChamado}>
-        {empresa.length === 0 && endereco.length === 0 ? (
+        {empresa.length === 0 || endereco.length === 0 ? (
           <View style={styles.activityStyle}>
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>
