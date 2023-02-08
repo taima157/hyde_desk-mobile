@@ -22,14 +22,14 @@ export default function Login({ navigation }) {
     try {
       const response = await api.post("/tecnicos/login", user);
 
+      console.log(response.data);
+
       setUser({
         cpf: "",
         senha: "",
       });
 
-      setMensagemErro("")
-
-      navigation.navigate("Logado");
+      navigation.navigate("Logado", response.data)
     } catch (error) {
 
       setMensagemErro("CPF ou senha inválidos.")
