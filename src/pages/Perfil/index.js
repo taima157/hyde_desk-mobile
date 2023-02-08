@@ -51,7 +51,7 @@ function Perfil({ route }) {
           {data.foto != undefined ? (
             <View style={styles.viewImage}>
 
-              <Image style={{ width: 50, height: 50 }} source={{ uri: `${data.foto}`}} />
+              <Image style={{ width: 50, height: 50 }} source={{ uri: `http://10.105.72.142:4001/${data.foto}`}} />
             </View>
           ) : (
             <View style={styles.activityStyle}>
