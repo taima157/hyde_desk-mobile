@@ -89,6 +89,7 @@ function Cadastro({ navigation }) {
               onChangeText={onChange}
               value={value}
               placeholderTextColor="#000000"
+              maxLength={11}
             ></TextInput>
           )}
         />
