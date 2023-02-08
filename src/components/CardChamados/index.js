@@ -31,14 +31,28 @@ export default function CardChamados({ chamado }) {
   const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
 
   function toggleModal() {
     setModalVisible(!isModalVisible);
   }
 
-  const [modalImage, setModalImage] = useState(false);
   function toggleModalImage() {
     setModalImage(!modalImage);
+  }
+
+  async function aceitarChamado() {
+    try {
+      const body = {
+        status: "andamento",
+        tecnico_id: 1
+      }
+      const response = await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body)
+
+      console.log(response)
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -162,7 +176,7 @@ export default function CardChamados({ chamado }) {
                     <Image
                       style={styles.anexo}
                       source={{
-                        uri: `http://192.168.1.191:4001/${chamado.anexo}`,
+                        url: `http://10.105.72.145:8080/${chamado.anexo}`,
                       }}
                       resizeMode="contain"
                     />
@@ -170,7 +184,7 @@ export default function CardChamados({ chamado }) {
                   <Modal isVisible={modalImage} backdropOpacity={0.1}>
                     <ImageViewer
                       imageUrls={[
-                        { url: `http://192.168.1.191:4001/${chamado.anexo}` },
+                        { url: `http://10.105.72.145:8080/${chamado.anexo}` },
                       ]}
                     />
                     <TouchableOpacity
@@ -204,6 +218,7 @@ export default function CardChamados({ chamado }) {
               <Text style={styles.textoBotao}>Voltar</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={aceitarChamado}
               style={[styles.botaoModal, { borderBottomRightRadius: 20 }]}
             >
               <Text style={styles.textoBotao}>Aceitar</Text>
