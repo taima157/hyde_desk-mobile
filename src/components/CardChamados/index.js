@@ -6,6 +6,8 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
+  Image,
 } from "react-native";
 import { api } from "../../services/api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,16 +16,44 @@ import {
   Poppins_400Regular,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
+import Modal from "react-native-modal";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 export default function CardChamados({ chamado }) {
   const [empresa, setEmpresa] = useState([]);
   const [endereco, setEndereco] = useState([]);
 
-  let data = chamado.data.slice(0, 10);
+  const dataHora = chamado.data.split("T");
+  let data = dataHora[0];
+  let hora = dataHora[1];
   data = data.split("-");
+  const horaChamado = hora.split(".")[0];
   const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
 
-  console.log(dataChamado);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
+
+  function toggleModal() {
+    setModalVisible(!isModalVisible);
+  }
+
+  function toggleModalImage() {
+    setModalImage(!modalImage);
+  }
+
+  async function aceitarChamado() {
+    try {
+      const body = {
+        status: "andamento",
+        tecnico_id: 1
+      }
+      const response = await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body)
+
+      console.log(response)
+    } catch(error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     async function getFuncionarioEmpresa() {
@@ -60,7 +90,7 @@ export default function CardChamados({ chamado }) {
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.5}>
+    <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
       <View style={styles.viewCardChamado}>
         {empresa.length === 0 || endereco.length === 0 ? (
           <View style={styles.activityStyle}>
@@ -112,6 +142,90 @@ export default function CardChamados({ chamado }) {
           </>
         )}
       </View>
+      <Modal isVisible={isModalVisible} backdropOpacity={0.1}>
+        <View style={styles.modalView}>
+          <Text style={styles.tituloDetalhe}>Detalhes</Text>
+          <ScrollView>
+            <View style={styles.detalhesChamado}>
+              <View style={styles.field}>
+                <Text style={styles.label}>Empresa:</Text>
+                <Text style={styles.valorField}>{empresa.nome}</Text>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Data do chamado:</Text>
+                <Text style={styles.valorField}>
+                  {dataChamado} - {horaChamado}
+                </Text>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Problema:</Text>
+                <Text
+                  style={[styles.valorField, { textTransform: "capitalize" }]}
+                >
+                  {chamado.problema}
+                </Text>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Descrição:</Text>
+                <Text style={styles.valorField}>{chamado.descricao}</Text>
+              </View>
+              {chamado.anexo !== null ? (
+                <View style={styles.field}>
+                  <Text style={styles.label}>Anexo:</Text>
+                  <TouchableOpacity onPress={toggleModalImage}>
+                    <Image
+                      style={styles.anexo}
+                      source={{
+                        url: `http://10.105.72.145:8080/${chamado.anexo}`,
+                      }}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <Modal isVisible={modalImage} backdropOpacity={0.1}>
+                    <ImageViewer
+                      imageUrls={[
+                        { url: `http://10.105.72.145:8080/${chamado.anexo}` },
+                      ]}
+                    />
+                    <TouchableOpacity
+                      style={styles.botaoModalImagem}
+                      onPress={toggleModalImage}
+                    >
+                      <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
+                    </TouchableOpacity>
+                  </Modal>
+                </View>
+              ) : null}
+              <View style={styles.field}>
+                <Text style={styles.label}>Setor:</Text>
+                <Text style={styles.valorField}>{chamado.setor}</Text>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Patrimônio:</Text>
+                <Text style={styles.valorField}>{chamado.patrimonio}</Text>
+              </View>
+              <View style={styles.field}>
+                <Text style={styles.label}>Código de verificação:</Text>
+                <Text style={styles.valorField}>{chamado.cod_verificacao}</Text>
+              </View>
+            </View>
+          </ScrollView>
+          <View style={styles.botoesModal}>
+            <TouchableOpacity
+              onPress={toggleModal}
+              style={[styles.botaoModal, { borderBottomLeftRadius: 20 }]}
+            >
+              <Text style={styles.textoBotao}>Voltar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={aceitarChamado}
+              style={[styles.botaoModal, { borderBottomRightRadius: 20 }]}
+            >
+              <Text style={styles.textoBotao}>Aceitar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </TouchableOpacity>
   );
 }
@@ -185,5 +299,72 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  modalView: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 5,
+    marginRight: 5,
+    elevation: 10,
+    borderRadius: 20,
+  },
+  tituloDetalhe: {
+    fontSize: 28,
+    fontFamily: "Poppins_600SemiBold",
+    padding: 10,
+    textAlign: "center",
+  },
+  detalhesChamado: {
+    padding: 10,
+  },
+  field: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 18,
+    fontFamily: "Poppins_600SemiBold",
+  },
+  valorField: {
+    width: "100%",
+    fontFamily: "Poppins_400Regular",
+    fontSize: 16,
+  },
+  anexo: {
+    width: "100%",
+    height: 200,
+    backgroundColor: "#000",
+    marginTop: 5,
+  },
+  botaoModalImagem: {
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "#000",
+  },
+  textoBotaoModalImagem: {
+    color: "#FFF",
+    padding: 10,
+    fontFamily: "Poppins_600SemiBold",
+  },
+  botoesModal: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+  },
+  botaoModal: {
+    width: "50%",
+    display: "flex",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#23AFFF",
+    padding: 5,
+  },
+  textoBotao: {
+    fontWeight: "500",
+    fontSize: 20,
+    color: "#23AFFF",
   },
 });

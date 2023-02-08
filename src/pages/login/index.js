@@ -15,20 +15,26 @@ export default function Login({ navigation }) {
     senha: "",
   });
 
+
+  const [mensagemErro, setMensagemErro] = useState("");
+
   async function handleLogin() {
     try {
       const response = await api.post("/tecnicos/login", user);
 
-      console.log(response.data);
+      console.log(response);
 
       setUser({
         cpf: "",
         senha: "",
       });
 
-      navigation.navigate("Logado", response.data)
+      navigation.navigate("Logado")
 
+      navigation.navigate("Logado", response.data);
     } catch (error) {
+
+      setMensagemErro("CPF ou senha inválidos.")
       console.log(error);
       setUser({
         cpf: "",
@@ -63,6 +69,7 @@ export default function Login({ navigation }) {
           value={user.cpf}
           onChangeText={(e) => setUser({ ...user, cpf: e })}
           keyboardType="numeric"
+          maxLength={11}
         />
         <TextInput
           style={styles.TextoSenha}
@@ -72,6 +79,11 @@ export default function Login({ navigation }) {
           value={user.senha}
           onChangeText={(e) => setUser({ ...user, senha: e })}
         />
+        {mensagemErro.length !== 0 ? (
+          <Text style={{ color: "red", textAlign: "center", fontWeight: "500", marginTop: 10 }}>
+            {mensagemErro}
+          </Text>
+        ) : null}
         <TouchableOpacity style={styles.Botao} onPress={() => handleLogin()}>
           <Text style={styles.TextoBotao}>LOGIN</Text>
         </TouchableOpacity>
@@ -145,7 +157,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     borderWidth: 2,
     padding: 15,
-    top: 10,
+    marginTop: 10
   },
 
   Botao: {
@@ -153,7 +165,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "95%",
     height: 52,
-    top: 25,
+    marginTop: 15,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
