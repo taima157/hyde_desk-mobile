@@ -5,7 +5,7 @@ import NavigationButton from "../components/NavigationButton";
 
 const { Screen, Navigator } = createBottomTabNavigator();
 
-export default function TabRoutes() {
+export default function TabRoutes( {route} ) {
   return (
     <Navigator
       screenOptions={{
@@ -35,6 +35,7 @@ export default function TabRoutes() {
       <Screen
         name="Perfil"
         component={Perfil}
+        initialParams={{dataTecnico: route.params}}
         options={{
           tabBarButton: (props) => {
             return (

@@ -19,14 +19,14 @@ export default function Login({ navigation }) {
     try {
       const response = await api.post("/tecnicos/login", user);
 
-      console.log(response);
+      console.log(response.data);
 
       setUser({
         cpf: "",
         senha: "",
       });
 
-      navigation.navigate("Logado")
+      navigation.navigate("Logado", response.data)
 
     } catch (error) {
       console.log(error);
