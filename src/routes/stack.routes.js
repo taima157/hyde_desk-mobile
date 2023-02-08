@@ -7,6 +7,7 @@ import CadastroContato from "../pages/CadastroContato";
 import Header from "../components/Header";
 import CadastrarFoto from "../pages/CadastrarFoto";
 import TabRoutes from "./tab.routes";
+import EditarPerfil from "../pages/EditarPerfil";
 
 const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
@@ -45,6 +46,13 @@ export function StackRoutes() {
         <Screen
           name="Logado"
           component={TabRoutes}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Screen
+          name="Editar Perfil"
+          component={EditarPerfil}
           options={{
             headerShown: false,
           }}

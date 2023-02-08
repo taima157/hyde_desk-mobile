@@ -10,7 +10,9 @@ import jwtDecode from "jwt-decode";
 import { api } from "../../services/api";
 import { useEffect, useState } from "react";
 
-function Perfil({ route }) {
+function Perfil({ route, navigation }) {
+
+  
 
   const { dataTecnico } = route.params
   const [data, setData] = useState([])
@@ -40,6 +42,10 @@ function Perfil({ route }) {
   if (!fontsLoaded) {
     return null;
   }
+
+  function goToEditar(){
+    navigation.navigate("Editar Perfil", data)
+  }
   return (
     <View style={{ backgroundColor: "#fff", height: "100%" }}>
 
@@ -50,7 +56,6 @@ function Perfil({ route }) {
         <>
           {data.foto != undefined ? (
             <View style={styles.viewImage}>
-
               <Image style={{ width: 50, height: 50 }} source={{ uri: `http://10.105.72.142:4001/${data.foto}`}} />
             </View>
           ) : (
@@ -63,7 +68,7 @@ function Perfil({ route }) {
             <Text>{data.nome}</Text>
             <Text style={styles.bold}>{data.email}</Text>
 
-            <TouchableOpacity style={styles.editar}>
+            <TouchableOpacity style={styles.editar} onPress={goToEditar}>
               <Text style={styles.textStyle}>Editar Perfil</Text>
             </TouchableOpacity>
           </View>

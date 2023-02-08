@@ -29,8 +29,6 @@ export default function Login({ navigation }) {
         senha: "",
       });
 
-      navigation.navigate("Logado")
-
       navigation.navigate("Logado", response.data);
     } catch (error) {
 
