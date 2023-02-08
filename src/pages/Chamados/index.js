@@ -40,7 +40,7 @@ export default function Chamados() {
     }
 
     getChamados();
-    getChamadosAndamento();
+    //getChamadosAndamento();
   }, []);
 
   let [fontsLoaded] = useFonts({

@@ -51,7 +51,7 @@ function Perfil({ route }) {
           {data.foto != undefined ? (
             <View style={styles.viewImage}>
 
-              <Image style={{ width: 50, height: 50 }} source={{ uri: `http://10.105.72.142:4001/${data.foto}`}} />
+              <Image style={{ width: 100, height: 100 }} source={{ uri: `https://hydedeskteste.azurewebsites.net/${data.foto}`}} />
             </View>
           ) : (
             <View style={styles.activityStyle}>

@@ -48,8 +48,8 @@ export default function CardChamados({ chamado }) {
         tecnico_id: 1
       }
       const response = await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body)
-
-      console.log(response)
+      
+      toggleModal()
     } catch(error) {
       console.log(error)
     }
@@ -89,10 +89,13 @@ export default function CardChamados({ chamado }) {
     return null;
   }
 
+  console.log(empresa)
+  console.log(chamado)
+
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
       <View style={styles.viewCardChamado}>
-        {empresa.length === 0 || endereco.length === 0 ? (
+        {empresa.length === 0 ? (
           <View style={styles.activityStyle}>
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>
@@ -176,7 +179,7 @@ export default function CardChamados({ chamado }) {
                     <Image
                       style={styles.anexo}
                       source={{
-                        url: `http://10.105.72.145:8080/${chamado.anexo}`,
+                        uri: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
                       }}
                       resizeMode="contain"
                     />
@@ -184,12 +187,15 @@ export default function CardChamados({ chamado }) {
                   <Modal isVisible={modalImage} backdropOpacity={0.1}>
                     <ImageViewer
                       imageUrls={[
-                        { url: `http://10.105.72.145:8080/${chamado.anexo}` },
+                        { url: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}` },
                       ]}
+                      enableImageZoom={true}
+                      
                     />
                     <TouchableOpacity
                       style={styles.botaoModalImagem}
                       onPress={toggleModalImage}
+                      activeOpacity={0.9}
                     >
                       <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
                     </TouchableOpacity>
