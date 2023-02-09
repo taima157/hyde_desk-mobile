@@ -1,13 +1,15 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Chamados from "../pages/Chamados";
 import Perfil from "../pages/Perfil";
+import Home from "../pages/Home";
 import NavigationButton from "../components/NavigationButton";
 
 const { Screen, Navigator } = createBottomTabNavigator();
 
-export default function TabRoutes( {route} ) {
+export default function TabRoutes({ route }) {
   return (
     <Navigator
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -33,9 +35,18 @@ export default function TabRoutes( {route} ) {
         }}
       />
       <Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarButton: (props) => {
+            return <NavigationButton {...props} name="home" pageName="Home" />;
+          },
+        }}
+      />
+      <Screen
         name="Perfil"
         component={Perfil}
-        initialParams={{dataTecnico: route.params}}
+        initialParams={{ dataTecnico: route.params }}
         options={{
           tabBarButton: (props) => {
             return (

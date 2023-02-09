@@ -4,35 +4,40 @@ import {
   Poppins_700Bold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from "jwt-decode";
 
 import { api } from "../../services/api";
 import { useEffect, useState } from "react";
 
-function Perfil({ route, navigation }) {
-
-  
-
-  const { dataTecnico } = route.params
+function Perfil({ navigation }) {
   const [data, setData] = useState([])
+  const [tecnico, setTecnico] = useState([])
 
-  // console.log(dataTecnico)
-
-  const tecnico = jwtDecode(dataTecnico.token)
-
-  // console.log(id_tecnico)
   useEffect(() => {
-    async function getPerfil() {
-      const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`)
+    async function getToken() {
+      try {
+        const storageToken = await AsyncStorage.getItem("user")
+        if (storageToken !== null) {
+          
+        
+          const tokenTecnico = JSON.parse(storageToken)
+          const tecnico = jwtDecode(tokenTecnico[0])
+          const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`)
 
-      setData(response.data)
-      console.log(data)
-      console.log(data.foto)
+          setData(response.data)
+        }
+      }
+      catch(e){
+        console.log(e)
+      }
     }
-
-    getPerfil()
+    
+    getToken()
   }, [])
+
+
+  console.log(data)
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -56,7 +61,7 @@ function Perfil({ route, navigation }) {
         <>
           {data.foto != undefined ? (
             <View style={styles.viewImage}>
-              <Image style={{ width: 100, height: 100, borderRadius: 50, }} source={{ uri: `https://hydedeskteste.azurewebsites.net/${data.foto}`}} />
+              <Image style={{ width: 100, height: 100, borderRadius: 50, }} source={{ uri: `http://192.168.15.10:4001/${data.foto}`}} />
             </View>
           ) : (
             <View style={styles.activityStyle}>

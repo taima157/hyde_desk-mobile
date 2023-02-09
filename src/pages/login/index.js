@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { api } from "../../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isExpired } from "react-jwt";
 
 export default function Login({ navigation }) {
   const [user, setUser] = useState({
@@ -15,24 +17,26 @@ export default function Login({ navigation }) {
     senha: "",
   });
 
-
   const [mensagemErro, setMensagemErro] = useState("");
 
   async function handleLogin() {
     try {
       const response = await api.post("/tecnicos/login", user);
 
-      console.log(response);
-
       setUser({
         cpf: "",
         senha: "",
       });
 
-      navigation.navigate("Logado", response.data);
-    } catch (error) {
+      setMensagemErro("");
 
-      setMensagemErro("CPF ou senha inválidos.")
+      console.log(response);
+
+      await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
+
+      navigation.navigate("Logado");
+    } catch (error) {
+      setMensagemErro("CPF ou senha inválidos.");
       console.log(error);
       setUser({
         cpf: "",
@@ -40,6 +44,34 @@ export default function Login({ navigation }) {
       });
     }
   }
+
+  useEffect(() => {
+    async function isLogado() {
+      try {
+        const user = await AsyncStorage.getItem("user");
+
+        if (user === null) {
+          await AsyncStorage.setItem("user", JSON.stringify({}));
+        } else {
+          const userLocal = JSON.parse(user);
+
+          if (userLocal.length !== 0) {
+            const expired = isExpired(userLocal[0]);
+
+            if (!expired) {
+              navigation.navigate("Logado");
+            } else {
+              await AsyncStorage.setItem("user", JSON.stringify({}));
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    isLogado();
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
@@ -78,7 +110,14 @@ export default function Login({ navigation }) {
           onChangeText={(e) => setUser({ ...user, senha: e })}
         />
         {mensagemErro.length !== 0 ? (
-          <Text style={{ color: "red", textAlign: "center", fontWeight: "500", marginTop: 10 }}>
+          <Text
+            style={{
+              color: "red",
+              textAlign: "center",
+              fontWeight: "500",
+              marginTop: 10,
+            }}
+          >
             {mensagemErro}
           </Text>
         ) : null}
@@ -155,7 +194,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     borderWidth: 2,
     padding: 15,
-    marginTop: 10
+    marginTop: 10,
   },
 
   Botao: {
