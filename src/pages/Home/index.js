@@ -1,7 +1,9 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 export default function Home() {
-  return <View style={styles.container}></View>;
+  return <View style={styles.container}>
+    <Text>Teste</Text>
+  </View>;
 }
 
 const styles = StyleSheet.create({

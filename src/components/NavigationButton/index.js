@@ -4,9 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFonts, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
 import {Inter_600SemiBold} from "@expo-google-fonts/inter"
 
-// <MaterialCommunityIcons name="account" size={24} color="black" />
-// <MaterialCommunityIcons name="clipboard-list-outline" size={24} color="black" />
-
 export default function NavigationButton(props) {
   const { name, pageName, onPress, accessibilityState } = props;
   const focused = accessibilityState.selected;
@@ -42,7 +39,7 @@ const styles = StyleSheet.create({
   buttonNavigation: {
     display: "flex",
     alignItems: "center",
-    width: 200,
+    width: 125,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 5,

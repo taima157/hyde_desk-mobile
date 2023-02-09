@@ -6,8 +6,6 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView,
-  Image,
 } from "react-native";
 import { api } from "../../services/api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -17,9 +15,11 @@ import {
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 import Modal from "react-native-modal";
-import ImageViewer from "react-native-image-zoom-viewer";
+import ModalDetalhes from "../ModalDetalhes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { decodeToken } from "react-jwt";
 
-export default function CardChamados({ chamado }) {
+export default function CardChamados({ chamado, setRefreshing }) {
   const [empresa, setEmpresa] = useState([]);
   const [endereco, setEndereco] = useState([]);
 
@@ -31,27 +31,32 @@ export default function CardChamados({ chamado }) {
   const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
 
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalImage, setModalImage] = useState(false);
 
   function toggleModal() {
     setModalVisible(!isModalVisible);
   }
 
-  function toggleModalImage() {
-    setModalImage(!modalImage);
-  }
-
   async function aceitarChamado() {
     try {
+      const tokenLocal = await AsyncStorage.getItem("user");
+      const tokenLocalParse = await JSON.parse(tokenLocal)[0];
+
+      const tokenDecode = decodeToken(tokenLocalParse);
+
       const body = {
         status: "andamento",
-        tecnico_id: 1
-      }
-      const response = await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body)
-      
-      toggleModal()
-    } catch(error) {
-      console.log(error)
+        tecnico_id: tokenDecode.id_tecnico,
+      };
+
+      const response = await api.put(
+        `/chamados/atualizar/${chamado.id_chamado}`,
+        body
+      );
+
+      toggleModal();
+      setRefreshing(true);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -88,9 +93,6 @@ export default function CardChamados({ chamado }) {
   if (!fontsLoaded) {
     return null;
   }
-
-  console.log(empresa)
-  console.log(chamado)
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
@@ -146,91 +148,15 @@ export default function CardChamados({ chamado }) {
         )}
       </View>
       <Modal isVisible={isModalVisible} backdropOpacity={0.1}>
-        <View style={styles.modalView}>
-          <Text style={styles.tituloDetalhe}>Detalhes</Text>
-          <ScrollView>
-            <View style={styles.detalhesChamado}>
-              <View style={styles.field}>
-                <Text style={styles.label}>Empresa:</Text>
-                <Text style={styles.valorField}>{empresa.nome}</Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Data do chamado:</Text>
-                <Text style={styles.valorField}>
-                  {dataChamado} - {horaChamado}
-                </Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Problema:</Text>
-                <Text
-                  style={[styles.valorField, { textTransform: "capitalize" }]}
-                >
-                  {chamado.problema}
-                </Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Descrição:</Text>
-                <Text style={styles.valorField}>{chamado.descricao}</Text>
-              </View>
-              {chamado.anexo !== null ? (
-                <View style={styles.field}>
-                  <Text style={styles.label}>Anexo:</Text>
-                  <TouchableOpacity onPress={toggleModalImage}>
-                    <Image
-                      style={styles.anexo}
-                      source={{
-                        uri: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
-                      }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Modal isVisible={modalImage} backdropOpacity={0.1}>
-                    <ImageViewer
-                      imageUrls={[
-                        { url: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}` },
-                      ]}
-                      enableImageZoom={true}
-                      
-                    />
-                    <TouchableOpacity
-                      style={styles.botaoModalImagem}
-                      onPress={toggleModalImage}
-                      activeOpacity={0.9}
-                    >
-                      <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
-                    </TouchableOpacity>
-                  </Modal>
-                </View>
-              ) : null}
-              <View style={styles.field}>
-                <Text style={styles.label}>Setor:</Text>
-                <Text style={styles.valorField}>{chamado.setor}</Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Patrimônio:</Text>
-                <Text style={styles.valorField}>{chamado.patrimonio}</Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Código de verificação:</Text>
-                <Text style={styles.valorField}>{chamado.cod_verificacao}</Text>
-              </View>
-            </View>
-          </ScrollView>
-          <View style={styles.botoesModal}>
-            <TouchableOpacity
-              onPress={toggleModal}
-              style={[styles.botaoModal, { borderBottomLeftRadius: 20 }]}
-            >
-              <Text style={styles.textoBotao}>Voltar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={aceitarChamado}
-              style={[styles.botaoModal, { borderBottomRightRadius: 20 }]}
-            >
-              <Text style={styles.textoBotao}>Aceitar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <ModalDetalhes
+          aceitarChamado={aceitarChamado}
+          toggleModal={toggleModal}
+          chamado={chamado}
+          dataChamado={dataChamado}
+          empresa={empresa}
+          endereco={endereco}
+          horaChamado={horaChamado}
+        />
       </Modal>
     </TouchableOpacity>
   );

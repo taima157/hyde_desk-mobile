@@ -12,43 +12,16 @@ const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
   return (
     <NavigationContainer>
-      <Header />
-      <Navigator>
-        <Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Screen
-          name="Cadastro"
-          component={Cadastro}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Screen
-          name="CadastroContato"
-          component={CadastroContato}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Screen
-          name="CadastrarFoto"
-          component={CadastrarFoto}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Screen
-          name="Logado"
-          component={TabRoutes}
-          options={{
-            headerShown: false,
-          }}
-        />
+      <Navigator
+        screenOptions={{
+          header: (props) => <Header {...props} />,
+        }}
+      >
+        <Screen name="Login" component={Login} />
+        <Screen name="Cadastro" component={Cadastro} />
+        <Screen name="CadastroContato" component={CadastroContato} />
+        <Screen name="CadastrarFoto" component={CadastrarFoto} />
+        <Screen name="Logado" component={TabRoutes} />
       </Navigator>
     </NavigationContainer>
   );
