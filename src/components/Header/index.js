@@ -117,7 +117,8 @@ const styles = StyleSheet.create({
   modalLogout: {
     backgroundColor: "#FFF",
     margin: 10,
-    borderRadius: 10
+    borderRadius: 10,
+    elevation: 10
   },
   textoMensagem: {
     padding: 10,
@@ -138,11 +139,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#23AFFF",
   },
   textoBotao: {
-    fontFamily: "Poppins_700Bold",
+    fontFamily: "Poppins_400Regular",
     fontSize: 16,
     color: "#23AFFF",
   }

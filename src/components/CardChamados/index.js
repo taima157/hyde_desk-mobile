@@ -18,17 +18,10 @@ import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decodeToken } from "react-jwt";
+import { getDetalhesChamados } from "../../middlewares/getDetalhesChamados";
 
 export default function CardChamados({ chamado, setRefreshing }) {
-  const [empresa, setEmpresa] = useState([]);
-  const [endereco, setEndereco] = useState([]);
-
-  const dataHora = chamado.data.split("T");
-  let data = dataHora[0];
-  let hora = dataHora[1];
-  data = data.split("-");
-  const horaChamado = hora.split(".")[0];
-  const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
+  const [detalhesChamado, setDetalhesChamado] = useState([]);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -61,28 +54,13 @@ export default function CardChamados({ chamado, setRefreshing }) {
   }
 
   useEffect(() => {
-    async function getFuncionarioEmpresa() {
-      try {
-        const funcionario = await api.get(
-          `/funcionarios/${chamado.funcionario_id}`
-        );
+    async function getDetalhes() {
+      let detalhes = await getDetalhesChamados(chamado);
 
-        const empresa = await api.get(
-          `/empresas/${funcionario.data.empresa_id}`
-        );
-
-        setEmpresa(empresa.data);
-
-        const endereco = await axios.get(
-          `https://viacep.com.br/ws/${empresa.data.cep}/json/`
-        );
-        setEndereco(endereco.data);
-      } catch (error) {
-        console.log(error);
-      }
+      setDetalhesChamado(detalhes);
     }
 
-    getFuncionarioEmpresa();
+    getDetalhes();
   }, []);
 
   let [fontsLoaded] = useFonts({
@@ -97,13 +75,15 @@ export default function CardChamados({ chamado, setRefreshing }) {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
       <View style={styles.viewCardChamado}>
-        {empresa.length === 0 ? (
+        {detalhesChamado.length === 0 ? (
           <View style={styles.activityStyle}>
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>
         ) : (
           <>
-            <Text style={styles.nomeEmpresa}>{empresa.nome}</Text>
+            <Text style={styles.nomeEmpresa}>
+              {detalhesChamado.empresa.nome}
+            </Text>
             <View style={styles.enderecoData}>
               <View style={styles.endereco}>
                 <MaterialCommunityIcons
@@ -112,7 +92,8 @@ export default function CardChamados({ chamado, setRefreshing }) {
                   color="black"
                 />
                 <Text style={styles.texto}>
-                  {endereco.logradouro}, {empresa.numero_endereco}
+                  {detalhesChamado.endereco.logradouro},{" "}
+                  {detalhesChamado.empresa.numero_endereco}
                 </Text>
               </View>
               <View style={styles.data}>
@@ -121,7 +102,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
                   size={20}
                   color="black"
                 />
-                <Text style={styles.texto}>{dataChamado}</Text>
+                <Text style={styles.texto}>{detalhesChamado.dataChamado}</Text>
               </View>
             </View>
             <View style={styles.problemaPrioridade}>
@@ -131,7 +112,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
                   size={20}
                   color="black"
                 />
-                <Text style={styles.texto}>{chamado.problema}</Text>
+                <Text style={styles.texto}>{detalhesChamado.problema}</Text>
               </View>
               <View style={styles.prioridade}>
                 <MaterialCommunityIcons
@@ -140,7 +121,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
                   color="black"
                 />
                 <Text style={styles.texto}>
-                  Prioridade {chamado.prioridade}
+                  Prioridade {detalhesChamado.prioridade}
                 </Text>
               </View>
             </View>
@@ -151,11 +132,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
         <ModalDetalhes
           aceitarChamado={aceitarChamado}
           toggleModal={toggleModal}
-          chamado={chamado}
-          dataChamado={dataChamado}
-          empresa={empresa}
-          endereco={endereco}
-          horaChamado={horaChamado}
+          chamado={detalhesChamado}
         />
       </Modal>
     </TouchableOpacity>

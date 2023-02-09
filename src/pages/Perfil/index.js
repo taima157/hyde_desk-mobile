@@ -1,4 +1,11 @@
-import { View, Image, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import {
   useFonts,
   Poppins_700Bold,
@@ -11,33 +18,27 @@ import { api } from "../../services/api";
 import { useEffect, useState } from "react";
 
 function Perfil({ navigation }) {
-  const [data, setData] = useState([])
-  const [tecnico, setTecnico] = useState([])
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     async function getToken() {
       try {
-        const storageToken = await AsyncStorage.getItem("user")
-        if (storageToken !== null) {
-          
-        
-          const tokenTecnico = JSON.parse(storageToken)
-          const tecnico = jwtDecode(tokenTecnico[0])
-          const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`)
+        const storageToken = await AsyncStorage.getItem("user");
 
-          setData(response.data)
+        if (storageToken !== null) {
+          const tokenTecnico = JSON.parse(storageToken);
+          const tecnico = jwtDecode(tokenTecnico[0]);
+          const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`);
+
+          setData(response.data);
         }
-      }
-      catch(e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
     }
-    
-    getToken()
-  }, [])
 
-
-  console.log(data)
+    getToken();
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -48,20 +49,24 @@ function Perfil({ navigation }) {
     return null;
   }
 
-  function goToEditar(){
-    navigation.navigate("Editar Perfil", data)
+  function goToEditar() {
+    navigation.navigate("Editar Perfil", data);
   }
+
   return (
     <View style={{ backgroundColor: "#fff", height: "100%" }}>
-
       {data.length === 0 ? (
         <View style={styles.activityStyle}>
           <ActivityIndicator size="large" color="#23AFFF" />
-        </View>) : (
+        </View>
+      ) : (
         <>
           {data.foto != undefined ? (
             <View style={styles.viewImage}>
-              <Image style={{ width: 100, height: 100, borderRadius: 50, }} source={{ uri: `http://192.168.15.10:4001/${data.foto}`}} />
+              <Image
+                style={{ width: 150, height: 150, borderRadius: 75 }}
+                source={{ uri: `http://192.168.1.191:4001/${data.foto}` }}
+              />
             </View>
           ) : (
             <View style={styles.activityStyle}>
@@ -82,13 +87,15 @@ function Perfil({ navigation }) {
 
             <View style={styles.viewDados2}>
               <Text style={styles.textDados}>Matricula: {data.matricula}</Text>
-              <Text style={styles.textDados}>Especialidade: {data.especialidade}</Text>
+              <Text style={styles.textDados}>
+                Especialidade: {data.especialidade}
+              </Text>
               <Text style={styles.textDados}>CPF: {data.cpf}</Text>
               <Text style={styles.textDados}>Telefone: {data.telefone}</Text>
             </View>
           </View>
-        </>)}
-
+        </>
+      )}
     </View>
   );
 }

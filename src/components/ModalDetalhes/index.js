@@ -17,11 +17,7 @@ import {
 } from "@expo-google-fonts/poppins";
 
 export default function ModalDetalhes({
-  empresa,
   chamado,
-  endereco,
-  dataChamado,
-  horaChamado,
   aceitarChamado,
   toggleModal,
 }) {
@@ -47,23 +43,26 @@ export default function ModalDetalhes({
         <View style={styles.detalhesChamado}>
           <View style={styles.field}>
             <Text style={styles.label}>Empresa:</Text>
-            <Text style={styles.valorField}>{empresa.nome}</Text>
+            <Text style={styles.valorField}>{chamado.empresa.nome}</Text>
           </View>
           <View style={styles.field}>
             <Text style={styles.label}>Endereco:</Text>
             <Text style={styles.valorField}>
-              {endereco.logradouro}, {empresa.numero_endereco},{" "}
-              {endereco.bairro}, {endereco.localidade} - {endereco.uf}
+              {chamado.endereco.logradouro}, {chamado.empresa.numero_endereco},{" "}
+              {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
+              {chamado.endereco.uf}
             </Text>
           </View>
           <View style={styles.field}>
             <Text style={styles.label}>Contato:</Text>
-            <Text style={styles.valorField}>Tel: {empresa.telefone}</Text>
+            <Text style={styles.valorField}>
+              Tel: {chamado.empresa.telefone}
+            </Text>
           </View>
           <View style={styles.field}>
             <Text style={styles.label}>Data do chamado:</Text>
             <Text style={styles.valorField}>
-              {dataChamado} - {horaChamado}
+              {chamado.dataChamado} - {chamado.horaChamado}
             </Text>
           </View>
           <View style={styles.field}>
@@ -108,7 +107,11 @@ export default function ModalDetalhes({
                 >
                   <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
                 </TouchableOpacity>
-                <StatusBar barStyle="default" backgroundColor="#000" animated={true}/>
+                <StatusBar
+                  barStyle="default"
+                  backgroundColor="#000"
+                  animated={true}
+                />
               </Modal>
             </View>
           ) : null}
