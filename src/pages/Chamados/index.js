@@ -16,6 +16,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decodeToken } from "react-jwt";
+import jwtDecode from "jwt-decode";
 
 export default function Chamados() {
   const [chamados, setChamados] = useState(null);
@@ -37,17 +38,20 @@ export default function Chamados() {
     async function getChamadosAndamento() {
       try {
         const tokenLocal = await AsyncStorage.getItem("user");
-        const tokenLocalParse = await JSON.parse(tokenLocal)[0];
 
-        const tokenDecode = decodeToken(tokenLocalParse);
-
-        const response = await api.get(
-          `/chamados?status_chamado=andamento&tecnico_id=${tokenDecode.id_tecnico}`
-        );
-
-        if (response.data.length > 0) {
-          setChamadoAndamento(true);
+        if (tokenLocal !== null) {
+          const tokenLocalParse = await JSON.parse(tokenLocal);
+          const tokenDecode = jwtDecode(tokenLocalParse[0]);
+  
+          const response = await api.get(
+            `/chamados?status_chamado=andamento&tecnico_id=${tokenDecode.id_tecnico}`
+          );
+  
+          if (response.data.length > 0) {
+            setChamadoAndamento(true);
+          }
         }
+
       } catch (error) {
         console.log(error);
       }

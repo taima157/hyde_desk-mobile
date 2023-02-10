@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,9 +9,10 @@ import {
 import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { api } from "../../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isExpired } from "react-jwt";
+import { AuthContext } from "../../context/auth";
 
 export default function Login({ navigation }) {
+  const { login } = useContext(AuthContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
@@ -30,8 +31,6 @@ export default function Login({ navigation }) {
 
       setMensagemErro("");
 
-      console.log(response);
-
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
       navigation.navigate("Logado");
@@ -44,34 +43,6 @@ export default function Login({ navigation }) {
       });
     }
   }
-
-  useEffect(() => {
-    async function isLogado() {
-      try {
-        const user = await AsyncStorage.getItem("user");
-
-        if (user === null) {
-          await AsyncStorage.setItem("user", JSON.stringify({}));
-        } else {
-          const userLocal = JSON.parse(user);
-
-          if (userLocal.length !== 0) {
-            const expired = isExpired(userLocal[0]);
-
-            if (!expired) {
-              navigation.navigate("Logado");
-            } else {
-              await AsyncStorage.setItem("user", JSON.stringify({}));
-            }
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    isLogado();
-  }, []);
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,

@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decodeToken } from "react-jwt";
+import jwtDecode from "jwt-decode";
 import { api } from "../../services/api";
 import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 import Modal from "react-native-modal";
@@ -33,19 +34,23 @@ export default function Home() {
     async function getChamadoAndamento() {
       try {
         const tokenLocal = await AsyncStorage.getItem("user");
-        const tokenLocalParse = await JSON.parse(tokenLocal)[0];
 
-        const tokenDecode = decodeToken(tokenLocalParse);
+        if (tokenLocal !== null) {
+          const tokenLocalParse = JSON.parse(tokenLocal);
+          const tokenDecode = jwtDecode(tokenLocalParse[0]);
 
-        const response = await api.get(
-          `/chamados?status_chamado=andamento&tecnico_id=${tokenDecode.id_tecnico}`
-        );
-
-        if (response.data.length > 0) {
-          let detalhes = await getDetalhesChamados(response.data[0]);
-
-          setChamado(detalhes);
+          const response = await api.get(
+            `/chamados?status_chamado=andamento&tecnico_id=${tokenDecode.id_tecnico}`
+          );
+  
+          if (response.data.length > 0) {
+            let detalhes = await getDetalhesChamados(response.data[0]);
+  
+            setChamado(detalhes);
+          }
         }
+
+
       } catch (error) {
         console.log(error);
       }
@@ -116,7 +121,7 @@ export default function Home() {
                     <Image
                       style={styles.anexo}
                       source={{
-                        uri: `http://192.168.1.191:4001/${chamado.anexo}`,
+                        uri: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
                       }}
                       resizeMode="contain"
                     />
@@ -129,7 +134,7 @@ export default function Home() {
                     <ImageViewer
                       imageUrls={[
                         {
-                          url: `http://192.168.1.191:4001/${chamado.anexo}`,
+                          url: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
                         },
                       ]}
                       saveToLocalByLongPress={false}

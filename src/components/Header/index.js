@@ -30,9 +30,7 @@ function Header({ navigation }) {
 
     if (user !== null) {
       const userParse = JSON.parse(userLocal);
-
-      console.log(userParse)
-
+      
       if (userParse.length !== 0) {
         setUser(userParse);
       } else {

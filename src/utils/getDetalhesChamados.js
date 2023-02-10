@@ -9,18 +9,26 @@ export async function getDetalhesChamados(chamado) {
   const horaChamado = hora.split(".")[0];
   const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
 
-  const funcionario = await api.get(`/funcionarios/${chamado.funcionario_id}`);
+  let empresa = []
+  let endereco = []
 
-  const responseEmpresa = await api.get(
-    `/empresas/${funcionario.data.empresa_id}`
-  );
-
-  const responseEndereco = await axios.get(
-    `https://viacep.com.br/ws/${responseEmpresa.data.cep}/json/`
-  );
-
-  const empresa = await responseEmpresa.data;
-  const endereco = await responseEndereco.data;
+  try {
+    const funcionario = await api.get(`/funcionarios/${chamado.funcionario_id}`);
+  
+    const responseEmpresa = await api.get(
+      `/empresas/${funcionario.data.empresa_id}`
+    );
+    
+    const responseEndereco = await axios.get(
+      `https://viacep.com.br/ws/${responseEmpresa.data.cep}/json/`
+    );
+  
+    empresa = await responseEmpresa.data;
+    endereco = await responseEndereco.data;
+    
+  } catch(error) {
+    console.log(error)
+  }
 
   return { ...chamado, horaChamado, dataChamado, empresa, endereco };
 }
