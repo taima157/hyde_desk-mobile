@@ -23,8 +23,7 @@ export default function EditarPerfil({ route, navigation }) {
     nome: dados.nome,
     email: dados.email,
     especialidade: dados.especialidade,
-    telefone: dados.telefone,
-    foto: dados.foto,
+    telefone: dados.telefone
   });
   const esepecilidade = [
     { key: "1", value: "Hardware" },
@@ -53,7 +52,8 @@ export default function EditarPerfil({ route, navigation }) {
       });
     }
   };
-  console.log(dados);
+
+  console.log(novosDados)
 
   async function enviarDados() {
     const form = new FormData();
@@ -62,7 +62,8 @@ export default function EditarPerfil({ route, navigation }) {
     form.append("email", novosDados.email);
     form.append("telefone", novosDados.telefone);
     form.append("especialidade", novosDados.especialidade);
-    form.append("foto", novosDados.foto);
+    form.append("foto", image);
+  
 
     console.log(image);
     try {
@@ -89,7 +90,7 @@ export default function EditarPerfil({ route, navigation }) {
               image.uri.length != 0
                 ? { uri: image.uri }
                 : {
-                    uri: `https://hydedeskteste.azurewebsites.net/${dados.foto}`,
+                    uri: `http://192.168.15.10:4001/${dados.foto}`,
                   }
             }
           />
