@@ -18,7 +18,7 @@ import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decodeToken } from "react-jwt";
-import { getDetalhesChamados } from "../../middlewares/getDetalhesChamados";
+import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 
 export default function CardChamados({ chamado, setRefreshing }) {
   const [detalhesChamado, setDetalhesChamado] = useState([]);
