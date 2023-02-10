@@ -5,11 +5,11 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
-import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
-import { api } from "../../services/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFonts, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
+import Modal from "react-native-modal";
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
@@ -18,12 +18,12 @@ export default function Login({ navigation }) {
     senha: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [mensagemErro, setMensagemErro] = useState("");
 
   async function handleLogin() {
     try {
-      const response = await api.post("/tecnicos/login", user);
-
       setUser({
         cpf: "",
         senha: "",
@@ -31,12 +31,15 @@ export default function Login({ navigation }) {
 
       setMensagemErro("");
 
-      await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
+      setLoading(true);
 
-      navigation.navigate("Logado");
+      await login(user);
+
+      setLoading(false);
     } catch (error) {
-      setMensagemErro("CPF ou senha inválidos.");
-      console.log(error);
+      setLoading(false);
+      setMensagemErro(error.message);
+
       setUser({
         cpf: "",
         senha: "",
@@ -46,6 +49,7 @@ export default function Login({ navigation }) {
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
+    Poppins_400Regular
   });
 
   if (!fontsLoaded) {
@@ -115,6 +119,12 @@ export default function Login({ navigation }) {
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
         </TouchableOpacity>
       </View>
+      <Modal isVisible={loading} backdropOpacity={0.2} style={styles.modalLoading} >
+        <View style={styles.viewModalLoading}>
+          <ActivityIndicator size="large" color="#23AFFF" />
+          <Text style={styles.textoLoading}>Processando...</Text>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -124,7 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
-    // width: "100%",
   },
 
   container_login: {
@@ -156,7 +165,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 15,
   },
-
   TextoSenha: {
     width: "95%",
     height: 52,
@@ -167,7 +175,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 10,
   },
-
   Botao: {
     backgroundColor: "#000",
     borderRadius: 10,
@@ -203,4 +210,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+  modalLoading: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  viewModalLoading: {
+    backgroundColor: "#FFF",
+    width: "80%",
+    paddingTop: 30,
+    paddingBottom: 20,
+    borderRadius: 10,
+    elevation: 10,
+  },
+  textoLoading: {
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 20,
+    fontFamily: "Poppins_400Regular",
+  }
 });

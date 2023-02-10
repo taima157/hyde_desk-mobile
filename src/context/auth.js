@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isExpired } from "react-jwt";
+import { api } from "../services/api";
 import jwtDecode from "jwt-decode";
 import { useNavigation } from "@react-navigation/native";
 
@@ -10,9 +10,28 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
 
-  async function login() {}
+  async function login(user) {
+    try {
+      const response = await api.post("/tecnicos/login", user);
+      console.log(response);
 
-  async function logout() {}
+      const decodeUser = jwtDecode(response.data.token)
+    
+      setUser(decodeUser)
+      
+      await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
+
+      navigation.navigate("Logado");
+    } catch (error) {
+      throw new Error("CPF ou senha inválidos")
+    }
+  }
+
+  async function logout() {
+    await AsyncStorage.setItem("user", JSON.stringify([]));
+    setUser(null);
+    navigation.navigate("Login");
+  }
 
   async function estaLogado() {
     try {
@@ -31,11 +50,13 @@ export function AuthProvider({ children }) {
           }
 
           if (!expired) {
-            setUser(userDecode)
-            navigation.navigate("Logado")
+            setUser(userDecode);
+            navigation.navigate("Logado");
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));
           }
+        } else {
+          setUser(null);
         }
       }
     } catch (error) {

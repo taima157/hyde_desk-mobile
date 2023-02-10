@@ -35,7 +35,6 @@ function CadastroContato({ navigation, route }) {
   });
 
   function validar(data) {
-    console.log(data);
     navigation.navigate("CadastrarFoto", {
       ...dataCad,
       ...data,
