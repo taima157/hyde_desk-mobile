@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { decodeToken } from "react-jwt";
 import { api } from "../../services/api";
-import { getDetalhesChamados } from "../../middlewares/getDetalhesChamados";
+import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 import Modal from "react-native-modal";
 import ImageViewer from "react-native-image-zoom-viewer";
 
