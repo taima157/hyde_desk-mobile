@@ -28,9 +28,15 @@ function Perfil({ navigation }) {
         if (storageToken !== null) {
           const tokenTecnico = JSON.parse(storageToken);
           const tecnico = jwtDecode(tokenTecnico[0]);
-          const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`);
 
-          setData(response.data);
+          try{
+            const response = await api.get(`/tecnicos/${tecnico.id_tecnico}`);
+            setData(response.data);
+          }
+          catch(error){
+            console.log(error)
+          }
+
         }
       } catch (e) {
         console.log(e);
@@ -65,7 +71,7 @@ function Perfil({ navigation }) {
             <View style={styles.viewImage}>
               <Image
                 style={{ width: 150, height: 150, borderRadius: 75 }}
-                source={{ uri: `http://192.168.1.191:4001/${data.foto}` }}
+                source={{ uri: `https://hydedeskteste.azurewebsites.net/${data.foto}` }}
               />
             </View>
           ) : (
