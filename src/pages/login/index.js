@@ -7,7 +7,11 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
-import { useFonts, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import Modal from "react-native-modal";
 import ModalLoading from "../../components/ModalLoading";
@@ -50,7 +54,7 @@ export default function Login({ navigation }) {
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
-    Poppins_400Regular
+    Poppins_400Regular,
   });
 
   if (!fontsLoaded) {
@@ -114,13 +118,13 @@ export default function Login({ navigation }) {
       </View>
 
       <View style={styles.container_link2}>
-        <Text>Esqueceu a senha? Recuperar senha</Text>
+        <Text>Esqueceu a senha?</Text>
 
         <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
         </TouchableOpacity>
       </View>
-      <ModalLoading isVisible={loading}/>
+      <ModalLoading isVisible={loading} />
     </View>
   );
 }
@@ -208,7 +212,7 @@ const styles = StyleSheet.create({
   },
   modalLoading: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   viewModalLoading: {
     backgroundColor: "#FFF",
@@ -223,5 +227,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontFamily: "Poppins_400Regular",
-  }
+  },
 });

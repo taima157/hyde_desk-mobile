@@ -15,15 +15,15 @@ export function AuthProvider({ children }) {
       const response = await api.post("/tecnicos/login", user);
       console.log(response);
 
-      const decodeUser = jwtDecode(response.data.token)
-    
-      setUser(decodeUser)
-      
+      const decodeUser = jwtDecode(response.data.token);
+
+      setUser(decodeUser);
+
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
       navigation.navigate("Logado");
     } catch (error) {
-      throw new Error("CPF ou senha inválidos")
+      throw new Error("CPF ou senha inválidos");
     }
   }
 

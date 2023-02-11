@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import {
   useFonts,
@@ -19,16 +20,61 @@ import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 import Modal from "react-native-modal";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { AuthContext } from "../../context/auth";
+import ConfirmModal from "../../components/ConfirmModal";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Home({ navigation }) {
   const { user } = useContext(AuthContext);
   const [chamado, setChamado] = useState(null);
   const [cancelar, setCancelar] = useState(false);
+  const [concluirChamado, setConcluirChamado] = useState({
+    descricao: "",
+    anexo: {
+      uri: "",
+      type: "",
+      name: "",
+    },
+  });
+  const [erroDescricao, setErroDescricao] = useState("");
 
   const [modalImage, setModalImage] = useState(false);
+  const [modalCancelar, setModalCancelar] = useState(false);
+  const [modalFinalizar, setModalFinalizar] = useState(false);
 
   function toggleModalImage() {
     setModalImage(!modalImage);
+  }
+
+  function toggleModalCancelar() {
+    setModalCancelar(!modalCancelar);
+  }
+
+  function toggleModalFinalizar() {
+    setModalFinalizar(!modalFinalizar);
+  }
+
+  async function anexarImagem() {
+    let resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!resultado.canceled) {
+      let imageName = resultado.assets[0].uri.split("/");
+      imageName = imageName[imageName.length - 1];
+
+      let tipo = imageName.split(".")[1];
+
+      setConcluirChamado({
+        ...concluirChamado,
+        anexo: {
+          uri: resultado.assets[0].uri,
+          type: `image/${tipo}`,
+          name: imageName,
+        },
+      });
+    }
   }
 
   async function cancelarChamado() {
@@ -37,15 +83,24 @@ export default function Home({ navigation }) {
         status: "pendente",
         tecnico_id: "NULL",
       };
-      const response = api.put(
-        `/chamados/atualizar/${chamado.id_chamado}`,
-        body
-      );
 
-      setChamado(null);
+      await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body);
+
+      setChamado([]);
       setCancelar(!cancelar);
+      toggleModalCancelar();
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async function finalizarChamado() {
+    setErroDescricao("");
+
+    if (concluirChamado.descricao) {
+      console.log("teste 5");
+    } else {
+      setErroDescricao("A descrição é obrigatória!");
     }
   }
 
@@ -65,6 +120,8 @@ export default function Home({ navigation }) {
       console.log(error);
     }
   }
+
+  console.log(concluirChamado)
 
   useEffect(() => {
     getChamadoAndamento();
@@ -86,8 +143,6 @@ export default function Home({ navigation }) {
   if (!fontsLoaded) {
     return null;
   }
-
-  console.log(chamado);
 
   return (
     <View style={styles.container}>
@@ -198,7 +253,7 @@ export default function Home({ navigation }) {
               <View style={styles.botoesChamado}>
                 <TouchableOpacity
                   style={styles.botao}
-                  onPress={cancelarChamado}
+                  onPress={toggleModalCancelar}
                 >
                   <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
                     Cancelar
@@ -206,6 +261,7 @@ export default function Home({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.botao, { backgroundColor: "#23AFFF" }]}
+                  onPress={toggleModalFinalizar}
                 >
                   <Text style={[styles.textoBotao, { color: "#FFF" }]}>
                     Finalizar
@@ -223,6 +279,75 @@ export default function Home({ navigation }) {
           </>
         )}
       </View>
+      <ConfirmModal
+        isVisible={modalCancelar}
+        fecharModal={toggleModalCancelar}
+        confirmarAcao={cancelarChamado}
+        mensagem="Deseja cancelar esse chamado?"
+      />
+      <Modal isVisible={modalFinalizar} backdropOpacity={0.3}>
+        <View style={styles.viewFinalizar}>
+          <Text style={styles.tituloFinalizar}>Finalizar Chamado</Text>
+          <View style={styles.viewDescricao}>
+            <Text style={styles.label}>Descrição:</Text>
+            <TextInput
+              style={styles.inputDescricao}
+              value={concluirChamado.descricao}
+              onChangeText={(e) => setConcluirChamado({...concluirChamado, descricao: e})}
+            />
+            <Text style={styles.erroDescricao}>{erroDescricao}</Text>
+          </View>
+          <View style={styles.viewAnexo}>
+            <View style={styles.inputAnexo}>
+              <Text style={styles.label}>Anexar alguma imagem:</Text>
+              <TouchableOpacity
+                style={styles.botaoAnexo}
+                onPress={anexarImagem}
+              >
+                <Text style={styles.textoBotaoAnexo}>Selecionar</Text>
+              </TouchableOpacity>
+            </View>
+            {concluirChamado.anexo.uri !== "" ? (
+              <Image
+                style={styles.imagemAnexo}
+                source={{
+                  uri: concluirChamado.anexo.uri,
+                }}
+                resizeMode="contain"
+              />
+            ) : null}
+          </View>
+          <View style={styles.botoesFinalizar}>
+            <TouchableOpacity
+              style={styles.botao}
+              onPress={() => {
+                setConcluirChamado({
+                  decricao: "",
+                  anexo: {
+                    uri: "",
+                    type: "",
+                    name: "",
+                  },
+                });
+                setErroDescricao("");
+                toggleModalFinalizar();
+              }}
+            >
+              <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
+                Cancelar
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.botao, { backgroundColor: "#23AFFF" }]}
+              onPress={finalizarChamado}
+            >
+              <Text style={[styles.textoBotao, { color: "#FFF" }]}>
+                Concluir
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -322,5 +447,72 @@ const styles = StyleSheet.create({
   textoBotao: {
     textAlign: "center",
     fontFamily: "Poppins_600SemiBold",
+  },
+  viewFinalizar: {
+    backgroundColor: "#FFF",
+    borderRadius: 20,
+    elevation: 10,
+    alignItems: "center",
+    padding: 15,
+  },
+  tituloFinalizar: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  viewDescricao: {
+    width: "100%",
+  },
+  inputDescricao: {
+    width: "100%",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#23AFFF",
+    height: 40,
+    paddingLeft: 10,
+  },
+  viewAnexo: {
+    width: "100%",
+    display: "flex",
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  inputAnexo: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  botaoAnexo: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: "#23AFFF",
+    borderRadius: 5,
+  },
+  textoBotaoAnexo: {
+    fontFamily: "Poppins_400Regular",
+    color: "#FFF",
+  },
+  imagemAnexo: {
+    width: "70%",
+    height: 130,
+    backgroundColor: "#000",
+    marginTop: 20,
+  },
+  botoesFinalizar: {
+    marginTop: 20,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  erroDescricao: {
+    fontFamily: "Poppins_700Bold",
+    color: "red",
+    textAlign: "center",
+    padding: 10,
   },
 });
