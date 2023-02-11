@@ -45,14 +45,9 @@ export default function CadastrarFoto({ navigation, route }) {
     form.append("confirmsenha", data.senha);
     form.append("foto", image);
 
-    console.log(image);
-
     try {
       const response = await api.post("/tecnicos/cadastro", form);
-
-      //const response = await api.get("tecnicos")
-
-      console.log(response);
+      
     } catch (error) {
       console.log(error);
     }

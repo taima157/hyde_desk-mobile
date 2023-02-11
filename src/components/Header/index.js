@@ -5,45 +5,17 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "react-native-modal";
+import { AuthContext } from "../../context/auth";
 
-function Header({ navigation }) {
-  const [user, setUser] = useState([]);
+function Header() {
+  const { user, logout } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
 
   function toggleModal() {
     setModalVisible(!isModalVisible);
   }
-
-  async function logout() {
-    await AsyncStorage.setItem("user", JSON.stringify([]));
-    await getUser();
-
-    toggleModal()
-    navigation.navigate("Login");
-  }
-
-  async function getUser() {
-    const userLocal = await AsyncStorage.getItem("user");
-
-    if (user !== null) {
-      const userParse = JSON.parse(userLocal);
-
-      console.log(userParse)
-
-      if (userParse.length !== 0) {
-        setUser(userParse);
-      } else {
-        setUser([]);
-      }
-    }
-  }
-
-  useEffect(() => {
-    getUser();
-  }, [navigation]);
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
@@ -60,7 +32,7 @@ function Header({ navigation }) {
         <Text style={styles.help}>Hyde</Text>
         <Text style={styles.desk}>Desk</Text>
       </View>
-      {user.length !== 0 ? (
+      {user !== null ? (
         <View style={styles.viewLogout}>
           <TouchableOpacity onPress={toggleModal}>
             <MaterialCommunityIcons name="logout" size={34} color="black" />
@@ -71,10 +43,16 @@ function Header({ navigation }) {
         <View style={styles.modalLogout}>
           <Text style={styles.textoMensagem}>Deseja mesmo sair?</Text>
           <View style={styles.viewBotoes}>
-            <TouchableOpacity onPress={toggleModal} style={[styles.botao, {borderBottomLeftRadius: 10}]}>
+            <TouchableOpacity
+              onPress={toggleModal}
+              style={[styles.botao, { borderBottomLeftRadius: 10 }]}
+            >
               <Text style={styles.textoBotao}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={logout} style={[styles.botao, {borderBottomRightRadius: 10}]}>
+            <TouchableOpacity
+              onPress={logout}
+              style={[styles.botao, { borderBottomRightRadius: 10 }]}
+            >
               <Text style={styles.textoBotao}>Sair</Text>
             </TouchableOpacity>
           </View>
@@ -118,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     margin: 10,
     borderRadius: 10,
-    elevation: 10
+    elevation: 10,
   },
   textoMensagem: {
     padding: 10,
@@ -126,12 +104,12 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: 20,
     marginBottom: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   viewBotoes: {
     display: "flex",
-    flexDirection:  "row",
-    justifyContent: "space-between"
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   botao: {
     width: "50%",
@@ -146,5 +124,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: 16,
     color: "#23AFFF",
-  }
+  },
 });

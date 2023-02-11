@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,9 +15,12 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { decodeToken } from "react-jwt";
+import jwtDecode from "jwt-decode";
+import { AuthContext } from "../../context/auth";
 
 export default function Chamados() {
+  const { user } = useContext(AuthContext);
+
   const [chamados, setChamados] = useState(null);
   const [chamadosAndamento, setChamadoAndamento] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -36,13 +39,8 @@ export default function Chamados() {
 
     async function getChamadosAndamento() {
       try {
-        const tokenLocal = await AsyncStorage.getItem("user");
-        const tokenLocalParse = await JSON.parse(tokenLocal)[0];
-
-        const tokenDecode = decodeToken(tokenLocalParse);
-
         const response = await api.get(
-          `/chamados?status_chamado=andamento&tecnico_id=${tokenDecode.id_tecnico}`
+          `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
         );
 
         if (response.data.length > 0) {

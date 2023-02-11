@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,11 +16,11 @@ import {
 } from "@expo-google-fonts/poppins";
 import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { decodeToken } from "react-jwt";
 import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
+import { AuthContext } from "../../context/auth";
 
 export default function CardChamados({ chamado, setRefreshing }) {
+  const { user } = useContext(AuthContext);
   const [detalhesChamado, setDetalhesChamado] = useState([]);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -31,14 +31,9 @@ export default function CardChamados({ chamado, setRefreshing }) {
 
   async function aceitarChamado() {
     try {
-      const tokenLocal = await AsyncStorage.getItem("user");
-      const tokenLocalParse = await JSON.parse(tokenLocal)[0];
-
-      const tokenDecode = decodeToken(tokenLocalParse);
-
       const body = {
         status: "andamento",
-        tecnico_id: tokenDecode.id_tecnico,
+        tecnico_id: user.id_tecnico,
       };
 
       const response = await api.put(

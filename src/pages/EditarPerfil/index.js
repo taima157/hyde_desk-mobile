@@ -10,7 +10,12 @@ import {
 import { api } from "../../services/api";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
-
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_600SemiBold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
 export default function EditarPerfil({ route, navigation }) {
   const dados = route.params;
   const [selectedValue, setSelectedValue] = useState("");
@@ -25,7 +30,7 @@ export default function EditarPerfil({ route, navigation }) {
     especialidade: dados.especialidade,
     telefone: dados.telefone
   });
-  const esepecilidade = [
+  const especialidade = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
     { key: "3", value: "Sistema Operacional" },
@@ -62,8 +67,10 @@ export default function EditarPerfil({ route, navigation }) {
     form.append("email", novosDados.email);
     form.append("telefone", novosDados.telefone);
     form.append("especialidade", novosDados.especialidade);
-    form.append("foto", image);
-  
+    if (image.uri != "") {
+      form.append("foto", image);
+    }
+
 
     console.log(image);
     try {
@@ -77,6 +84,20 @@ export default function EditarPerfil({ route, navigation }) {
   function goBack() {
     navigation.navigate("Perfil");
   }
+  function goHome() {
+    navigation.navigate("Home");
+  }
+
+  let [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Poppins_600SemiBold
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={{ backgroundColor: "#fff", height: "100%" }}>
       <View style={styles.viewImage}>
@@ -90,8 +111,8 @@ export default function EditarPerfil({ route, navigation }) {
               image.uri.length != 0
                 ? { uri: image.uri }
                 : {
-                    uri: `http://192.168.15.10:4001/${dados.foto}`,
-                  }
+                  uri: `https://hydedeskteste.azurewebsites.net/${dados.foto}`,
+                }
             }
           />
         </TouchableOpacity>
@@ -99,35 +120,45 @@ export default function EditarPerfil({ route, navigation }) {
       <View style={styles.viewInput}>
         <Text style={styles.editarText}>Editar Perfil</Text>
         <TextInput
-        style={styles.inputs}
+        value={novosDados.nome}
+          style={styles.inputs}
           onChangeText={(e) => setNovosDados({ ...novosDados, nome: e })}
           placeholder={`Nome: ${dados.nome}`}
         ></TextInput>
         <TextInput
-        style={styles.inputs}
+          style={styles.inputs}
+          value={novosDados.email}
           onChangeText={(e) => setNovosDados({ ...novosDados, email: e })}
           placeholder={`Email: ${dados.email}`}
         ></TextInput>
-        <SelectList
-          data={esepecilidade}
-          save="value"
-          setSelected={(e) =>
-            setNovosDados({ ...novosDados, especialidade: e })
-          }
-          placeholder={`Especialidade: ${dados.especialidade}`}
-        ></SelectList>
+
         <TextInput
-        style={styles.inputs}
+          style={styles.inputs}
+          value={novosDados.telefone}
           maxLength={11}
           onChangeText={(e) => setNovosDados({ ...novosDados, telefone: e })}
           keyboardType="numeric"
           placeholder={`Telefone: ${dados.telefone}`}
         ></TextInput>
+        <SelectList
+          data={especialidade}
+          save="value"
+          setSelected={(e) =>
+            setNovosDados({ ...novosDados, especialidade: e })
+          }
+          boxStyles={{ borderWidth: 1, borderColor: "#a8a7a7", height: 50, width: "100%", }}
+          inputStyles={{marginLeft: -10 }}
+          fontFamily='Poppins_400Regular'
+          placeholder={`Especialidade: ${dados.especialidade}`}
+        ></SelectList>
         <View style={styles.viewBotoes}>
           <TouchableOpacity style={styles.botoes} onPress={goBack}>
             <Text style={styles.textColor}>Cancelar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botoes} onPress={enviarDados}>
+          <TouchableOpacity style={styles.botoes} onPress={() => {
+            enviarDados()
+            goHome()
+          }}>
             <Text style={styles.textColor}>Editar</Text>
           </TouchableOpacity>
         </View>
@@ -138,7 +169,9 @@ export default function EditarPerfil({ route, navigation }) {
 
 const styles = StyleSheet.create({
   viewInput: {
-    marginTop: 50,
+    width: "100%",
+    padding: 10,
+    marginTop: 20,
   },
   viewImage: {
     width: "100%",
@@ -166,11 +199,19 @@ const styles = StyleSheet.create({
   },
   textColor: {
     color: "#FFF",
+    fontFamily: "Poppins_700Bold"
   },
   editarText: {
-    marginBottom: 50,
+    marginBottom: 20,
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 22,
   },
-  inputs :{
-    borderBottomColor: ""
+  inputs: {
+    height: 40,
+    borderBottomColor: "#a8a7a7",
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    width: "100%",
+    fontFamily: "Poppins_400Regular"
   }
 });

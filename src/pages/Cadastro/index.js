@@ -46,7 +46,6 @@ function Cadastro({ navigation }) {
   });
 
   function validar(data) {
-    console.log(data);
     navigation.navigate("CadastroContato", data);
   }
 
