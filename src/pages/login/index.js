@@ -1,28 +1,34 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
-import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
-import { api } from "../../services/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isExpired } from "react-jwt";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
+import { AuthContext } from "../../context/auth";
+import Modal from "react-native-modal";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function Login({ navigation }) {
+  const { login } = useContext(AuthContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [mensagemErro, setMensagemErro] = useState("");
 
   async function handleLogin() {
     try {
-      const response = await api.post("/tecnicos/login", user);
-
       setUser({
         cpf: "",
         senha: "",
@@ -30,14 +36,15 @@ export default function Login({ navigation }) {
 
       setMensagemErro("");
 
-      console.log(response);
+      setLoading(true);
 
-      await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
+      await login(user);
 
-      navigation.navigate("Logado");
+      setLoading(false);
     } catch (error) {
-      setMensagemErro("CPF ou senha inválidos.");
-      console.log(error);
+      setLoading(false);
+      setMensagemErro(error.message);
+
       setUser({
         cpf: "",
         senha: "",
@@ -45,36 +52,9 @@ export default function Login({ navigation }) {
     }
   }
 
-  useEffect(() => {
-    async function isLogado() {
-      try {
-        const user = await AsyncStorage.getItem("user");
-
-        if (user === null) {
-          await AsyncStorage.setItem("user", JSON.stringify({}));
-        } else {
-          const userLocal = JSON.parse(user);
-
-          if (userLocal.length !== 0) {
-            const expired = isExpired(userLocal[0]);
-
-            if (!expired) {
-              navigation.navigate("Logado");
-            } else {
-              await AsyncStorage.setItem("user", JSON.stringify({}));
-            }
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    isLogado();
-  }, []);
-
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
+    Poppins_400Regular,
   });
 
   if (!fontsLoaded) {
@@ -138,12 +118,13 @@ export default function Login({ navigation }) {
       </View>
 
       <View style={styles.container_link2}>
-        <Text>Esqueceu a senha? Recuperar senha</Text>
+        <Text>Esqueceu a senha?</Text>
 
         <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
         </TouchableOpacity>
       </View>
+      <ModalLoading isVisible={loading} />
     </View>
   );
 }
@@ -153,7 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
-    // width: "100%",
   },
 
   container_login: {
@@ -185,7 +165,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 15,
   },
-
   TextoSenha: {
     width: "95%",
     height: 52,
@@ -196,7 +175,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 10,
   },
-
   Botao: {
     backgroundColor: "#000",
     borderRadius: 10,
@@ -231,5 +209,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
+  },
+  modalLoading: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  viewModalLoading: {
+    backgroundColor: "#FFF",
+    width: "80%",
+    paddingTop: 30,
+    paddingBottom: 20,
+    borderRadius: 10,
+    elevation: 10,
+  },
+  textoLoading: {
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 20,
+    fontFamily: "Poppins_400Regular",
   },
 });

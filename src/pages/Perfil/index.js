@@ -65,7 +65,7 @@ function Perfil({ navigation }) {
             <View style={styles.viewImage}>
               <Image
                 style={{ width: 150, height: 150, borderRadius: 75 }}
-                source={{ uri: `http://192.168.1.191:4001/${data.foto}` }}
+                source={{ uri: `https://hydedeskteste.azurewebsites.net//${data.foto}` }}
               />
             </View>
           ) : (
