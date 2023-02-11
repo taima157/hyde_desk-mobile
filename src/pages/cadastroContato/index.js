@@ -7,29 +7,43 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import * as yup from 'yup'
-import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
 const schema = yup.object({
   email: yup.string().email("E-mail inválido").required("Digite seu e-mail"),
-  telefone: yup.string().min(11,"Telefone inválido").required("Digite seu telefone"),
-  senha: yup.string().min(6,"A senha deve conter no mínimo 6 dígitos").required("Digite sua senha")
-})
+  telefone: yup
+    .string()
+    .min(11, "Telefone inválido")
+    .required("Digite seu telefone"),
+  senha: yup
+    .string()
+    .min(6, "A senha deve conter no mínimo 6 dígitos")
+    .required("Digite sua senha"),
+});
 
-function CadastroContato({navigation}) {
+function CadastroContato({ navigation, route }) {
+  const dataCad = route.params;
 
-
-  const {control, handleSubmit, formState: { errors }} = useForm({
-    resolver: yupResolver(schema)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
   });
 
   function validar(data) {
     console.log(data);
+    navigation.navigate("CadastrarFoto", {
+      ...dataCad,
+      ...data,
+    });
   }
 
-  function voltar(){
-    navigation.navigate('cadastro');
+  function voltar() {
+    navigation.navigate("Cadastro");
   }
 
   return (
@@ -39,57 +53,66 @@ function CadastroContato({navigation}) {
       </View>
 
       <View style={styles.containerInputs}>
-      <Controller
+        <Controller
           control={control}
           name="email"
           render={({ field: { onChange, value } }) => (
             <TextInput
-            onChangeText={onChange}
-            value={value}
-            keyboardType="email-address"
-            style={styles.inputs}
-            placeholder="E-mail:"
-            placeholderTextColor="#000000"
-          ></TextInput>
+              onChangeText={onChange}
+              value={value}
+              keyboardType="email-address"
+              style={styles.inputs}
+              placeholder="E-mail:"
+              placeholderTextColor="#000000"
+            ></TextInput>
           )}
         />
-{errors.email && <Text style={styles.labelError}>{errors.email?.message}</Text>}
+        {errors.email && (
+          <Text style={styles.labelError}>{errors.email?.message}</Text>
+        )}
         <Controller
           control={control}
           name="telefone"
           render={({ field: { onChange, value } }) => (
             <TextInput
-            onChangeText={onChange}
-            value={value}
-            keyboardType="number-pad"
-            style={styles.inputs}
-            placeholder="Telefone:"
-            placeholderTextColor="#000000"
-            maxLength={11}
-          ></TextInput>
+              onChangeText={onChange}
+              value={value}
+              keyboardType="number-pad"
+              style={styles.inputs}
+              placeholder="Telefone:"
+              placeholderTextColor="#000000"
+              maxLength={11}
+            ></TextInput>
           )}
         />
-{errors.telefone && <Text style={styles.labelError}>{errors.telefone?.message}</Text>}
-         <Controller
+        {errors.telefone && (
+          <Text style={styles.labelError}>{errors.telefone?.message}</Text>
+        )}
+        <Controller
           control={control}
           name="senha"
           render={({ field: { onChange, value } }) => (
             <TextInput
-            onChangeText={onChange}
-            value={value}
-            style={styles.inputs}
-            placeholder="Senha:"
-            placeholderTextColor="#000000"
-            secureTextEntry={true}
-            maxLength={11} 
-          ></TextInput>
+              onChangeText={onChange}
+              value={value}
+              style={styles.inputs}
+              placeholder="Senha:"
+              placeholderTextColor="#000000"
+              secureTextEntry={true}
+              maxLength={11}
+            ></TextInput>
           )}
         />
-{errors.senha && <Text style={styles.labelError}>{errors.senha?.message}</Text>}
+        {errors.senha && (
+          <Text style={styles.labelError}>{errors.senha?.message}</Text>
+        )}
       </View>
 
       <View style={styles.containerButtonNext}>
-        <TouchableOpacity style={styles.buttonNext} onPress={handleSubmit(validar)}>
+        <TouchableOpacity
+          style={styles.buttonNext}
+          onPress={handleSubmit(validar)}
+        >
           <Text style={styles.textNext}>Próximo</Text>
         </TouchableOpacity>
       </View>
@@ -108,6 +131,7 @@ export default CadastroContato;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   textCadastro: {
     fontWeight: "bold",
@@ -174,10 +198,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   labelError: {
-    color: '#ff375b',
+    color: "#ff375b",
     marginTop: 10,
     marginLeft: 20,
     fontSize: 16,
-    alignSelf: 'flex-start',
-  }
+    alignSelf: "flex-start",
+  },
 });

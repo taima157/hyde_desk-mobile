@@ -1,39 +1,34 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import Login from "../pages/Login";
+import Perfil from "../pages/Perfil";
+import Cadastro from "../pages/Cadastro";
+import CadastroContato from "../pages/CadastroContato";
+import Header from "../components/Header";
+import CadastrarFoto from "../pages/CadastrarFoto";
+import TabRoutes from "./tab.routes";
+import EditarPerfil from "../pages/EditarPerfil";
+import ConfirmSenha from "../components/ConfirmSenha";
 
 const { Screen, Navigator } = createNativeStackNavigator();
-
-import Cadastro from "../pages/cadastro";
-import CadastroContato from "../pages/cadastroContato";
-import Header from "../componentes/header";
-
 export function StackRoutes() {
   return (
     <NavigationContainer>
-      <Navigator>
-        <Screen
-          name="cadastro"
-          component={Cadastro}
-          options={{
-            headerTitle: () => <Header />,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: 'rgb(242,242,242)',
-            }
-          }}
-        />
-        <Screen
-          name="cadastroContato"
-          component={CadastroContato}
-          options={{
-            headerTitle: () => <Header />,
-            headerTitleAlign: "center",
-            headerStyle: {
-              backgroundColor: 'rgb(242,242,242)'
-            }
-          }}
-        />
+      <Navigator
+        screenOptions={{
+          header: (props) => <Header {...props} />,
+        }}
+      >
+        <Screen name="ConfirmSenha" component={ConfirmSenha} />
+        <Screen name="Login" component={Login} />
+        <Screen name="Cadastro" component={Cadastro} />
+        <Screen name="CadastroContato" component={CadastroContato} />
+        <Screen name="CadastrarFoto" component={CadastrarFoto} />
+        <Screen name="Logado" component={TabRoutes} />
+        <Screen name="Editar Perfil" component={EditarPerfil} />
       </Navigator>
     </NavigationContainer>
   );
 }
+
+export default StackRoutes;
