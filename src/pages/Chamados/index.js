@@ -14,46 +14,52 @@ import {
   Poppins_600SemiBold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import jwtDecode from "jwt-decode";
 import { AuthContext } from "../../context/auth";
 
-export default function Chamados() {
+export default function Chamados({ navigation }) {
   const { user } = useContext(AuthContext);
 
-  const [chamados, setChamados] = useState(null);
-  const [chamadosAndamento, setChamadoAndamento] = useState(false);
+  const [chamados, setChamados] = useState([]);
+  const [chamadosAndamento, setChamadoAndamento] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
+  async function getChamados() {
+    try {
+      const response = await api.get("/chamados?status_chamado=pendente");
+
+      setChamados(response.data);
+      setRefreshing(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getChamadosAndamento() {
+    try {
+      const response = await api.get(
+        `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
+      );
+
+      setChamadoAndamento(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    async function getChamados() {
-      try {
-        const response = await api.get("/chamados?status_chamado=pendente");
-
-        setChamados(response.data);
-        setRefreshing(false);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    async function getChamadosAndamento() {
-      try {
-        const response = await api.get(
-          `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
-        );
-
-        if (response.data.length > 0) {
-          setChamadoAndamento(true);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     getChamados();
     getChamadosAndamento();
-  }, [refreshing]);
+
+    navigation.addListener("focus", () => {
+      getChamados();
+      getChamadosAndamento();
+    });
+
+    navigation.addListener("blur", () => {
+      setChamados([]);
+      setChamadoAndamento(null);
+    });
+  }, [refreshing, navigation]);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -70,16 +76,7 @@ export default function Chamados() {
         <Text style={styles.titulo}>Chamados</Text>
       </View>
       <View style={styles.viewChamados}>
-        {chamadosAndamento ? (
-          <View>
-            <Text style={styles.textoChamadoAndamento}>
-              Você já possui um chamado em andamento.
-            </Text>
-            <Text style={styles.textoChamadoAndamento}>
-              Vá até a Home para mais detalhes.
-            </Text>
-          </View>
-        ) : chamados === null ? (
+        {chamadosAndamento === null ? (
           <View
             style={{
               justifyContent: "center",
@@ -87,6 +84,15 @@ export default function Chamados() {
             }}
           >
             <ActivityIndicator size="large" color="#23AFFF" />
+          </View>
+        ) : chamadosAndamento.length !== 0 ? (
+          <View>
+            <Text style={styles.textoChamadoAndamento}>
+              Você já possui um chamado em andamento.
+            </Text>
+            <Text style={styles.textoChamadoAndamento}>
+              Vá até a Home para mais detalhes.
+            </Text>
           </View>
         ) : (
           <View style={styles.viewFlatList}>
@@ -103,7 +109,7 @@ export default function Chamados() {
               refreshing={refreshing}
               onRefresh={() => {
                 setRefreshing(true);
-                setChamados(null);
+                setChamados([]);
               }}
             />
             {chamados.length === 0 ? (

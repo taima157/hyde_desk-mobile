@@ -20,9 +20,10 @@ import Modal from "react-native-modal";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { AuthContext } from "../../context/auth";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const { user } = useContext(AuthContext);
   const [chamado, setChamado] = useState(null);
+  const [cancelar, setCancelar] = useState(false);
 
   const [modalImage, setModalImage] = useState(false);
 
@@ -30,23 +31,52 @@ export default function Home() {
     setModalImage(!modalImage);
   }
 
-  useEffect(() => {
-    async function getChamadoAndamento() {
-      try {
-        const response = await api.get(
-          `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
-        );
+  async function cancelarChamado() {
+    try {
+      const body = {
+        status: "pendente",
+        tecnico_id: "NULL",
+      };
+      const response = api.put(
+        `/chamados/atualizar/${chamado.id_chamado}`,
+        body
+      );
 
-        let detalhes = await getDetalhesChamados(response.data[0]);
-
-        setChamado(detalhes);
-      } catch (error) {
-        console.log(error);
-      }
+      setChamado(null);
+      setCancelar(!cancelar);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
+  async function getChamadoAndamento() {
+    try {
+      const response = await api.get(
+        `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
+      );
+
+      if (response.data.length !== 0) {
+        let detalhes = await getDetalhesChamados(response.data[0]);
+        setChamado(detalhes);
+      } else {
+        setChamado([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
     getChamadoAndamento();
-  }, []);
+
+    navigation.addListener("focus", () => {
+      getChamadoAndamento();
+    });
+
+    navigation.addListener("blur", () => {
+      setChamado(null);
+    });
+  }, [navigation, cancelar]);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -56,6 +86,8 @@ export default function Home() {
   if (!fontsLoaded) {
     return null;
   }
+
+  console.log(chamado);
 
   return (
     <View style={styles.container}>
@@ -164,7 +196,10 @@ export default function Home() {
                 </View>
               </ScrollView>
               <View style={styles.botoesChamado}>
-                <TouchableOpacity style={styles.botao}>
+                <TouchableOpacity
+                  style={styles.botao}
+                  onPress={cancelarChamado}
+                >
                   <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
                     Cancelar
                   </Text>

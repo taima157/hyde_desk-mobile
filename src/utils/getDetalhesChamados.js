@@ -28,7 +28,7 @@ export async function getDetalhesChamados(chamado) {
 
   try {
     const responseEndereco = await axios.get(
-      `https://viacep.com.br/ws/${responseEmpresa.data.cep}/json/`
+      `https://viacep.com.br/ws/${empresa.cep}/json/`
     );
 
     endereco = await responseEndereco.data;

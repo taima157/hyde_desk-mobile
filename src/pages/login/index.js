@@ -10,6 +10,7 @@ import {
 import { useFonts, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import Modal from "react-native-modal";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
@@ -119,12 +120,7 @@ export default function Login({ navigation }) {
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
         </TouchableOpacity>
       </View>
-      <Modal isVisible={loading} backdropOpacity={0.2} style={styles.modalLoading} >
-        <View style={styles.viewModalLoading}>
-          <ActivityIndicator size="large" color="#23AFFF" />
-          <Text style={styles.textoLoading}>Processando...</Text>
-        </View>
-      </Modal>
+      <ModalLoading isVisible={loading}/>
     </View>
   );
 }
