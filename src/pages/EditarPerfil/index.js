@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Button
 } from "react-native";
-import { api } from "../../services/api";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
 import {
@@ -16,9 +16,15 @@ import {
   Poppins_600SemiBold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
+
+import ConfirmarSenha from "../../components/ConfirmarSenha";
+
 export default function EditarPerfil({ route, navigation }) {
+
+  const [modal, setModal] = useState(false)
   const dados = route.params;
-  const [selectedValue, setSelectedValue] = useState("");
+
+  
   const [image, setImage] = useState({
     uri: "",
     type: "",
@@ -58,36 +64,11 @@ export default function EditarPerfil({ route, navigation }) {
     }
   };
 
-  console.log(novosDados)
-
-  async function enviarDados() {
-    const form = new FormData();
-
-    form.append("nome", novosDados.nome);
-    form.append("email", novosDados.email);
-    form.append("telefone", novosDados.telefone);
-    form.append("especialidade", novosDados.especialidade);
-    if (image.uri != "") {
-      form.append("foto", image);
-    }
-
-
-    console.log(image);
-    try {
-      const response = await api.put(`/tecnicos/editar/${dados.id_tecnico}`, form);
-      console.log(response)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
+  
+ 
   function goBack() {
     navigation.navigate("Perfil");
   }
-  function goHome() {
-    navigation.navigate("Home");
-  }
-
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
@@ -111,7 +92,7 @@ export default function EditarPerfil({ route, navigation }) {
               image.uri.length != 0
                 ? { uri: image.uri }
                 : {
-                  uri: `https://hydedeskteste.azurewebsites.net/${dados.foto}`,
+                  uri: `http://192.168.15.10:4001/${dados.foto}`,
                 }
             }
           />
@@ -120,7 +101,7 @@ export default function EditarPerfil({ route, navigation }) {
       <View style={styles.viewInput}>
         <Text style={styles.editarText}>Editar Perfil</Text>
         <TextInput
-        value={novosDados.nome}
+          value={novosDados.nome}
           style={styles.inputs}
           onChangeText={(e) => setNovosDados({ ...novosDados, nome: e })}
           placeholder={`Nome: ${dados.nome}`}
@@ -147,7 +128,7 @@ export default function EditarPerfil({ route, navigation }) {
             setNovosDados({ ...novosDados, especialidade: e })
           }
           boxStyles={{ borderWidth: 1, borderColor: "#a8a7a7", height: 50, width: "100%", }}
-          inputStyles={{marginLeft: -10 }}
+          inputStyles={{ marginLeft: -10 }}
           fontFamily='Poppins_400Regular'
           placeholder={`Especialidade: ${dados.especialidade}`}
         ></SelectList>
@@ -156,12 +137,14 @@ export default function EditarPerfil({ route, navigation }) {
             <Text style={styles.textColor}>Cancelar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.botoes} onPress={() => {
-            enviarDados()
-            goHome()
+           setModal(!modal)
+           console.log(modal)
           }}>
             <Text style={styles.textColor}>Editar</Text>
           </TouchableOpacity>
+       
         </View>
+          {modal != false ? <ConfirmarSenha navigation={navigation} id_tecnico={dados.id_tecnico} image={image} dados={novosDados} senha={dados.senha}/> : null}
       </View>
     </View>
   );

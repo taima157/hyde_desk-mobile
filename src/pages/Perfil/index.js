@@ -66,15 +66,15 @@ function Perfil({ navigation }) {
         </View>
       ) : (
         <>
-          {data.foto != undefined ? (
+          {data.foto ? (
             <View style={styles.viewImage}>
               <Image
                 style={{ width: 150, height: 150, borderRadius: 75 }}
-                source={{ uri: `https://hydedeskteste.azurewebsites.net/${data.foto}` }}
+                source={{ uri: `http://192.168.15.10:4001/${data.foto}` }}
               />
             </View>
           ) : (
-            <View style={styles.activityStyle}>
+            <View style={styles.activityStyle2}>
               <ActivityIndicator size="large" color="#23AFFF" />
             </View>
           )}
@@ -154,6 +154,11 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  activityStyle2: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 50,
   },
   textBold : {
     fontFamily: "Poppins_600SemiBold",
