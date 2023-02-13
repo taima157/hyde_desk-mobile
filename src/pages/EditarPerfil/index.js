@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Button
+  ScrollView,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
@@ -20,16 +20,13 @@ import {
 import ConfirmarSenha from "../../components/ConfirmarSenha";
 
 export default function EditarPerfil({ route, navigation }) {
+  const [modal, setModal] = useState(false);
 
-  const [modal, setModal] = useState(false)
-  
-  
-  function toggleModal(){
-    setModal(!modal)
+  function toggleModal() {
+    setModal(!modal);
   }
   const dados = route.params;
 
-  
   const [image, setImage] = useState({
     uri: "",
     type: "",
@@ -39,7 +36,7 @@ export default function EditarPerfil({ route, navigation }) {
     nome: dados.nome,
     email: dados.email,
     especialidade: dados.especialidade,
-    telefone: dados.telefone
+    telefone: dados.telefone,
   });
   const especialidade = [
     { key: "1", value: "Hardware" },
@@ -69,15 +66,13 @@ export default function EditarPerfil({ route, navigation }) {
     }
   };
 
-  
- 
   function goBack() {
     navigation.navigate("Perfil");
   }
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
-    Poppins_600SemiBold
+    Poppins_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -85,85 +80,101 @@ export default function EditarPerfil({ route, navigation }) {
   }
 
   return (
-    <View style={{ backgroundColor: "#fff", height: "100%" }}>
-      <View style={styles.viewImage}>
-        <TouchableOpacity
-          style={styles.imageOpacity}
-          onPress={() => ObterImage()}
-        >
-          <Image
-            style={styles.ImgCamera}
-            source={
-              image.uri.length != 0
-                ? { uri: image.uri }
-                : {
-                  uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
-                }
-            }
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.viewInput}>
-        <Text style={styles.editarText}>Editar Perfil</Text>
-        <TextInput
-          value={novosDados.nome}
-          style={styles.inputs}
-          onChangeText={(e) => setNovosDados({ ...novosDados, nome: e })}
-          placeholder={`Nome: ${dados.nome}`}
-        ></TextInput>
-        <TextInput
-          style={styles.inputs}
-          value={novosDados.email}
-          onChangeText={(e) => setNovosDados({ ...novosDados, email: e })}
-          placeholder={`Email: ${dados.email}`}
-        ></TextInput>
-
-        <TextInput
-          style={styles.inputs}
-          value={novosDados.telefone}
-          maxLength={11}
-          onChangeText={(e) => setNovosDados({ ...novosDados, telefone: e })}
-          keyboardType="numeric"
-          placeholder={`Telefone: ${dados.telefone}`}
-        ></TextInput>
-        <SelectList
-          data={especialidade}
-          save="value"
-          setSelected={(e) =>
-            setNovosDados({ ...novosDados, especialidade: e })
-          }
-          boxStyles={{ borderWidth: 1, borderColor: "#a8a7a7", height: 50, width: "100%", }}
-          inputStyles={{ marginLeft: -10 }}
-          fontFamily='Poppins_400Regular'
-          placeholder={`Especialidade: ${dados.especialidade}`}
-        ></SelectList>
-        <View style={styles.viewBotoes}>
-          <TouchableOpacity style={styles.botoes} onPress={goBack}>
-            <Text style={styles.textColor}>Cancelar</Text>
+    <ScrollView style={{ backgroundColor: "#fff", flex: 1 }}>
+      <View style={{ backgroundColor: "#fff", flex: 1, padding: 20 }}>
+        <View style={styles.viewImage}>
+          <TouchableOpacity
+            style={styles.imageOpacity}
+            onPress={() => ObterImage()}
+          >
+            <Image
+              style={styles.ImgCamera}
+              source={
+                image.uri.length != 0
+                  ? { uri: image.uri }
+                  : {
+                      uri: `http://192.168.1.191:4001/${dados.foto}`,
+                    }
+              }
+            />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botoes} onPress={() => {
-           setModal(!modal)
-          }}>
-            <Text style={styles.textColor}>Editar</Text>
-          </TouchableOpacity>
-       
         </View>
-          <ConfirmarSenha mudarVisibilidade={toggleModal} visibilidade={modal} navigation={navigation} id_tecnico={dados.id_tecnico} image={image} dados={novosDados} senha={dados.senha}/>
+        <View style={styles.viewInput}>
+          <Text style={styles.editarText}>Editar Perfil</Text>
+          <TextInput
+            value={novosDados.nome}
+            style={styles.inputs}
+            onChangeText={(e) => setNovosDados({ ...novosDados, nome: e })}
+            placeholder={`Nome: ${dados.nome}`}
+          ></TextInput>
+          <TextInput
+            style={styles.inputs}
+            value={novosDados.email}
+            onChangeText={(e) => setNovosDados({ ...novosDados, email: e })}
+            placeholder={`Email: ${dados.email}`}
+          ></TextInput>
+
+          <TextInput
+            style={styles.inputs}
+            value={novosDados.telefone}
+            maxLength={11}
+            onChangeText={(e) => setNovosDados({ ...novosDados, telefone: e })}
+            keyboardType="numeric"
+            placeholder={`Telefone: ${dados.telefone}`}
+          ></TextInput>
+          <SelectList
+            data={especialidade}
+            save="value"
+            setSelected={(e) =>
+              setNovosDados({ ...novosDados, especialidade: e })
+            }
+            boxStyles={{
+              borderWidth: 1,
+              borderColor: "#a8a7a7",
+              height: 50,
+              width: "100%",
+            }}
+            inputStyles={{ marginLeft: -10 }}
+            fontFamily="Poppins_400Regular"
+            placeholder={`Especialidade: ${dados.especialidade}`}
+          ></SelectList>
+          <View style={styles.viewBotoes}>
+            <TouchableOpacity style={styles.botoes} onPress={goBack}>
+              <Text style={styles.textColor}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botoes}
+              onPress={() => {
+                setModal(!modal);
+              }}
+            >
+              <Text style={styles.textColor}>Editar</Text>
+            </TouchableOpacity>
+          </View>
+          <ConfirmarSenha
+            mudarVisibilidade={toggleModal}
+            visibilidade={modal}
+            navigation={navigation}
+            id_tecnico={dados.id_tecnico}
+            image={image}
+            dados={novosDados}
+            senha={dados.senha}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   viewInput: {
     width: "100%",
-    padding: 10,
-    marginTop: 20,
+    marginTop: 60,
   },
   viewImage: {
     width: "100%",
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 20,
   },
   ImgCamera: {
     width: 150,
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
   botoes: {
     backgroundColor: "#23AFFF",
@@ -182,11 +193,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 30,
-    marginTop: 20,
+    marginTop: 30,
   },
   textColor: {
     color: "#FFF",
-    fontFamily: "Poppins_700Bold"
+    fontFamily: "Poppins_700Bold",
   },
   editarText: {
     marginBottom: 20,
@@ -197,8 +208,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomColor: "#a8a7a7",
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     width: "100%",
-    fontFamily: "Poppins_400Regular"
-  }
+    fontFamily: "Poppins_400Regular",
+  },
 });

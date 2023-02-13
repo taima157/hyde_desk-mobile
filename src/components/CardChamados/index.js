@@ -77,7 +77,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
         ) : (
           <>
             <Text style={styles.nomeEmpresa}>
-              {detalhesChamado.empresa.nome}
+              {detalhesChamado.empresa.nome_empresa}
             </Text>
             <View style={styles.enderecoData}>
               <View style={styles.endereco}>
