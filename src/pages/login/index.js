@@ -64,6 +64,10 @@ export default function Login({ navigation }) {
   function goToCadastrar() {
     navigation.navigate("Cadastro");
   }
+  
+  function goToRecuperarSenha() {
+    navigation.navigate("Recuperar Senha");
+  }
 
   return (
     <View style={styles.container}>
@@ -120,7 +124,7 @@ export default function Login({ navigation }) {
       <View style={styles.container_link2}>
         <Text>Esqueceu a senha?</Text>
 
-        <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
+        <TouchableOpacity style={styles.LinkCadastro} onPress={() => goToRecuperarSenha()}>
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
         </TouchableOpacity>
       </View>
