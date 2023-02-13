@@ -22,6 +22,11 @@ import ConfirmarSenha from "../../components/ConfirmarSenha";
 export default function EditarPerfil({ route, navigation }) {
 
   const [modal, setModal] = useState(false)
+  
+  
+  function toggleModal(){
+    setModal(!modal)
+  }
   const dados = route.params;
 
   
@@ -92,7 +97,7 @@ export default function EditarPerfil({ route, navigation }) {
               image.uri.length != 0
                 ? { uri: image.uri }
                 : {
-                  uri: `http://192.168.15.10:4001/${dados.foto}`,
+                  uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
                 }
             }
           />
@@ -138,13 +143,12 @@ export default function EditarPerfil({ route, navigation }) {
           </TouchableOpacity>
           <TouchableOpacity style={styles.botoes} onPress={() => {
            setModal(!modal)
-           console.log(modal)
           }}>
             <Text style={styles.textColor}>Editar</Text>
           </TouchableOpacity>
        
         </View>
-          {modal != false ? <ConfirmarSenha navigation={navigation} id_tecnico={dados.id_tecnico} image={image} dados={novosDados} senha={dados.senha}/> : null}
+          <ConfirmarSenha mudarVisibilidade={toggleModal} visibilidade={modal} navigation={navigation} id_tecnico={dados.id_tecnico} image={image} dados={novosDados} senha={dados.senha}/>
       </View>
     </View>
   );

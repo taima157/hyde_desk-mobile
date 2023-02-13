@@ -11,13 +11,11 @@ import { useState } from "react";
 var bcrypt = require('bcryptjs');
 import { api } from "../../services/api";
 
-export default function ConfirmarSenha({navigation, senha, dados, image, id_tecnico }) {
+export default function ConfirmarSenha({navigation, senha, dados, image, id_tecnico, visibilidade, mudarVisibilidade }) {
     const [comparar, setComparar] = useState()
-    const [visivel, setVisivel] = useState(true)
     const [text, setText] = useState(false)
-    function toggleVisivel() {
-        setVisivel(!visivel);
-    }
+
+
     function compararSenhas(){
      
         if(bcrypt.compareSync(comparar, senha) == true) {
@@ -62,10 +60,10 @@ export default function ConfirmarSenha({navigation, senha, dados, image, id_tecn
 
     return (
         <View style={styles.containerModal}>
-            <Modal isVisible={visivel} backdropOpacity={0.1}>
+            <Modal isVisible={visibilidade} backdropOpacity={0.1}>
                 <View style={styles.modalView}>
                     <View styles={styles.viewFechar}>
-                        <TouchableOpacity onPress={toggleVisivel} style={styles.nada}>
+                        <TouchableOpacity onPress={mudarVisibilidade} style={styles.nada}>
                             <Text style={styles.textFechar}>X</Text>
                         </TouchableOpacity>
                     </View>

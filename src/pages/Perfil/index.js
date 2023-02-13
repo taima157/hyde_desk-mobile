@@ -70,7 +70,7 @@ function Perfil({ navigation }) {
             <View style={styles.viewImage}>
               <Image
                 style={{ width: 150, height: 150, borderRadius: 75 }}
-                source={{ uri: `http://192.168.15.10:4001/${data.foto}` }}
+                source={{ uri: `https://hdteste.azurewebsites.net/${data.foto}` }}
               />
             </View>
           ) : (
