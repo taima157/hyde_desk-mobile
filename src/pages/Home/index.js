@@ -22,6 +22,7 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import { AuthContext } from "../../context/auth";
 import ConfirmModal from "../../components/ConfirmModal";
 import * as ImagePicker from "expo-image-picker";
+import CardChamadoConcluido from "../../components/CardChamadoConcluido";
 
 export default function Home({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -122,30 +123,24 @@ export default function Home({ navigation }) {
     }
   }
 
+  console.log(chamadosConcluido);
+
   async function getChamadosConcluidos() {
     try {
+      console.log(user.id_tecnico);
       const response = await api.get(
         `/chamados?status_chamado=concluido&tecnico_id=${user.id_tecnico}`
       );
 
-      let chamadosConcluidosDetalhe = [];
-
       if (response.data.length !== 0) {
-        chamadosConcluidosDetalhe = response.data.map(
-          async (chamadoConcluido) => {
-            return await getDetalhesChamados(chamadoConcluido);
-          }
-        );
+        setChamadosConcluido(response.data);
+      } else {
+        setChamadosConcluido([]);
       }
-
-      console.log(chamadosConcluidosDetalhe);
     } catch (error) {
       console.log(error);
     }
   }
-
-  console.log(concluirChamado);
-  console.log(chamado);
 
   useEffect(() => {
     getChamadoAndamento();
@@ -153,10 +148,12 @@ export default function Home({ navigation }) {
 
     navigation.addListener("focus", () => {
       getChamadoAndamento();
+      getChamadosConcluidos();
     });
 
     navigation.addListener("blur", () => {
       setChamado(null);
+      setChamadosConcluido([]);
     });
   }, [navigation, cancelar]);
 
@@ -186,7 +183,9 @@ export default function Home({ navigation }) {
             <Text style={styles.tituloChamado}>Chamado em andamento</Text>
             <View style={styles.containerChamado}>
               <ScrollView>
-                <Text style={styles.nomeEmpresa}>{chamado.empresa.nome}</Text>
+                <Text style={styles.nomeEmpresa}>
+                  {chamado.empresa.nome_empresa}
+                </Text>
                 <View style={styles.field}>
                   <Text style={styles.label}>Endereco:</Text>
                   <Text style={styles.valorField}>
@@ -252,11 +251,7 @@ export default function Home({ navigation }) {
                       >
                         <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
                       </TouchableOpacity>
-                      <StatusBar
-                        barStyle="default"
-                        backgroundColor="#000"
-                        animated={true}
-                      />
+                      <StatusBar backgroundColor="#000" />
                     </Modal>
                   </View>
                 ) : null}
@@ -301,22 +296,23 @@ export default function Home({ navigation }) {
               Últimos chamados concluídos
             </Text>
             {chamadosConcluido.length !== 0 ? (
-              <View style={styles.containerChamado}></View>
+              <ScrollView>
+                <View style={styles.containerChamadosConcluidos}>
+                  {chamadosConcluido.map((chamado, index) => {
+                    if (index < 5) {
+                      return (
+                        <CardChamadoConcluido
+                          key={chamado.id_chamado}
+                          chamado={chamado}
+                        />
+                      );
+                    }
+                  })}
+                </View>
+              </ScrollView>
             ) : (
-              <View
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  alignItem: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontFamily: "Poppins_400Regular",
-                  }}
-                >
+              <View style={styles.viewSemConcluidos}>
+                <Text style={styles.textSemConcluidos}>
                   Você não há chamados concluidos.
                 </Text>
               </View>
@@ -442,6 +438,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: "#23AFFF",
   },
+  containerChamadosConcluidos: {
+    width: "100%",
+    height: "87%",
+    padding: 2
+  },
   nomeEmpresa: {
     fontSize: 18,
     fontFamily: "Poppins_600SemiBold",
@@ -561,5 +562,15 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     padding: 10,
+  },
+  viewSemConcluidos: {
+    flex: 1,
+    width: "100%",
+    alignItem: "center",
+    justifyContent: "center",
+  },
+  textSemConcluidos: {
+    textAlign: "center",
+    fontFamily: "Poppins_400Regular",
   },
 });
