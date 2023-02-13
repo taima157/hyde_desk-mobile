@@ -26,6 +26,7 @@ import * as ImagePicker from "expo-image-picker";
 export default function Home({ navigation }) {
   const { user } = useContext(AuthContext);
   const [chamado, setChamado] = useState(null);
+  const [chamadosConcluido, setChamadosConcluido] = useState([]);
   const [cancelar, setCancelar] = useState(false);
   const [concluirChamado, setConcluirChamado] = useState({
     descricao: "",
@@ -121,10 +122,34 @@ export default function Home({ navigation }) {
     }
   }
 
-  console.log(concluirChamado)
+  async function getChamadosConcluidos() {
+    try {
+      const response = await api.get(
+        `/chamados?status_chamado=concluido&tecnico_id=${user.id_tecnico}`
+      );
+
+      let chamadosConcluidosDetalhe = [];
+
+      if (response.data.length !== 0) {
+        chamadosConcluidosDetalhe = response.data.map(
+          async (chamadoConcluido) => {
+            return await getDetalhesChamados(chamadoConcluido);
+          }
+        );
+      }
+
+      console.log(chamadosConcluidosDetalhe);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log(concluirChamado);
+  console.log(chamado);
 
   useEffect(() => {
     getChamadoAndamento();
+    getChamadosConcluidos();
 
     navigation.addListener("focus", () => {
       getChamadoAndamento();
@@ -275,7 +300,27 @@ export default function Home({ navigation }) {
             <Text style={styles.tituloChamado}>
               Últimos chamados concluídos
             </Text>
-            <View style={styles.containerChamado}></View>
+            {chamadosConcluido.length !== 0 ? (
+              <View style={styles.containerChamado}></View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  width: "100%",
+                  alignItem: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontFamily: "Poppins_400Regular",
+                  }}
+                >
+                  Você não há chamados concluidos.
+                </Text>
+              </View>
+            )}
           </>
         )}
       </View>
@@ -293,7 +338,9 @@ export default function Home({ navigation }) {
             <TextInput
               style={styles.inputDescricao}
               value={concluirChamado.descricao}
-              onChangeText={(e) => setConcluirChamado({...concluirChamado, descricao: e})}
+              onChangeText={(e) =>
+                setConcluirChamado({ ...concluirChamado, descricao: e })
+              }
             />
             <Text style={styles.erroDescricao}>{erroDescricao}</Text>
           </View>
