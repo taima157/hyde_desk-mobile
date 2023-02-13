@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://hydedeskteste.azurewebsites.net/"
+  baseURL: "https://hdteste.azurewebsites.net/"
 });

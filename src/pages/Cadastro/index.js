@@ -34,6 +34,7 @@ function Cadastro({ navigation }) {
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
     { key: "3", value: "Sistema Operacional" },
+    { key: "4", value: "Software" },
   ];
 
   const {
