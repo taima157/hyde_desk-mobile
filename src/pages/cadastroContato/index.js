@@ -76,7 +76,7 @@ function CadastroContato({ navigation, route }) {
               keyboardType="email-address"
               style={styles.inputs}
               placeholder="E-mail:"
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
             ></TextInput>
           )}
         />
@@ -93,7 +93,7 @@ function CadastroContato({ navigation, route }) {
               keyboardType="number-pad"
               style={styles.inputs}
               placeholder="Telefone:"
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
               maxLength={11}
             ></TextInput>
           )}
@@ -110,7 +110,7 @@ function CadastroContato({ navigation, route }) {
               value={value}
               style={styles.inputs}
               placeholder="Senha:"
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
               secureTextEntry={true}
               maxLength={11}
             ></TextInput>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   textCadastro: {
     fontSize: 36,
-    fontFamily: 'Poppins_700Bold'
+    fontFamily: "Poppins_700Bold",
   },
   containerTextCadastro: {
     marginTop: "30%",
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     width: "95%",
     color: "#000",
     fontSize: 15,
-    fontFamily: 'Poppins_400Regular'
+    fontFamily: "Poppins_400Regular",
   },
   containerInputs: {
     flexDirection: "column",
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     textTransform: "uppercase",
-    fontFamily: 'Poppins_700Bold',
+    fontFamily: "Poppins_700Bold",
   },
   buttonBack: {
     backgroundColor: "#000000",
@@ -213,9 +213,10 @@ const styles = StyleSheet.create({
   },
   labelError: {
     color: "#ff375b",
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 20,
-    fontSize: 16,
+    fontSize: 14,
     alignSelf: "flex-start",
+    fontFamily: "Poppins_400Regular",
   },
 });

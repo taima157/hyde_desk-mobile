@@ -100,7 +100,6 @@ export default function Home({ navigation }) {
     setErroDescricao("");
 
     if (concluirChamado.descricao) {
-      console.log("teste 5");
     } else {
       setErroDescricao("A descrição é obrigatória!");
     }
@@ -123,11 +122,8 @@ export default function Home({ navigation }) {
     }
   }
 
-  console.log(chamadosConcluido);
-
   async function getChamadosConcluidos() {
     try {
-      console.log(user.id_tecnico);
       const response = await api.get(
         `/chamados?status_chamado=concluido&tecnico_id=${user.id_tecnico}`
       );
@@ -226,7 +222,7 @@ export default function Home({ navigation }) {
                       <Image
                         style={styles.anexo}
                         source={{
-                          uri: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
+                          uri: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
                         }}
                         resizeMode="contain"
                       />
@@ -239,7 +235,7 @@ export default function Home({ navigation }) {
                       <ImageViewer
                         imageUrls={[
                           {
-                            url: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
+                            url: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
                           },
                         ]}
                         saveToLocalByLongPress={false}
@@ -441,7 +437,7 @@ const styles = StyleSheet.create({
   containerChamadosConcluidos: {
     width: "100%",
     height: "87%",
-    padding: 2
+    padding: 2,
   },
   nomeEmpresa: {
     fontSize: 18,

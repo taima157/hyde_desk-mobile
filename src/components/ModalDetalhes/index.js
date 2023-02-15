@@ -82,7 +82,7 @@ export default function ModalDetalhes({
                 <Image
                   style={styles.anexo}
                   source={{
-                    uri: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
+                    uri: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
                   }}
                   resizeMode="contain"
                 />
@@ -95,7 +95,7 @@ export default function ModalDetalhes({
                 <ImageViewer
                   imageUrls={[
                     {
-                      url: `https://hydedeskteste.azurewebsites.net/${chamado.anexo}`,
+                      url: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
                     },
                   ]}
                   saveToLocalByLongPress={false}

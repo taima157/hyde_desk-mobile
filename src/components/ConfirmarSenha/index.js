@@ -41,13 +41,11 @@ export default function ConfirmarSenha({
           form.append("foto", image);
         }
 
-        // console.log(image);
         try {
           const response = await api.put(
             `/tecnicos/editar/${id_tecnico}`,
             form
           );
-          console.log(response);
         } catch (error) {
           console.log(error);
         }
