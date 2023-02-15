@@ -13,8 +13,8 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
-import Modal from "react-native-modal";
 import ModalLoading from "../../components/ModalLoading";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export default function Login({ navigation }) {
   const { login } = useContext(AuthContext);
@@ -35,15 +35,28 @@ export default function Login({ navigation }) {
       });
 
       setMensagemErro("");
-
       setLoading(true);
+      const response = await login(user);
 
-      await login(user);
+      Toast.show({
+        type: "success",
+        text1: "Login",
+        text2: response.data.message,
+        topOffset: 0,
+      });
 
-      setLoading(false);
+      setInterval(() => {
+        setLoading(false);
+        navigation.navigate("Logado");
+      }, 2000);
     } catch (error) {
       setLoading(false);
-      setMensagemErro(error.message);
+      Toast.show({
+        type: "error",
+        text1: "Login",
+        text2: error.message,
+        topOffset: 0,
+      });
 
       setUser({
         cpf: "",
@@ -67,6 +80,7 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Toast />
       <View style={styles.container_login}>
         <Text style={styles.login}>Login</Text>
       </View>

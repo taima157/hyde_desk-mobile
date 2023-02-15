@@ -93,7 +93,7 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                      uri: `http://192.168.1.191:4001/${dados.foto}`,
+                      uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
                     }
               }
             />
