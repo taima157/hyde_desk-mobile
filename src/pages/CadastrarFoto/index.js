@@ -1,25 +1,17 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  // Keyboard,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { api } from "../../services/api";
-import axios from "axios";
+import ModalLoading from "../../components/ModalLoading";
+import { AuthContext } from "../../context/auth";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+
 export default function CadastrarFoto({ navigation, route }) {
+  const { errorToast } = useContext(AuthContext);
   const data = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
 
-  function goToEditar() {
-    navigation.navigate("Editar");
-  }
-
-  const [nome, setNome] = useState("");
   const [image, setImage] = useState({
     uri: "",
     type: "",
@@ -46,9 +38,32 @@ export default function CadastrarFoto({ navigation, route }) {
     form.append("foto", image);
 
     try {
+      setModalVisible(true);
+
       const response = await api.post("/tecnicos/cadastro", form);
-      
+
+      Toast.show({
+        type: "success",
+        text1: "Cadastro",
+        text2: response.data.message,
+        topOffset: 0,
+      })
+
+      setInterval(() => {
+        setModalVisible(false);
+
+        navigation.navigate("Logado")
+      }, 3000)
+
     } catch (error) {
+      setModalVisible(false);
+      Toast.show({
+        type: "error",
+        text1: "Cadastro",
+        text2: error.response.data.message,
+        topOffset: 0,
+      });
+
       console.log(error);
     }
   }
@@ -85,6 +100,7 @@ export default function CadastrarFoto({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      <Toast />
       <View style={styles.container_CadastrarFoto}>
         <Text style={styles.CadastrarFoto}>Cadastro</Text>
       </View>
@@ -120,6 +136,7 @@ export default function CadastrarFoto({ navigation, route }) {
           <Image source={require("../../../assets/arrow.png")} />
         </TouchableOpacity>
       </View>
+      <ModalLoading isVisible={modalVisible} />
     </View>
   );
 }

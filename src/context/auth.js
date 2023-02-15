@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
 
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
-      navigation.navigate("Logado");
+      return response;
     } catch (error) {
       throw new Error("CPF ou senha inválidos");
     }
