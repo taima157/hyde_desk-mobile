@@ -7,6 +7,11 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
 import { SelectList } from "react-native-dropdown-select-list";
 // import Header from "../../componentes/header";
 import * as yup from "yup";
@@ -22,7 +27,10 @@ const schema = yup.object({
     .required("Informe seu CPF"),
 });
 
+
+
 function Cadastro({ navigation }) {
+
   // const [username, setUsername] = useState('')
   // const [cpf, setCpf] = useState('')
   const [selectedValue, setSelectedValue] = useState("");
@@ -30,6 +38,9 @@ function Cadastro({ navigation }) {
   // function goBack() {
   //   navigation.navigate("Login")
   // }
+
+
+
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
@@ -51,6 +62,15 @@ function Cadastro({ navigation }) {
 
   function voltar() {
     navigation.navigate("Login");
+  }
+
+  let [fontsLoaded] = useFonts({
+    Poppins_700Bold,
+    Poppins_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
@@ -135,8 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   textCadastro: {
-    fontWeight: "bold",
     fontSize: 36,
+    fontFamily: 'Poppins_700Bold',
   },
   containerTextCadastro: {
     marginTop: "30%",
@@ -152,6 +172,7 @@ const styles = StyleSheet.create({
     width: "95%",
     color: "#000",
     fontSize: 15,
+    fontFamily: 'Poppins_400Regular'
   },
   containerInputs: {
     flexDirection: "column",
@@ -178,7 +199,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     textTransform: "uppercase",
-    fontWeight: "bold",
+    fontFamily: 'Poppins_700Bold'
   },
   buttonBack: {
     backgroundColor: "#000000",

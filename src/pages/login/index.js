@@ -132,7 +132,7 @@ export default function Login({ navigation }) {
       </View>
 
       <View style={styles.container_link2}>
-        <Text>Esqueceu a senha?</Text>
+        <Text style={styles.textRecuperar}>Esqueceu a senha?</Text>
 
         <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
           <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     borderWidth: 2,
     padding: 15,
+    fontFamily: 'Poppins_400Regular',
   },
   TextoSenha: {
     width: "95%",
@@ -188,6 +189,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 15,
     marginTop: 10,
+    fontFamily: 'Poppins_400Regular',
   },
   Botao: {
     backgroundColor: "#000",
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
 
   TextoBotao: {
     color: "#fff",
+    fontFamily: 'Poppins_700Bold'
   },
 
   container_link: {
@@ -215,6 +218,7 @@ const styles = StyleSheet.create({
   TextoLinkCadastro: {
     paddingLeft: 5,
     color: "#23AFFF",
+    fontFamily: 'Poppins_400Regular',
   },
 
   container_link2: {
@@ -242,4 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: "Poppins_400Regular",
   },
+  textRecuperar: {
+    fontFamily: 'Poppins_400Regular',
+  }
 });
