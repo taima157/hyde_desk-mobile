@@ -122,8 +122,6 @@ export default function Home({ navigation }) {
     }
   }
 
-  console.log(chamadosConcluido);
-
   async function getChamadosConcluidos() {
     try {
       const response = await api.get(
@@ -439,7 +437,7 @@ const styles = StyleSheet.create({
   containerChamadosConcluidos: {
     width: "100%",
     height: "87%",
-    padding: 2
+    padding: 2,
   },
   nomeEmpresa: {
     fontSize: 18,

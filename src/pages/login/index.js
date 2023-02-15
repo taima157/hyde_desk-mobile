@@ -36,14 +36,14 @@ export default function Login({ navigation }) {
       setMensagemErro("");
       setLoading(true);
       await login(user);
-
+      setLoading(false);
     } catch (error) {
       setLoading(false);
 
       if (error.message) {
-        errorToast("Login", error.message)
+        errorToast("Login", error.message);
       } else {
-        errorToast("Login", "Erro na autenticação")
+        errorToast("Login", "Erro na autenticação");
       }
 
       setUser({
@@ -75,7 +75,7 @@ export default function Login({ navigation }) {
         <View style={styles.container_TextoInput}>
           <TextInput
             style={styles.TextoInput}
-            placeholder="CPF"
+            placeholder="CPF:"
             placeholderTextColor="#909090"
             value={user.cpf}
             onChangeText={(e) => setUser({ ...user, cpf: e })}
@@ -84,7 +84,7 @@ export default function Login({ navigation }) {
           />
           <TextInput
             style={styles.TextoSenha}
-            placeholder="Senha"
+            placeholder="Senha:"
             secureTextEntry={true}
             placeholderTextColor="#909090"
             value={user.senha}
@@ -107,7 +107,9 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container_link}>
-          <Text style={{fontFamily: "Poppins_400Regular"}}>Ainda não é um técnico?</Text>
+          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+            Ainda não é um técnico?
+          </Text>
           <TouchableOpacity
             style={styles.LinkCadastro}
             onPress={() => goToCadastrar()}
@@ -116,7 +118,9 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container_link2}>
-          <Text style={{fontFamily: "Poppins_400Regular"}}>Esqueceu a senha?</Text>
+          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+            Esqueceu a senha?
+          </Text>
           <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
             <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
           </TouchableOpacity>
@@ -156,12 +160,12 @@ const styles = StyleSheet.create({
 
   TextoInput: {
     width: "95%",
-    height: 52,
+    height: 50,
     backgroundColor: "#fff",
     borderRadius: 10,
     borderBottomColor: "#000",
     borderWidth: 2,
-    paddingLeft: 15,
+    padding: 10,
     fontFamily: "Poppins_400Regular",
   },
   TextoSenha: {
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginTop: 10,
     fontFamily: "Poppins_400Regular",
-    paddingLeft: 15
+    padding: 10,
   },
   Botao: {
     backgroundColor: "#000",
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
   TextoLinkCadastro: {
     paddingLeft: 5,
     color: "#23AFFF",
-    fontFamily: "Poppins_400Regular"
+    fontFamily: "Poppins_400Regular",
   },
 
   container_link2: {
@@ -228,6 +232,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     marginTop: 20,
+    fontFamily: "Poppins_400Regular",
+  },
+  textRecuperar: {
     fontFamily: "Poppins_400Regular",
   },
 });

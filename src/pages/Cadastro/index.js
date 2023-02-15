@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,8 +6,12 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
 import { SelectList } from "react-native-dropdown-select-list";
-// import Header from "../../componentes/header";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
@@ -20,11 +23,10 @@ const schema = yup.object({
     .min(11, "CPF inválido")
     .max(11, "CPF inválido")
     .required("Informe seu CPF"),
+  especialidade: yup.string().required("Selecione uma especialidade"),
 });
 
 function Cadastro({ navigation }) {
-  const [selectedValue, setSelectedValue] = useState("");
-
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
@@ -41,14 +43,23 @@ function Cadastro({ navigation }) {
   });
 
   function validar(dados) {
-    navigation.navigate("CadastroContato", {
-      ...dados,
-      especialidade: data[Number(selectedValue)].value,
-    });
+    if (dados.especialidade.length < 2) {
+      dados.especialidade = data[Number(dados.especialidade)].value;
+    }
+    navigation.navigate("CadastroContato", dados);
   }
 
   function voltar() {
     navigation.navigate("Login");
+  }
+
+  let [fontsLoaded] = useFonts({
+    Poppins_700Bold,
+    Poppins_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
@@ -67,7 +78,7 @@ function Cadastro({ navigation }) {
               placeholder="Nome:"
               onChangeText={onChange}
               value={value}
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
             ></TextInput>
           )}
         />
@@ -85,7 +96,7 @@ function Cadastro({ navigation }) {
               placeholder="CPF:"
               onChangeText={onChange}
               value={value}
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
               maxLength={11}
             ></TextInput>
           )}
@@ -95,15 +106,37 @@ function Cadastro({ navigation }) {
         )}
 
         <View style={styles.containerSelectList}>
-          <SelectList
-            data={data}
-            value={selectedValue}
-            setSelected={setSelectedValue}
-            placeholder="Selecione sua especialidade"
-            boxStyles={{ borderWidth: 2, borderColor: "black", height: 50 }}
-            inputStyles={{ color: "black", fontSize: 15, marginLeft: -10 }}
+          <Controller
+            control={control}
+            name="especialidade"
+            render={({ field: { onChange, value } }) => {
+              return (
+                <SelectList
+                  data={data}
+                  value={value}
+                  setSelected={onChange}
+                  search={false}
+                  placeholder="Selecione sua especialidade"
+                  placeholderTextColor="#909090"
+                  boxStyles={{
+                    borderWidth: 2,
+                    borderColor: "black",
+                    height: 50,
+                  }}
+                  fontFamily="Poppins_400Regular"
+                  inputStyles={{
+                    color: value === undefined ? "#909090" : "#000",
+                    fontSize: 15,
+                    marginLeft: -10,
+                  }}
+                />
+              );
+            }}
           />
         </View>
+        {errors.especialidade && (
+          <Text style={styles.labelError}>{errors.especialidade?.message}</Text>
+        )}
       </View>
 
       <View style={styles.containerButtonNext}>
@@ -132,8 +165,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   textCadastro: {
-    fontWeight: "bold",
     fontSize: 36,
+    fontFamily: "Poppins_700Bold",
   },
   containerTextCadastro: {
     marginTop: "30%",
@@ -149,6 +182,7 @@ const styles = StyleSheet.create({
     width: "95%",
     color: "#000",
     fontSize: 15,
+    fontFamily: "Poppins_400Regular",
   },
   containerInputs: {
     flexDirection: "column",
@@ -175,7 +209,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     textTransform: "uppercase",
-    fontWeight: "bold",
+    fontFamily: "Poppins_700Bold",
   },
   buttonBack: {
     backgroundColor: "#000000",
@@ -197,9 +231,10 @@ const styles = StyleSheet.create({
   },
   labelError: {
     color: "#ff375b",
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 20,
-    fontSize: 16,
+    fontSize: 14,
     alignSelf: "flex-start",
+    fontFamily: "Poppins_400Regular",
   },
 });

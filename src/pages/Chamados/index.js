@@ -51,12 +51,12 @@ export default function Chamados({ navigation }) {
     getChamadosAndamento();
 
     navigation.addListener("focus", () => {
-      getChamados()   
+      getChamados();
       getChamadosAndamento();
     });
 
     navigation.addListener("blur", () => {
-      setChamados([])    
+      setChamados([]);
       setChamadoAndamento(null);
     });
   }, [refreshing, navigation]);
