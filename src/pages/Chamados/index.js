@@ -53,10 +53,12 @@ export default function Chamados({ navigation }) {
     console.log("teste")
 
     navigation.addListener("focus", () => {
+      getChamados()   
       getChamadosAndamento();
     });
 
     navigation.addListener("blur", () => {
+      setChamados([])    
       setChamadoAndamento(null);
     });
   }, [refreshing, navigation]);

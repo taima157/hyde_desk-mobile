@@ -32,7 +32,7 @@ export default function CadastrarFoto({ navigation, route }) {
     form.append("cpf", data.cpf);
     form.append("email", data.email);
     form.append("telefone", data.telefone);
-    form.append("especialidade", "Software");
+    form.append("especialidade", data.especialidade);
     form.append("senha", data.senha);
     form.append("confirmsenha", data.senha);
     form.append("foto", image);
@@ -75,6 +75,8 @@ export default function CadastrarFoto({ navigation, route }) {
       aspect: [4, 3],
       quality: 1,
     });
+
+    console.log(result)
 
     if (!result.canceled) {
       let imageName = result.assets[0].uri.split("/");

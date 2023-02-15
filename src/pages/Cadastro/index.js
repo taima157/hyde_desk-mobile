@@ -23,13 +23,8 @@ const schema = yup.object({
 });
 
 function Cadastro({ navigation }) {
-  // const [username, setUsername] = useState('')
-  // const [cpf, setCpf] = useState('')
   const [selectedValue, setSelectedValue] = useState("");
 
-  // function goBack() {
-  //   navigation.navigate("Login")
-  // }
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
@@ -55,7 +50,6 @@ function Cadastro({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <Header /> */}
       <View style={styles.containerTextCadastro}>
         <Text style={styles.textCadastro}>Cadastro</Text>
       </View>
