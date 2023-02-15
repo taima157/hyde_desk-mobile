@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 var bcrypt = require("bcryptjs");
 import { api } from "../../services/api";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 export default function ConfirmarSenha({
   navigation,
@@ -25,10 +26,13 @@ export default function ConfirmarSenha({
   visibilidade,
   mudarVisibilidade,
 }) {
-  const [comparar, setComparar] = useState();
+  const [comparar, setComparar] = useState("");
   const [text, setText] = useState(false);
+  const [textVazio, setTextVazio] = useState(false);
+
 
   function compararSenhas() {
+    if(comparar.length > 0){
     if (bcrypt.compareSync(comparar, senha) == true) {
       async function enviarDados() {
         const form = new FormData();
@@ -57,9 +61,14 @@ export default function ConfirmarSenha({
       navigation.navigate("Home");
     } else {
       setText(true);
+      setTextVazio(false);
     }
+  }else{
+    setText(false);
+    setTextVazio(true);
   }
 
+}
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -88,8 +97,11 @@ export default function ConfirmarSenha({
               placeholderTextColor="#000000"
               secureTextEntry={true}
             ></TextInput>
-            {text == true ? (
+            {text ? (
               <Text style={styles.textSenha}>Senha incorreta</Text>
+            ) : null}
+            {textVazio ? (
+              <Text style={styles.textSenha}>Digite aluma senha</Text>
             ) : null}
             <TouchableOpacity
               onPress={compararSenhas}
