@@ -40,8 +40,11 @@ function Cadastro({ navigation }) {
     resolver: yupResolver(schema),
   });
 
-  function validar(data) {
-    navigation.navigate("CadastroContato", data);
+  function validar(dados) {
+    navigation.navigate("CadastroContato", {
+      ...dados,
+      especialidade: data[Number(selectedValue)].value,
+    });
   }
 
   function voltar() {

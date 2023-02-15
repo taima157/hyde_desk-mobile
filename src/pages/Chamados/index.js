@@ -50,8 +50,6 @@ export default function Chamados({ navigation }) {
     getChamados();
     getChamadosAndamento();
 
-    console.log("teste")
-
     navigation.addListener("focus", () => {
       getChamados()   
       getChamadosAndamento();
@@ -112,6 +110,7 @@ export default function Chamados({ navigation }) {
               onRefresh={() => {
                 setRefreshing(true);
                 setChamados([]);
+                setChamadoAndamento(null);
               }}
             />
             {chamados.length === 0 ? (

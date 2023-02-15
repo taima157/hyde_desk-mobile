@@ -14,10 +14,9 @@ import {
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import ModalLoading from "../../components/ModalLoading";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export default function Login({ navigation }) {
-  const { login } = useContext(AuthContext);
+  const { login, errorToast } = useContext(AuthContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
@@ -36,16 +35,16 @@ export default function Login({ navigation }) {
 
       setMensagemErro("");
       setLoading(true);
-      const response = await login(user);
+      await login(user);
 
     } catch (error) {
       setLoading(false);
-      Toast.show({
-        type: "error",
-        text1: "Login",
-        text2: error.message,
-        topOffset: 0,
-      });
+
+      if (error.message) {
+        errorToast("Login", error.message)
+      } else {
+        errorToast("Login", "Erro na autenticação")
+      }
 
       setUser({
         cpf: "",
@@ -69,7 +68,6 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Toast />
       <View>
         <View style={styles.container_login}>
           <Text style={styles.login}>Login</Text>

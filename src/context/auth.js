@@ -12,6 +12,26 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
 
+  function errorToast(text1, text2) {
+    Toast.show({
+      type: "error",
+      text1: text1,
+      text2: text2,
+      topOffset: 50,
+      visibilityTime: 2000,
+    });
+  }
+
+  function successToast(text1, text2) {
+    Toast.show({
+      type: "success",
+      text1: text1,
+      text2: text2,
+      topOffset: 50,
+      visibilityTime: 2000,
+    });
+  }
+
   async function login(user) {
     try {
       const response = await api.post("/tecnicos/login", user);
@@ -22,13 +42,7 @@ export function AuthProvider({ children }) {
 
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
-      Toast.show({
-        type: "success",
-        text1: "Login",
-        text2: response.data.message,
-        topOffset: 0,
-        duration: 10000,
-      });
+      successToast("Login", response.data.message);
 
       navigation.navigate("Logado");
     } catch (error) {
@@ -78,11 +92,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, estaLogado }}>
-      <View style={{ flex: 1 }}>
-        <Toast />
-        {children}
-      </View>
+    <AuthContext.Provider
+      value={{ user, login, logout, estaLogado, successToast, errorToast }}
+    >
+      {children}
+      <Toast />
     </AuthContext.Provider>
   );
 }

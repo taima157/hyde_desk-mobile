@@ -100,7 +100,6 @@ export default function Home({ navigation }) {
     setErroDescricao("");
 
     if (concluirChamado.descricao) {
-      console.log("teste 5");
     } else {
       setErroDescricao("A descrição é obrigatória!");
     }
@@ -127,7 +126,6 @@ export default function Home({ navigation }) {
 
   async function getChamadosConcluidos() {
     try {
-      console.log(user.id_tecnico);
       const response = await api.get(
         `/chamados?status_chamado=concluido&tecnico_id=${user.id_tecnico}`
       );
