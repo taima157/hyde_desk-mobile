@@ -16,6 +16,7 @@ import {
   Poppins_600SemiBold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 import ConfirmarSenha from "../../components/ConfirmarSenha";
 
@@ -87,14 +88,15 @@ export default function EditarPerfil({ route, navigation }) {
             style={styles.imageOpacity}
             onPress={() => ObterImage()}
           >
+            <MaterialCommunityIcons style={styles.caneta} name="pencil-outline" size={32} color="#23AFFF" />
             <Image
               style={styles.ImgCamera}
               source={
                 image.uri.length != 0
-                  ? { uri: image.uri }
-                  : {
-                      uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
-                    }
+                ? { uri: image.uri }
+                : {
+                  uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
+                }
               }
             />
           </TouchableOpacity>
@@ -151,7 +153,8 @@ export default function EditarPerfil({ route, navigation }) {
               <Text style={styles.textColor}>Editar</Text>
             </TouchableOpacity>
           </View>
-          <ConfirmarSenha
+
+          {modal ? <ConfirmarSenha
             mudarVisibilidade={toggleModal}
             visibilidade={modal}
             navigation={navigation}
@@ -159,7 +162,8 @@ export default function EditarPerfil({ route, navigation }) {
             image={image}
             dados={novosDados}
             senha={dados.senha}
-          />
+          /> : null}
+          
         </View>
       </View>
     </ScrollView>
@@ -175,6 +179,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginTop: 20,
+
   },
   ImgCamera: {
     width: 150,
@@ -212,4 +217,13 @@ const styles = StyleSheet.create({
     width: "100%",
     fontFamily: "Poppins_400Regular",
   },
+  caneta : {
+    position: "absolute",
+    marginLeft: "35%",
+
+    zIndex: 10,
+  },
+  imageOpacity: {
+
+  }
 });
