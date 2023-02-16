@@ -13,18 +13,8 @@ import {
 } from "@expo-google-fonts/poppins";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
-
-const schema = yup.object({
-  nome: yup.string().required("Digite seu nome"),
-  cpf: yup
-    .string()
-    .min(11, "CPF inválido")
-    .max(11, "CPF inválido")
-    .required("Informe seu CPF"),
-  especialidade: yup.string().required("Selecione uma especialidade"),
-});
+import { Formik } from "formik";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Cadastro({ navigation }) {
   const data = [
@@ -34,19 +24,27 @@ function Cadastro({ navigation }) {
     { key: "4", value: "Software" },
   ];
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
+  const yupSchema = yup.object({
+    nome: yup.string().required("Digite seu nome"),
+    cpf: yup
+      .string()
+      .min(11, "CPF inválido")
+      .max(11, "CPF inválido")
+      .required("Informe seu CPF"),
+    especialidade: yup.string().required("Selecione uma especialidade"),
   });
 
-  function validar(dados) {
-    if (dados.especialidade.length < 2) {
-      dados.especialidade = data[Number(dados.especialidade)].value;
+  async function handleSubmit(values) {
+    if (values.especialidade.length < 2) {
+      values.especialidade = data[Number(values.especialidade)].value
     }
-    navigation.navigate("CadastroContato", dados);
+
+    await AsyncStorage.setItem(
+      "cadastro",
+      JSON.stringify(values)
+    );
+
+    navigation.navigate("CadastroContato");
   }
 
   function voltar() {
@@ -68,53 +66,49 @@ function Cadastro({ navigation }) {
         <Text style={styles.textCadastro}>Cadastro</Text>
       </View>
 
-      <View style={styles.containerInputs}>
-        <Controller
-          control={control}
-          name="nome"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              style={styles.inputs}
-              placeholder="Nome:"
-              onChangeText={onChange}
-              value={value}
-              placeholderTextColor="#909090"
-            ></TextInput>
-          )}
-        />
-        {errors.nome && (
-          <Text style={styles.labelError}>{errors.nome?.message}</Text>
-        )}
+      <Formik
+        validationSchema={yupSchema}
+        initialValues={{
+          nome: "",
+          cpf: "",
+          especialidade: "",
+        }}
+        onSubmit={(values) => handleSubmit(values)}
+      >
+        {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+          <>
+            <View style={styles.containerInputs}>
+              <TextInput
+                style={styles.inputs}
+                placeholder="Nome:"
+                onChangeText={handleChange("nome")}
+                value={values.nome}
+                placeholderTextColor="#909090"
+              />
 
-        <Controller
-          control={control}
-          name="cpf"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              keyboardType="numeric"
-              style={styles.inputs}
-              placeholder="CPF:"
-              onChangeText={onChange}
-              value={value}
-              placeholderTextColor="#909090"
-              maxLength={11}
-            ></TextInput>
-          )}
-        />
-        {errors.cpf && (
-          <Text style={styles.labelError}>{errors.cpf?.message}</Text>
-        )}
+              {errors.nome && submitCount ? (
+                <Text style={styles.labelError}>{errors.nome}</Text>
+              ) : null}
 
-        <View style={styles.containerSelectList}>
-          <Controller
-            control={control}
-            name="especialidade"
-            render={({ field: { onChange, value } }) => {
-              return (
+              <TextInput
+                keyboardType="numeric"
+                style={styles.inputs}
+                placeholder="CPF:"
+                onChangeText={handleChange("cpf")}
+                value={values.cpf}
+                placeholderTextColor="#909090"
+                maxLength={11}
+              />
+
+              {errors.cpf && submitCount ? (
+                <Text style={styles.labelError}>{errors.cpf}</Text>
+              ) : null}
+
+              <View style={styles.containerSelectList}>
                 <SelectList
                   data={data}
-                  value={value}
-                  setSelected={onChange}
+                  value={values.especialidade}
+                  setSelected={handleChange("especialidade")}
                   search={false}
                   placeholder="Selecione sua especialidade"
                   placeholderTextColor="#909090"
@@ -125,28 +119,28 @@ function Cadastro({ navigation }) {
                   }}
                   fontFamily="Poppins_400Regular"
                   inputStyles={{
-                    color: value === undefined ? "#909090" : "#000",
+                    color: values.especialidade === "" ? "#909090" : "#000",
                     fontSize: 15,
                     marginLeft: -10,
                   }}
                 />
-              );
-            }}
-          />
-        </View>
-        {errors.especialidade && (
-          <Text style={styles.labelError}>{errors.especialidade?.message}</Text>
-        )}
-      </View>
+              </View>
+              {errors.especialidade && submitCount ? (
+                <Text style={styles.labelError}>{errors.especialidade}</Text>
+              ) : null}
+            </View>
 
-      <View style={styles.containerButtonNext}>
-        <TouchableOpacity
-          style={styles.buttonNext}
-          onPress={handleSubmit(validar)}
-        >
-          <Text style={styles.textNext}>Próximo</Text>
-        </TouchableOpacity>
-      </View>
+            <View style={styles.containerButtonNext}>
+              <TouchableOpacity
+                style={styles.buttonNext}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.textNext}>Próximo</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </Formik>
 
       <View style={styles.containerButtonBack}>
         <TouchableOpacity style={styles.buttonBack} onPress={voltar}>

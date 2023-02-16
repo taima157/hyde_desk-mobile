@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import ModalLoading from "../../components/ModalLoading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const { login, errorToast } = useContext(AuthContext);
@@ -53,6 +54,17 @@ export default function Login({ navigation }) {
     }
   }
 
+  function goToCadastrar() {
+    navigation.navigate("Cadastro");
+  }
+
+  useEffect(() => {
+    navigation.addListener("focus", async () => {
+      await AsyncStorage.setItem("cadastro", JSON.stringify({}))
+    })
+
+  }, [navigation])
+
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -60,10 +72,6 @@ export default function Login({ navigation }) {
 
   if (!fontsLoaded) {
     return null;
-  }
-
-  function goToCadastrar() {
-    navigation.navigate("Cadastro");
   }
 
   return (
@@ -192,6 +200,8 @@ const styles = StyleSheet.create({
 
   TextoBotao: {
     color: "#fff",
+    fontSize: 16,
+    textTransform: "uppercase",
     fontFamily: "Poppins_700Bold",
   },
 

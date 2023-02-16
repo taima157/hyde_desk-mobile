@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -13,38 +13,32 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
+import { Formik } from "formik";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const schema = yup.object({
-  email: yup.string().email("E-mail inválido").required("Digite seu e-mail"),
-  telefone: yup
-    .string()
-    .min(11, "Telefone inválido")
-    .required("Digite seu telefone"),
-  senha: yup
-    .string()
-    .min(6, "A senha deve conter no mínimo 6 dígitos")
-    .required("Digite sua senha"),
-});
+function CadastroContato({ navigation }) {
+  async function handleSubmit(values) {
+    const cadastroLocal = await AsyncStorage.getItem("cadastro");
+    const cadastroParse = JSON.parse(cadastroLocal);
 
-function CadastroContato({ navigation, route }) {
-  const dataCad = route.params;
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  function validar(data) {
-    navigation.navigate("CadastrarFoto", {
-      ...dataCad,
-      ...data,
-    });
+    await AsyncStorage.setItem(
+      "cadastro",
+      JSON.stringify({ ...cadastroParse, ...values })
+    );
+    navigation.navigate("CadastrarFoto");
   }
+
+  const yupSchema = yup.object({
+    email: yup.string().email("E-mail inválido").required("Digite seu e-mail"),
+    telefone: yup
+      .string()
+      .min(11, "Telefone inválido")
+      .required("Digite seu telefone"),
+    senha: yup
+      .string()
+      .min(6, "A senha deve conter no mínimo 6 dígitos")
+      .required("Digite sua senha"),
+  });
 
   function voltar() {
     navigation.navigate("Cadastro");
@@ -65,70 +59,70 @@ function CadastroContato({ navigation, route }) {
         <Text style={styles.textCadastro}>Cadastro</Text>
       </View>
 
-      <View style={styles.containerInputs}>
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              onChangeText={onChange}
-              value={value}
-              keyboardType="email-address"
-              style={styles.inputs}
-              placeholder="E-mail:"
-              placeholderTextColor="#909090"
-            ></TextInput>
-          )}
-        />
-        {errors.email && (
-          <Text style={styles.labelError}>{errors.email?.message}</Text>
-        )}
-        <Controller
-          control={control}
-          name="telefone"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              onChangeText={onChange}
-              value={value}
-              keyboardType="number-pad"
-              style={styles.inputs}
-              placeholder="Telefone:"
-              placeholderTextColor="#909090"
-              maxLength={11}
-            ></TextInput>
-          )}
-        />
-        {errors.telefone && (
-          <Text style={styles.labelError}>{errors.telefone?.message}</Text>
-        )}
-        <Controller
-          control={control}
-          name="senha"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              onChangeText={onChange}
-              value={value}
-              style={styles.inputs}
-              placeholder="Senha:"
-              placeholderTextColor="#909090"
-              secureTextEntry={true}
-              maxLength={11}
-            ></TextInput>
-          )}
-        />
-        {errors.senha && (
-          <Text style={styles.labelError}>{errors.senha?.message}</Text>
-        )}
-      </View>
+      <Formik
+        validationSchema={yupSchema}
+        initialValues={{
+          email: "",
+          telefone: "",
+          senha: "",
+        }}
+        onSubmit={(values) => handleSubmit(values)}
+      >
+        {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+          <>
+            <View style={styles.containerInputs}>
+              <TextInput
+                onChangeText={handleChange("email")}
+                value={values.email}
+                keyboardType="email-address"
+                style={styles.inputs}
+                placeholder="E-mail:"
+                placeholderTextColor="#909090"
+              />
+              {errors.email && submitCount ? (
+                <Text style={styles.labelError}>{errors.email}</Text>
+              ) : null}
 
-      <View style={styles.containerButtonNext}>
-        <TouchableOpacity
-          style={styles.buttonNext}
-          onPress={handleSubmit(validar)}
-        >
-          <Text style={styles.textNext}>Próximo</Text>
-        </TouchableOpacity>
-      </View>
+              <TextInput
+                onChangeText={handleChange("telefone")}
+                value={values.telefone}
+                keyboardType="number-pad"
+                style={styles.inputs}
+                placeholder="Telefone:"
+                placeholderTextColor="#909090"
+                maxLength={11}
+              />
+
+              {errors.telefone && submitCount ? (
+                <Text style={styles.labelError}>{errors.telefone}</Text>
+              ) : null}
+
+              <TextInput
+                onChangeText={handleChange("senha")}
+                value={values.senha}
+                style={styles.inputs}
+                placeholder="Senha:"
+                placeholderTextColor="#909090"
+                secureTextEntry={true}
+                maxLength={11}
+              />
+
+              {errors.senha && submitCount ? (
+                <Text style={styles.labelError}>{errors.senha}</Text>
+              ) : null}
+            </View>
+
+            <View style={styles.containerButtonNext}>
+              <TouchableOpacity
+                style={styles.buttonNext}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.textNext}>Próximo</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </Formik>
 
       <View style={styles.containerButtonBack}>
         <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
