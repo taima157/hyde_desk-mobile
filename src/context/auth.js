@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../services/api";
 import jwtDecode from "jwt-decode";
 import { useNavigation } from "@react-navigation/native";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { View } from "react-native";
 
 export const AuthContext = createContext();
 
@@ -10,10 +12,29 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
 
+  function errorToast(text1, text2) {
+    Toast.show({
+      type: "error",
+      text1: text1,
+      text2: text2,
+      topOffset: 50,
+      visibilityTime: 2000,
+    });
+  }
+
+  function successToast(text1, text2) {
+    Toast.show({
+      type: "success",
+      text1: text1,
+      text2: text2,
+      topOffset: 50,
+      visibilityTime: 2000,
+    });
+  }
+
   async function login(user) {
     try {
       const response = await api.post("/tecnicos/login", user);
-      console.log(response);
 
       const decodeUser = jwtDecode(response.data.token);
 
@@ -21,7 +42,9 @@ export function AuthProvider({ children }) {
 
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
-      return response;
+      successToast("Login", response.data.message);
+
+      navigation.navigate("Logado");
     } catch (error) {
       throw new Error("CPF ou senha inválidos");
     }
@@ -69,8 +92,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, estaLogado }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, estaLogado, successToast, errorToast }}
+    >
       {children}
+      <Toast />
     </AuthContext.Provider>
   );
 }

@@ -15,7 +15,8 @@ import {
 import { useState } from "react";
 var bcrypt = require("bcryptjs");
 import { api } from "../../services/api";
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ModalLoading from "../ModalLoading";
 
 export default function ConfirmarSenha({
   navigation,
@@ -27,48 +28,54 @@ export default function ConfirmarSenha({
   mudarVisibilidade,
 }) {
   const [comparar, setComparar] = useState("");
-  const [text, setText] = useState(false);
+  const [visivel, setVisivel] = useState(false);
   const [textVazio, setTextVazio] = useState(false);
-
-
-  function compararSenhas() {
-    if(comparar.length > 0){
-    if (bcrypt.compareSync(comparar, senha) == true) {
-      async function enviarDados() {
-        const form = new FormData();
-
-        form.append("nome", dados.nome);
-        form.append("email", dados.email);
-        form.append("telefone", dados.telefone);
-        form.append("especialidade", dados.especialidade);
-        if (image.uri != "") {
-          form.append("foto", image);
-        }
-
-        // console.log(image);
-        try {
-          const response = await api.put(
-            `/tecnicos/editar/${id_tecnico}`,
-            form
-          );
-          console.log(response);
-        } catch (error) {
-          console.log(error);
-        }
+  function senhas() {
+    bcrypt.compare(comparar, senha, (error, valid) => {
+      if (error) {
+        console.log(error);
       }
-      enviarDados();
+      if (valid) {
+        if (comparar.length > 0) {
+          async function enviarDados() {
+            const form = new FormData();
 
-      navigation.navigate("Home");
-    } else {
-      setText(true);
-      setTextVazio(false);
-    }
-  }else{
-    setText(false);
-    setTextVazio(true);
+            form.append("nome", dados.nome);
+            form.append("email", dados.email);
+            form.append("telefone", dados.telefone);
+            form.append("especialidade", dados.especialidade);
+            if (image.uri != "") {
+              form.append("foto", image);
+            }
+
+            try {
+              const response = await api.put(
+                `/tecnicos/editar/${id_tecnico}`,
+                form,
+                {
+                  headers: {
+                    "content-type": "multipart/form-data",
+                  },
+                }
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+          enviarDados();
+
+          navigation.navigate("Home");
+        } else {
+          setTextVazio(false);
+          setVisivel(false);
+        }
+      } else {
+        setTextVazio(true);
+        setVisivel(false);
+      }
+    });
   }
 
-}
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -97,14 +104,14 @@ export default function ConfirmarSenha({
               placeholderTextColor="#000000"
               secureTextEntry={true}
             ></TextInput>
-            {text ? (
-              <Text style={styles.textSenha}>Senha incorreta</Text>
-            ) : null}
             {textVazio ? (
-              <Text style={styles.textSenha}>Digite aluma senha</Text>
+              <Text style={styles.textSenha}>Digite alguma senha válida</Text>
             ) : null}
             <TouchableOpacity
-              onPress={compararSenhas}
+              onPress={() => {
+                setVisivel(!visivel);
+                senhas();
+              }}
               style={styles.buttonConfirmar}
             >
               <Text style={styles.textConfirmar}>Confirmar</Text>
@@ -112,6 +119,7 @@ export default function ConfirmarSenha({
           </View>
         </View>
       </Modal>
+      <ModalLoading isVisible={visivel} />
     </View>
   );
 }

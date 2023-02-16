@@ -14,10 +14,9 @@ import {
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import ModalLoading from "../../components/ModalLoading";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export default function Login({ navigation }) {
-  const { login } = useContext(AuthContext);
+  const { login, errorToast } = useContext(AuthContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
@@ -36,27 +35,16 @@ export default function Login({ navigation }) {
 
       setMensagemErro("");
       setLoading(true);
-      const response = await login(user);
-
-      Toast.show({
-        type: "success",
-        text1: "Login",
-        text2: response.data.message,
-        topOffset: 0,
-      });
-
-      setInterval(() => {
-        setLoading(false);
-        navigation.navigate("Logado");
-      }, 2000);
+      await login(user);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
-      Toast.show({
-        type: "error",
-        text1: "Login",
-        text2: error.message,
-        topOffset: 0,
-      });
+
+      if (error.message) {
+        errorToast("Login", error.message);
+      } else {
+        errorToast("Login", "Erro na autenticação");
+      }
 
       setUser({
         cpf: "",
@@ -80,63 +68,63 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Toast />
-      <View style={styles.container_login}>
-        <Text style={styles.login}>Login</Text>
-      </View>
-
-      <View style={styles.container_TextoInput}>
-        <TextInput
-          style={styles.TextoInput}
-          placeholder="CPF"
-          placeholderTextColor="#909090"
-          value={user.cpf}
-          onChangeText={(e) => setUser({ ...user, cpf: e })}
-          keyboardType="numeric"
-          maxLength={11}
-        />
-        <TextInput
-          style={styles.TextoSenha}
-          placeholder="Senha"
-          secureTextEntry={true}
-          placeholderTextColor="#909090"
-          value={user.senha}
-          onChangeText={(e) => setUser({ ...user, senha: e })}
-        />
-        {mensagemErro.length !== 0 ? (
-          <Text
-            style={{
-              color: "red",
-              textAlign: "center",
-              fontWeight: "500",
-              marginTop: 10,
-            }}
-          >
-            {mensagemErro}
+      <View>
+        <View style={styles.container_login}>
+          <Text style={styles.login}>Login</Text>
+        </View>
+        <View style={styles.container_TextoInput}>
+          <TextInput
+            style={styles.TextoInput}
+            placeholder="CPF:"
+            placeholderTextColor="#909090"
+            value={user.cpf}
+            onChangeText={(e) => setUser({ ...user, cpf: e })}
+            keyboardType="numeric"
+            maxLength={11}
+          />
+          <TextInput
+            style={styles.TextoSenha}
+            placeholder="Senha:"
+            secureTextEntry={true}
+            placeholderTextColor="#909090"
+            value={user.senha}
+            onChangeText={(e) => setUser({ ...user, senha: e })}
+          />
+          {mensagemErro.length !== 0 ? (
+            <Text
+              style={{
+                color: "red",
+                textAlign: "center",
+                fontWeight: "500",
+                marginTop: 10,
+              }}
+            >
+              {mensagemErro}
+            </Text>
+          ) : null}
+          <TouchableOpacity style={styles.Botao} onPress={() => handleLogin()}>
+            <Text style={styles.TextoBotao}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container_link}>
+          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+            Ainda não é um técnico?
           </Text>
-        ) : null}
-        <TouchableOpacity style={styles.Botao} onPress={() => handleLogin()}>
-          <Text style={styles.TextoBotao}>LOGIN</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.container_link}>
-        <Text>Ainda não é um técnico?</Text>
-
-        <TouchableOpacity
-          style={styles.LinkCadastro}
-          onPress={() => goToCadastrar()}
-        >
-          <Text style={styles.TextoLinkCadastro}>Cadastre-se</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.container_link2}>
-        <Text>Esqueceu a senha?</Text>
-
-        <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
-          <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.LinkCadastro}
+            onPress={() => goToCadastrar()}
+          >
+            <Text style={styles.TextoLinkCadastro}>Cadastre-se</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container_link2}>
+          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+            Esqueceu a senha?
+          </Text>
+          <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
+            <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <ModalLoading isVisible={loading} />
     </View>
@@ -147,10 +135,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center",
   },
 
   container_login: {
+    marginTop: "40%",
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
@@ -172,12 +160,13 @@ const styles = StyleSheet.create({
 
   TextoInput: {
     width: "95%",
-    height: 52,
+    height: 50,
     backgroundColor: "#fff",
     borderRadius: 10,
     borderBottomColor: "#000",
     borderWidth: 2,
-    padding: 15,
+    padding: 10,
+    fontFamily: "Poppins_400Regular",
   },
   TextoSenha: {
     width: "95%",
@@ -186,8 +175,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderBottomColor: "#000",
     borderWidth: 2,
-    padding: 15,
     marginTop: 10,
+    fontFamily: "Poppins_400Regular",
+    padding: 10,
   },
   Botao: {
     backgroundColor: "#000",
@@ -202,6 +192,7 @@ const styles = StyleSheet.create({
 
   TextoBotao: {
     color: "#fff",
+    fontFamily: "Poppins_700Bold",
   },
 
   container_link: {
@@ -215,6 +206,7 @@ const styles = StyleSheet.create({
   TextoLinkCadastro: {
     paddingLeft: 5,
     color: "#23AFFF",
+    fontFamily: "Poppins_400Regular",
   },
 
   container_link2: {
@@ -240,6 +232,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     marginTop: 20,
+    fontFamily: "Poppins_400Regular",
+  },
+  textRecuperar: {
     fontFamily: "Poppins_400Regular",
   },
 });

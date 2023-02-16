@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/auth";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export default function CadastrarFoto({ navigation, route }) {
-  const { errorToast } = useContext(AuthContext);
+  const { errorToast, successToast } = useContext(AuthContext);
   const data = route.params;
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -32,7 +32,7 @@ export default function CadastrarFoto({ navigation, route }) {
     form.append("cpf", data.cpf);
     form.append("email", data.email);
     form.append("telefone", data.telefone);
-    form.append("especialidade", "Software");
+    form.append("especialidade", data.especialidade);
     form.append("senha", data.senha);
     form.append("confirmsenha", data.senha);
     form.append("foto", image);
@@ -40,31 +40,23 @@ export default function CadastrarFoto({ navigation, route }) {
     try {
       setModalVisible(true);
 
-      const response = await api.post("/tecnicos/cadastro", form);
-
-      Toast.show({
-        type: "success",
-        text1: "Cadastro",
-        text2: response.data.message,
-        topOffset: 0,
-      })
-
-      setInterval(() => {
-        setModalVisible(false);
-
-        navigation.navigate("Logado")
-      }, 3000)
-
-    } catch (error) {
-      setModalVisible(false);
-      Toast.show({
-        type: "error",
-        text1: "Cadastro",
-        text2: error.response.data.message,
-        topOffset: 0,
+      const response = await api.post("/tecnicos/cadastro", form, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
 
-      console.log(error);
+      successToast("Cadastro", response.data.message);
+
+      navigation.navigate("Login");
+    } catch (error) {
+      setModalVisible(false);
+
+      if (error.response.data) {
+        errorToast("Cadastro", error.response.data.message);
+      } else {
+        errorToast("Cadastro", "Erro ao se cadastrar. Tente mais tarde!");
+      }
     }
   }
 
@@ -100,7 +92,6 @@ export default function CadastrarFoto({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Toast />
       <View style={styles.container_CadastrarFoto}>
         <Text style={styles.CadastrarFoto}>Cadastro</Text>
       </View>

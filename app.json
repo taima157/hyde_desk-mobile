@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hydedesk",
-    "slug": "hydedesk",
+    "name": "Hyde Desk",
+    "slug": "hyde-desk",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.gustavotaima.hydedesk"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "27a8c6c3-49bd-4bb5-8494-85bb20291185"
+      }
     }
   }
 }
