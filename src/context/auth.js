@@ -4,7 +4,6 @@ import { api } from "../services/api";
 import jwtDecode from "jwt-decode";
 import { useNavigation } from "@react-navigation/native";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { View } from "react-native";
 
 export const AuthContext = createContext();
 
@@ -18,7 +17,7 @@ export function AuthProvider({ children }) {
       text1: text1,
       text2: text2,
       topOffset: 50,
-      visibilityTime: 2000,
+      visibilityTime: 4000,
     });
   }
 
@@ -28,7 +27,7 @@ export function AuthProvider({ children }) {
       text1: text1,
       text2: text2,
       topOffset: 50,
-      visibilityTime: 2000,
+      visibilityTime: 4000,
     });
   }
 

@@ -1,16 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { api } from "../../services/api";
 import ModalLoading from "../../components/ModalLoading";
 import { AuthContext } from "../../context/auth";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function CadastrarFoto({ navigation, route }) {
+export default function CadastrarFoto({ navigation }) {
   const { errorToast, successToast } = useContext(AuthContext);
-  const data = route.params;
+  const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    async function getStorage() {
+      const cadastroLocal = await AsyncStorage.getItem("cadastro");
+
+      setData(JSON.parse(cadastroLocal));
+    }
+
+    getStorage();
+  }, []);
 
   const [image, setImage] = useState({
     uri: "",
@@ -26,6 +36,11 @@ export default function CadastrarFoto({ navigation, route }) {
   }
 
   async function cadastrar() {
+    if (image.uri === "") {
+      errorToast("Foto", "Selecione uma foto de perfil!");
+      return;
+    }
+
     const form = new FormData();
 
     form.append("nome", data.nome);
@@ -53,10 +68,12 @@ export default function CadastrarFoto({ navigation, route }) {
       setModalVisible(false);
 
       if (error.response.data) {
-        errorToast("Cadastro", error.response.data.message);
+        errorToast("Erro ao se cadastrar", error.response.data.message);
       } else {
-        errorToast("Cadastro", "Erro ao se cadastrar. Tente mais tarde!");
+        errorToast("Erro ao se cadastrar", "Tente novamente mais tarde!");
       }
+
+      navigation.navigate("Login");
     }
   }
 
