@@ -57,6 +57,9 @@ export default function Login({ navigation }) {
   function goToCadastrar() {
     navigation.navigate("Cadastro");
   }
+  function goToRecuperarSenha() {
+    navigation.navigate("Recuperar Senha");
+  }
 
   useEffect(() => {
     navigation.addListener("focus", async () => {
@@ -129,7 +132,7 @@ export default function Login({ navigation }) {
           <Text style={{ fontFamily: "Poppins_400Regular" }}>
             Esqueceu a senha?
           </Text>
-          <TouchableOpacity style={styles.LinkCadastro} onPress={() => ""}>
+          <TouchableOpacity style={styles.LinkCadastro} onPress={() => goToRecuperarSenha()}>
             <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
           </TouchableOpacity>
         </View>
