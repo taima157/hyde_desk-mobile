@@ -111,14 +111,16 @@ const styles = StyleSheet.create({
 
   TextoBotao: {
     color: "#fff",
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Poppins_700Bold",
+    textTransform: "uppercase",
   },
 
   containerTextoInfo:{
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    textAlign: "center",
+    width: "90%",
     top: 30
   },
 
