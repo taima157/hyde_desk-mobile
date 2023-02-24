@@ -68,7 +68,7 @@ export default function EditarPerfil({ route, navigation }) {
   };
 
   function goBack() {
-    navigation.navigate("Perfil");
+    navigation.navigate("Perfil", dados.receitas);
   }
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -126,6 +126,7 @@ export default function EditarPerfil({ route, navigation }) {
           ></TextInput>
           <SelectList
             data={especialidade}
+            search={false}
             save="value"
             setSelected={(e) =>
               setNovosDados({ ...novosDados, especialidade: e })

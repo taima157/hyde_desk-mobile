@@ -17,7 +17,6 @@ var bcrypt = require("bcryptjs");
 import { api } from "../../services/api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ModalLoading from "../ModalLoading";
-
 export default function ConfirmarSenha({
   navigation,
   senha,
@@ -92,16 +91,17 @@ export default function ConfirmarSenha({
         <View style={styles.modalView}>
           <View styles={styles.viewFechar}>
             <TouchableOpacity onPress={mudarVisibilidade} style={styles.nada}>
-              <Text style={styles.textFechar}>X</Text>
+              <MaterialCommunityIcons style={styles.textFechar} name="close" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <Text style={styles.title}>Confirmar senha</Text>
           <View style={styles.containerInput}>
             <TextInput
+
               onChangeText={(comparar) => setComparar(comparar)}
               style={styles.inputPassword}
               placeholder="Senha:"
-              placeholderTextColor="#000000"
+              placeholderTextColor="#909090"
               secureTextEntry={true}
             ></TextInput>
             {textVazio ? (
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     width: "80%",
     color: "#000",
     fontSize: 15,
+    fontFamily: "Poppins_400Regular",
   },
   containerInput: {
     justifyContent: "center",
@@ -177,7 +178,6 @@ const styles = StyleSheet.create({
   textFechar: {
     paddingTop: 5,
     paddingRight: 15,
-    fontFamily: "Poppins_700Bold",
     color: "#000",
     fontSize: 22,
     textAlign: "right",
