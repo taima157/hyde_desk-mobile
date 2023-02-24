@@ -6,6 +6,7 @@ export default function ConfirmModal({
   fecharModal,
   confirmarAcao,
   mensagem,
+  route
 }) {
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.1}>

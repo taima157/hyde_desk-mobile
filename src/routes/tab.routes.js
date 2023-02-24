@@ -11,6 +11,7 @@ export default function TabRoutes({ route }) {
     <Navigator
       initialRouteName="Home"
       screenOptions={{
+        
         headerShown: false,
         tabBarStyle: {
           display: "flex",
