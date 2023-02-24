@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   TextInput,
-  ActivityIndicator,
+  Image,
 } from "react-native";
 import {
   useFonts,
@@ -14,7 +13,10 @@ import {
 } from "@expo-google-fonts/poppins";
 
 export default function Login({ navigation }) {
-  
+  function voltar() {
+    navigation.navigate("Login");
+  }
+
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -23,7 +25,6 @@ export default function Login({ navigation }) {
   if (!fontsLoaded) {
     return null;
   }
-
 
   return (
     <View style={styles.container}>
@@ -38,13 +39,21 @@ export default function Login({ navigation }) {
           placeholderTextColor="#909090"
           keyboardType="email-address"
         />
-  
+
         <TouchableOpacity style={styles.Botao} onPress={() => ""}>
           <Text style={styles.TextoBotao}>Enviar Email</Text>
         </TouchableOpacity>
 
-        <View  style={styles.containerTextoInfo}>
-          <Text style={styles.TextoInfo}>Um link sera enviado para que você possa redefinir sua senha.</Text>
+        <View style={styles.containerTextoInfo}>
+          <Text style={styles.TextoInfo}>
+            Um link será enviado para que você possa redefinir sua senha.
+          </Text>
+        </View>
+
+        <View style={styles.containerButtonBack}>
+          <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
+            <Image source={require("../../../assets/arrow.png")} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -57,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
   },
-
   container_login: {
     display: "flex",
     alignItems: "center",
@@ -66,18 +74,15 @@ const styles = StyleSheet.create({
     paddingBottom: "2%",
     paddingLeft: "1%",
   },
-
   login: {
     padding: "2%",
     fontSize: 36,
     fontFamily: "Poppins_700Bold",
   },
-
   container_TextoInput: {
     width: "100%",
     alignItems: "center",
   },
-
   TextoInput: {
     width: "95%",
     height: 52,
@@ -108,24 +113,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   TextoBotao: {
     color: "#fff",
     fontFamily: "Poppins_700Bold",
     textTransform: "uppercase",
   },
-
-  containerTextoInfo:{
+  containerTextoInfo: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    textAlign: "center",
     width: "90%",
-    top: 30
+    top: 30,
   },
-
   TextoInfo: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 17,
+    fontSize: 15,
+    textAlign: "center",
+  },
+  buttonBack: {
+    backgroundColor: "#000000",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    width: 40,
+    height: 40,
+    padding: 25,
+  },
+  containerButtonBack: {
+    marginTop: "15%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
