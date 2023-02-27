@@ -3,8 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFonts, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
 import {Inter_600SemiBold} from "@expo-google-fonts/inter"
+import { useContext } from "react";
+import { ThemeContext } from "../../context/theme";
 
 export default function NavigationButton(props) {
+  const {theme} = useContext(ThemeContext);
   const { name, pageName, onPress, accessibilityState } = props;
   const focused = accessibilityState.selected;
 
@@ -23,10 +26,10 @@ export default function NavigationButton(props) {
         <MaterialCommunityIcons
           name={name}
           size={30}
-          color={focused ? "#23AFFF" : "#A9A3A3"}
+          color={focused ? "#23AFFF" : theme === "light" ? "#A9A3A3" : "#94a3b8"}
         />
         <Text
-          style={[styles.texto, { color: focused ? "#23AFFF" : "#A9A3A3" }]}
+          style={[styles.texto, { color: focused ? "#23AFFF" : theme === "light" ? "#A9A3A3" : "#94a3b8" }]}
         >
           {pageName}
         </Text>

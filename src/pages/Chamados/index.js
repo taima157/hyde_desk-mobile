@@ -15,9 +15,11 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
+import { ThemeContext } from "../../context/theme";
 
 export default function Chamados({ navigation }) {
   const { user } = useContext(AuthContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
 
   const [chamados, setChamados] = useState([]);
   const [chamadosAndamento, setChamadoAndamento] = useState(null);
@@ -71,9 +73,9 @@ export default function Chamados({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.viewTitulo}>
-        <Text style={styles.titulo}>Chamados</Text>
+        <Text style={[styles.titulo, styleTheme.textPrimary]}>Chamados</Text>
       </View>
       <View style={styles.viewChamados}>
         {chamadosAndamento === null ? (
@@ -87,10 +89,10 @@ export default function Chamados({ navigation }) {
           </View>
         ) : chamadosAndamento.length !== 0 ? (
           <View>
-            <Text style={styles.textoChamadoAndamento}>
+            <Text style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}>
               Você já possui um chamado em andamento.
             </Text>
-            <Text style={styles.textoChamadoAndamento}>
+            <Text style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}>
               Vá até a Home para mais detalhes.
             </Text>
           </View>
@@ -115,7 +117,7 @@ export default function Chamados({ navigation }) {
             />
             {chamados.length === 0 ? (
               <View style={styles.viewSemChamados}>
-                <Text style={styles.textoSemChamados}>
+                <Text style={[styles.textoSemChamados, styleTheme.textPrimary]}>
                   Não há chamados pendentes.
                 </Text>
               </View>
