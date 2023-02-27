@@ -41,6 +41,8 @@ export function AuthProvider({ children }) {
 
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
 
+      api.defaults.headers.Authorization = `Basic ${response.data.token}`;
+
       successToast("Login", response.data.message);
 
       navigation.navigate("Logado");
@@ -73,6 +75,7 @@ export function AuthProvider({ children }) {
 
           if (!expired) {
             setUser(userDecode);
+            api.defaults.headers.Authorization = `Basic ${userLocal[0]}`;
             navigation.navigate("Logado");
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));

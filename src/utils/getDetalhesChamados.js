@@ -13,7 +13,7 @@ export async function getDetalhesChamados(chamado) {
 
   try {
     const responseEndereco = await axios.get(
-      `https://viacep.com.br/ws/${chamado.empresa.cep}/json/`
+      `https://viacep.com.br/ws/${chamado.cep}/json/`
     );
 
     endereco = await responseEndereco.data;

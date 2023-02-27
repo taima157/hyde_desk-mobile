@@ -43,12 +43,12 @@ export default function ModalDetalhes({
         <View style={styles.detalhesChamado}>
           <View style={styles.field}>
             <Text style={styles.label}>Empresa:</Text>
-            <Text style={styles.valorField}>{chamado.empresa.nome_empresa}</Text>
+            <Text style={styles.valorField}>{chamado.nome_empresa}</Text>
           </View>
           <View style={styles.field}>
             <Text style={styles.label}>Endereco:</Text>
             <Text style={styles.valorField}>
-              {chamado.endereco.logradouro}, {chamado.empresa.numero_endereco},{" "}
+              {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
               {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
               {chamado.endereco.uf}
             </Text>
@@ -56,7 +56,7 @@ export default function ModalDetalhes({
           <View style={styles.field}>
             <Text style={styles.label}>Contato:</Text>
             <Text style={styles.valorField}>
-              Tel: {chamado.empresa.telefone}
+              Tel: {chamado.telefone}
             </Text>
           </View>
           <View style={styles.field}>

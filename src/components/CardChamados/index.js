@@ -32,12 +32,11 @@ export default function CardChamados({ chamado, setRefreshing }) {
   async function aceitarChamado() {
     try {
       const body = {
-        status: "andamento",
         tecnico_id: user.id_tecnico,
       };
 
       const response = await api.put(
-        `/chamados/atualizar/${chamado.id_chamado}`,
+        `/chamados/aceitar/${chamado.id_chamado}`,
         body
       );
 
@@ -77,7 +76,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
         ) : (
           <>
             <Text style={styles.nomeEmpresa}>
-              {detalhesChamado.empresa.nome_empresa}
+              {detalhesChamado.nome_empresa}
             </Text>
             <View style={styles.enderecoData}>
               <View style={styles.endereco}>
@@ -88,7 +87,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
                 />
                 <Text style={styles.texto}>
                   {detalhesChamado.endereco.logradouro},{" "}
-                  {detalhesChamado.empresa.numero_endereco}
+                  {detalhesChamado.numero_endereco}
                 </Text>
               </View>
               <View style={styles.data}>

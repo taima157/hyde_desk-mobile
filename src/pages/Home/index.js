@@ -81,12 +81,7 @@ export default function Home({ navigation }) {
 
   async function cancelarChamado() {
     try {
-      const body = {
-        status: "pendente",
-        tecnico_id: "NULL",
-      };
-
-      await api.put(`/chamados/atualizar/${chamado.id_chamado}`, body);
+      await api.put(`/chamados/suspender/${chamado.id_chamado}`);
 
       setChamado([]);
       setCancelar(!cancelar);
@@ -100,6 +95,35 @@ export default function Home({ navigation }) {
     setErroDescricao("");
 
     if (concluirChamado.descricao) {
+      const form = new FormData();
+
+      form.append("descricao", concluirChamado.descricao);
+
+      if (concluirChamado.anexo.uri !== "") {
+        form.append("anexo", concluirChamado.anexo);
+      }
+
+      try {
+        const response = await api.put(
+          `/chamados/concluir/${chamado.id_chamado}`,
+          form,
+          {
+            headers: {
+              "content-type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(response);
+
+        toggleModalFinalizar();
+
+      } catch (error) {
+        console.log(error);
+      }
+
+
+
     } else {
       setErroDescricao("A descrição é obrigatória!");
     }
@@ -179,23 +203,19 @@ export default function Home({ navigation }) {
             <Text style={styles.tituloChamado}>Chamado em andamento</Text>
             <View style={styles.containerChamado}>
               <ScrollView>
-                <Text style={styles.nomeEmpresa}>
-                  {chamado.empresa.nome_empresa}
-                </Text>
+                <Text style={styles.nomeEmpresa}>{chamado.nome_empresa}</Text>
                 <View style={styles.field}>
                   <Text style={styles.label}>Endereco:</Text>
                   <Text style={styles.valorField}>
-                    {chamado.endereco.logradouro},{" "}
-                    {chamado.empresa.numero_endereco}, {chamado.endereco.bairro}
-                    , {chamado.endereco.localidade} - {chamado.endereco.uf}
+                    {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
+                    {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
+                    {chamado.endereco.uf}
                   </Text>
                 </View>
 
                 <View style={styles.field}>
                   <Text style={styles.label}>Contato:</Text>
-                  <Text style={styles.valorField}>
-                    Tel: {chamado.empresa.telefone}
-                  </Text>
+                  <Text style={styles.valorField}>Tel: {chamado.telefone}</Text>
                 </View>
                 <View style={styles.field}>
                   <Text style={styles.label}>Data do chamado:</Text>
