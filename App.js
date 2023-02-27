@@ -6,8 +6,6 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
     <StackRoutes />
-    <StatusBar barStyle="dark-content"  backgroundColor="#FFF"/>
-    {/* <Footer /> */}
   </SafeAreaView>
   );
 }

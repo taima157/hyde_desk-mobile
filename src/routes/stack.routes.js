@@ -8,27 +8,31 @@ import CadastrarFoto from "../pages/CadastrarFoto";
 import TabRoutes from "./tab.routes";
 import EditarPerfil from "../pages/EditarPerfil";
 import { AuthProvider } from "../context/auth";
+import { ThemeProvider } from "../context/theme";
 import RecuperarSenha from "../pages/RecuperarSenha";
+import { StatusBar } from "react-native";
 
 const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
   return (
     <NavigationContainer>
-      <AuthProvider>
-        <Navigator
-          screenOptions={{
-            header: (props) => <Header {...props} />,
-          }}
-        >
-          <Screen name="Login" component={Login} />
-          <Screen name="Cadastro" component={Cadastro} />
-          <Screen name="CadastroContato" component={CadastroContato} />
-          <Screen name="CadastrarFoto" component={CadastrarFoto} />
-          <Screen name="Logado" component={TabRoutes} />
-          <Screen name="Editar Perfil" component={EditarPerfil} />
-          <Screen name="Recuperar Senha" component={RecuperarSenha} />
-        </Navigator>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Navigator
+            screenOptions={{
+              header: (props) => <Header {...props} />,
+            }}
+          >
+            <Screen name="Login" component={Login} />
+            <Screen name="Cadastro" component={Cadastro} />
+            <Screen name="CadastroContato" component={CadastroContato} />
+            <Screen name="CadastrarFoto" component={CadastrarFoto} />
+            <Screen name="Logado" component={TabRoutes} />
+            <Screen name="Editar Perfil" component={EditarPerfil} />
+            <Screen name="Recuperar Senha" component={RecuperarSenha} />
+          </Navigator>
+        </AuthProvider>
+      </ThemeProvider>
     </NavigationContainer>
   );
 }

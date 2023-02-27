@@ -3,20 +3,24 @@ import Chamados from "../pages/Chamados";
 import Perfil from "../pages/Perfil";
 import Home from "../pages/Home";
 import NavigationButton from "../components/NavigationButton";
+import { useContext } from "react";
+import { ThemeContext } from "../context/theme";
 
 const { Screen, Navigator } = createBottomTabNavigator();
 
 export default function TabRoutes({ route }) {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <Navigator
       initialRouteName="Home"
       screenOptions={{
-        
         headerShown: false,
         tabBarStyle: {
           display: "flex",
           alignItems: "center",
           height: 60,
+          backgroundColor: theme === "light" ? "#FFF" : "#161b22"  
         },
       }}
     >

@@ -23,9 +23,12 @@ import { AuthContext } from "../../context/auth";
 import ConfirmModal from "../../components/ConfirmModal";
 import * as ImagePicker from "expo-image-picker";
 import CardChamadoConcluido from "../../components/CardChamadoConcluido";
+import { ThemeContext } from "../../context/theme";
 
 export default function Home({ navigation }) {
   const { user } = useContext(AuthContext);
+  const { styleTheme, toggleTheme } = useContext(ThemeContext);
+
   const [chamado, setChamado] = useState(null);
   const [chamadosConcluido, setChamadosConcluido] = useState([]);
   const [cancelar, setCancelar] = useState(false);
@@ -117,13 +120,9 @@ export default function Home({ navigation }) {
         console.log(response);
 
         toggleModalFinalizar();
-
       } catch (error) {
         console.log(error);
       }
-
-
-
     } else {
       setErroDescricao("A descrição é obrigatória!");
     }
@@ -187,9 +186,9 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.viewTitulo}>
-        <Text style={styles.titulo}>Home</Text>
+        <Text style={[styles.titulo, styleTheme.textPrimary]}>Home</Text>
       </View>
       <View style={styles.viewChamado}>
         {chamado === null ? (
@@ -200,13 +199,13 @@ export default function Home({ navigation }) {
           </View>
         ) : chamado.length !== 0 ? (
           <>
-            <Text style={styles.tituloChamado}>Chamado em andamento</Text>
-            <View style={styles.containerChamado}>
+            <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>Chamado em andamento</Text>
+            <View style={[styles.containerChamado]}>
               <ScrollView>
-                <Text style={styles.nomeEmpresa}>{chamado.nome_empresa}</Text>
+                <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>{chamado.nome_empresa}</Text>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Endereco:</Text>
-                  <Text style={styles.valorField}>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Endereco:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
                     {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
                     {chamado.endereco.uf}
@@ -214,30 +213,30 @@ export default function Home({ navigation }) {
                 </View>
 
                 <View style={styles.field}>
-                  <Text style={styles.label}>Contato:</Text>
-                  <Text style={styles.valorField}>Tel: {chamado.telefone}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Contato:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>Tel: {chamado.telefone}</Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Data do chamado:</Text>
-                  <Text style={styles.valorField}>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Data do chamado:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.dataChamado} - {chamado.horaChamado}
                   </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Problema:</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Problema:</Text>
                   <Text
-                    style={[styles.valorField, { textTransform: "capitalize" }]}
+                    style={[styles.valorField, styleTheme.textPrimary, { textTransform: "capitalize" }]}
                   >
                     {chamado.problema}
                   </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Descrição:</Text>
-                  <Text style={styles.valorField}>{chamado.descricao}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Descrição:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.descricao}</Text>
                 </View>
                 {chamado.anexo !== null ? (
                   <View style={styles.field}>
-                    <Text style={styles.label}>Anexo:</Text>
+                    <Text style={[styles.label, styleTheme.textPrimary]}>Anexo:</Text>
                     <TouchableOpacity onPress={toggleModalImage}>
                       <Image
                         style={styles.anexo}
@@ -272,16 +271,16 @@ export default function Home({ navigation }) {
                   </View>
                 ) : null}
                 <View style={styles.field}>
-                  <Text style={styles.label}>Setor:</Text>
-                  <Text style={styles.valorField}>{chamado.setor}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Setor:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.setor}</Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Patrimônio:</Text>
-                  <Text style={styles.valorField}>{chamado.patrimonio}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Patrimônio:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.patrimonio}</Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={styles.label}>Código de verificação:</Text>
-                  <Text style={styles.valorField}>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>Código de verificação:</Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.cod_verificacao}
                   </Text>
                 </View>
@@ -308,7 +307,7 @@ export default function Home({ navigation }) {
           </>
         ) : (
           <>
-            <Text style={styles.tituloChamado}>
+            <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>
               Últimos chamados concluídos
             </Text>
             {chamadosConcluido.length !== 0 ? (
@@ -328,7 +327,7 @@ export default function Home({ navigation }) {
               </ScrollView>
             ) : (
               <View style={styles.viewSemConcluidos}>
-                <Text style={styles.textSemConcluidos}>
+                <Text style={[styles.textSemConcluidos, styleTheme.textPrimary]}>
                   Você não há chamados concluidos.
                 </Text>
               </View>
@@ -343,10 +342,10 @@ export default function Home({ navigation }) {
         mensagem="Deseja cancelar esse chamado?"
       />
       <Modal isVisible={modalFinalizar} backdropOpacity={0.3}>
-        <View style={styles.viewFinalizar}>
-          <Text style={styles.tituloFinalizar}>Finalizar Chamado</Text>
+        <View style={[styles.viewFinalizar, styleTheme.containerSecundary]}>
+          <Text style={[styles.tituloFinalizar, styleTheme.textPrimary]}>Finalizar Chamado</Text>
           <View style={styles.viewDescricao}>
-            <Text style={styles.label}>Descrição:</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>Descrição:</Text>
             <TextInput
               style={styles.inputDescricao}
               value={concluirChamado.descricao}
@@ -358,7 +357,7 @@ export default function Home({ navigation }) {
           </View>
           <View style={styles.viewAnexo}>
             <View style={styles.inputAnexo}>
-              <Text style={styles.label}>Anexar alguma imagem:</Text>
+              <Text style={[styles.label, styleTheme.textPrimary]}>Anexar alguma imagem:</Text>
               <TouchableOpacity
                 style={styles.botaoAnexo}
                 onPress={anexarImagem}
@@ -416,7 +415,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#FFF",
   },
   viewTitulo: {
     width: "80%",
@@ -513,7 +511,6 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
   },
   viewFinalizar: {
-    backgroundColor: "#FFF",
     borderRadius: 20,
     elevation: 10,
     alignItems: "center",

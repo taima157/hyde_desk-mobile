@@ -1,4 +1,10 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import {
   useFonts,
   Poppins_700Bold,
@@ -8,9 +14,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/auth";
 import ConfirmModal from "../ConfirmModal";
+import { ThemeContext } from "../../context/theme";
 
 function Header() {
   const { user, logout } = useContext(AuthContext);
+  const { toggleTheme, styleTheme, theme } = useContext(ThemeContext);
   const [isModalVisible, setModalVisible] = useState(false);
 
   function toggleModal() {
@@ -27,23 +35,36 @@ function Header() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
+      <View>
+        <TouchableOpacity onPress={toggleTheme}>
+          <Text style={styleTheme.textPrimary}>Dark</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.titulo}>
         <Text style={styles.help}>Hyde</Text>
-        <Text style={styles.desk}>Desk</Text>
+        <Text style={[styles.desk, styleTheme.textPrimary]}>Desk</Text>
       </View>
-      {user !== null ? (
-        <View style={styles.viewLogout}>
+      <View style={styles.viewLogout}>
+        {user !== null ? (
           <TouchableOpacity onPress={toggleModal}>
-            <MaterialCommunityIcons name="logout" size={34} color="black" />
+            <MaterialCommunityIcons
+              name="logout"
+              size={34}
+              color={theme === "light" ? "#000" : "#f0f6fc"}
+            />
           </TouchableOpacity>
-        </View>
-      ) : null}
+        ) : null}
+      </View>
       <ConfirmModal
         isVisible={isModalVisible}
         fecharModal={toggleModal}
         confirmarAcao={logout}
         mensagem="Deseja mesmo sair?"
+      />
+      <StatusBar
+        barStyle={theme === "light" ? "dark-content" : "light-content"}
+        backgroundColor={theme === "light" ? "#FFF" : "#0d1117"}
       />
     </View>
   );
@@ -59,6 +80,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     position: "relative",
     alignItems: "center",
+    width: "100%",
   },
   titulo: {
     display: "flex",
