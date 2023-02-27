@@ -1,8 +1,9 @@
 {
   "expo": {
+    "owner": "hyde_desk",
     "name": "Hyde Desk",
     "slug": "hyde-desk",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -25,15 +24,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.gustavotaima.hydedesk"
+      "package": "com.hydedesk.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "27a8c6c3-49bd-4bb5-8494-85bb20291185"
-      }
     }
   }
 }

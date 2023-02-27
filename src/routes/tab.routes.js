@@ -19,8 +19,9 @@ export default function TabRoutes({ route }) {
         tabBarStyle: {
           display: "flex",
           alignItems: "center",
-          height: 60,
-          backgroundColor: theme === "light" ? "#FFF" : "#161b22"  
+          height: 65,
+          backgroundColor: theme === "light" ? "#FFF" : "#161b22",
+          marginBottom: -1
         },
       }}
     >

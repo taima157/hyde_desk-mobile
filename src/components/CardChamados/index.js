@@ -18,9 +18,11 @@ import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
 import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 import { AuthContext } from "../../context/auth";
+import { ThemeContext } from "../../context/theme";
 
 export default function CardChamados({ chamado, setRefreshing }) {
   const { user } = useContext(AuthContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
   const [detalhesChamado, setDetalhesChamado] = useState([]);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -68,14 +70,14 @@ export default function CardChamados({ chamado, setRefreshing }) {
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
-      <View style={styles.viewCardChamado}>
+      <View style={[styles.viewCardChamado, styleTheme.containerSecundary]}>
         {detalhesChamado.length === 0 ? (
           <View style={styles.activityStyle}>
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>
         ) : (
           <>
-            <Text style={styles.nomeEmpresa}>
+            <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>
               {detalhesChamado.nome_empresa}
             </Text>
             <View style={styles.enderecoData}>
@@ -83,9 +85,9 @@ export default function CardChamados({ chamado, setRefreshing }) {
                 <MaterialCommunityIcons
                   name="map-marker-outline"
                   size={20}
-                  color="black"
+                  color={theme === "light" ? "#000" : "#cbd5e1"}
                 />
-                <Text style={styles.texto}>
+                <Text style={[styles.texto, styleTheme.textPrimary]}>
                   {detalhesChamado.endereco.logradouro},{" "}
                   {detalhesChamado.numero_endereco}
                 </Text>
@@ -94,9 +96,11 @@ export default function CardChamados({ chamado, setRefreshing }) {
                 <MaterialCommunityIcons
                   name="calendar-month"
                   size={20}
-                  color="black"
+                  color={theme === "light" ? "#000" : "#cbd5e1"}
                 />
-                <Text style={styles.texto}>{detalhesChamado.dataChamado}</Text>
+                <Text style={[styles.texto, styleTheme.textPrimary]}>
+                  {detalhesChamado.dataChamado}
+                </Text>
               </View>
             </View>
             <View style={styles.problemaPrioridade}>
@@ -104,17 +108,19 @@ export default function CardChamados({ chamado, setRefreshing }) {
                 <MaterialCommunityIcons
                   name="desktop-classic"
                   size={20}
-                  color="black"
+                  color={theme === "light" ? "#000" : "#cbd5e1"}
                 />
-                <Text style={styles.texto}>{detalhesChamado.problema}</Text>
+                <Text style={[styles.texto, styleTheme.textPrimary]}>
+                  {detalhesChamado.problema}
+                </Text>
               </View>
               <View style={styles.prioridade}>
                 <MaterialCommunityIcons
                   name="radiobox-marked"
                   size={20}
-                  color="black"
+                  color={theme === "light" ? "#000" : "#cbd5e1"}
                 />
-                <Text style={styles.texto}>
+                <Text style={[styles.texto, styleTheme.textPrimary]}>
                   Prioridade {detalhesChamado.prioridade}
                 </Text>
               </View>

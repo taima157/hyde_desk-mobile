@@ -11,8 +11,13 @@ import {
   Poppins_700Bold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/theme";
 
 export default function Login({ navigation }) {
+  const { styleTheme } = useContext(ThemeContext);
+
   function voltar() {
     navigation.navigate("Login");
   }
@@ -27,32 +32,41 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.container_login}>
-        <Text style={styles.login}>Recuperar Senha</Text>
+        <Text style={[styles.login, styleTheme.textPrimary]}>
+          Recuperar Senha
+        </Text>
       </View>
 
       <View style={styles.container_TextoInput}>
         <TextInput
-          style={styles.TextoInput}
+          style={[styles.TextoInput, styleTheme.inputPrimary]}
           placeholder="E-mail"
-          placeholderTextColor="#909090"
+          placeholderTextColor={styleTheme.textSecundary.color}
           keyboardType="email-address"
         />
 
-        <TouchableOpacity style={styles.Botao} onPress={() => ""}>
-          <Text style={styles.TextoBotao}>Enviar Email</Text>
+        <TouchableOpacity style={[styles.Botao, styleTheme.buttonPress]} onPress={() => ""}>
+          <Text style={[styles.TextoBotao, styleTheme.buttonText]}>Enviar Email</Text>
         </TouchableOpacity>
 
         <View style={styles.containerTextoInfo}>
-          <Text style={styles.TextoInfo}>
+          <Text style={[styles.TextoInfo, styleTheme.textPrimary]}>
             Um link será enviado para que você possa redefinir sua senha.
           </Text>
         </View>
 
         <View style={styles.containerButtonBack}>
-          <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
-            <Image source={require("../../../assets/arrow.png")} />
+          <TouchableOpacity
+            style={[styles.buttonBack, styleTheme.buttonPress]}
+            onPress={voltar}
+          >
+            <MaterialCommunityIcons
+              name="keyboard-backspace"
+              size={40}
+              color={styleTheme.buttonText.color}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -86,9 +100,7 @@ const styles = StyleSheet.create({
   TextoInput: {
     width: "95%",
     height: 52,
-    backgroundColor: "#fff",
     borderRadius: 10,
-    borderBottomColor: "#000",
     borderWidth: 2,
     padding: 15,
     fontFamily: "Poppins_400Regular",
@@ -131,13 +143,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonBack: {
-    backgroundColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 50,
-    width: 40,
-    height: 40,
-    padding: 25,
+    width: 55,
+    height: 55,
+    alignItems: "center",
+    justifyContent: "center",
   },
   containerButtonBack: {
     marginTop: "15%",

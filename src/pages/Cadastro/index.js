@@ -15,8 +15,12 @@ import { SelectList } from "react-native-dropdown-select-list";
 import * as yup from "yup";
 import { Formik } from "formik";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useContext } from "react";
+import { ThemeContext } from "../../context/theme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function Cadastro({ navigation }) {
+  const { theme, styleTheme } = useContext(ThemeContext);
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
@@ -36,13 +40,10 @@ function Cadastro({ navigation }) {
 
   async function handleSubmit(values) {
     if (values.especialidade.length < 2) {
-      values.especialidade = data[Number(values.especialidade)].value
+      values.especialidade = data[Number(values.especialidade)].value;
     }
 
-    await AsyncStorage.setItem(
-      "cadastro",
-      JSON.stringify(values)
-    );
+    await AsyncStorage.setItem("cadastro", JSON.stringify(values));
 
     navigation.navigate("CadastroContato");
   }
@@ -61,9 +62,11 @@ function Cadastro({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.containerTextCadastro}>
-        <Text style={styles.textCadastro}>Cadastro</Text>
+        <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
+          Cadastro
+        </Text>
       </View>
 
       <Formik
@@ -79,11 +82,11 @@ function Cadastro({ navigation }) {
           <>
             <View style={styles.containerInputs}>
               <TextInput
-                style={styles.inputs}
+                style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="Nome:"
                 onChangeText={handleChange("nome")}
                 value={values.nome}
-                placeholderTextColor="#909090"
+                placeholderTextColor={styleTheme.textSecundary.color}
               />
 
               {errors.nome && submitCount ? (
@@ -92,11 +95,11 @@ function Cadastro({ navigation }) {
 
               <TextInput
                 keyboardType="numeric"
-                style={styles.inputs}
+                style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="CPF:"
                 onChangeText={handleChange("cpf")}
                 value={values.cpf}
-                placeholderTextColor="#909090"
+                placeholderTextColor={styleTheme.textSecundary.color}
                 maxLength={11}
               />
 
@@ -111,18 +114,23 @@ function Cadastro({ navigation }) {
                   setSelected={handleChange("especialidade")}
                   search={false}
                   placeholder="Selecione sua especialidade"
-                  placeholderTextColor="#909090"
-                  boxStyles={{
-                    borderWidth: 2,
-                    borderColor: "black",
-                    height: 50,
-                  }}
+                  boxStyles={[
+                    {
+                      borderWidth: 2,
+                      height: 50,
+                    },
+                    styleTheme.inputPrimary,
+                  ]}
                   fontFamily="Poppins_400Regular"
                   inputStyles={{
-                    color: values.especialidade === "" ? "#909090" : "#000",
+                    color:
+                      values.especialidade === ""
+                        ? styleTheme.textSecundary.color
+                        : styleTheme.textPrimary.color,
                     fontSize: 15,
                     marginLeft: -10,
                   }}
+                  dropdownTextStyles={styleTheme.textPrimary}
                 />
               </View>
               {errors.especialidade && submitCount ? (
@@ -132,10 +140,12 @@ function Cadastro({ navigation }) {
 
             <View style={styles.containerButtonNext}>
               <TouchableOpacity
-                style={styles.buttonNext}
+                style={[styles.buttonNext, styleTheme.buttonPress]}
                 onPress={handleSubmit}
               >
-                <Text style={styles.textNext}>Próximo</Text>
+                <Text style={[styles.textNext, styleTheme.buttonText]}>
+                  Próximo
+                </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -143,8 +153,15 @@ function Cadastro({ navigation }) {
       </Formik>
 
       <View style={styles.containerButtonBack}>
-        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
-          <Image source={require("../../../assets/arrow.png")} />
+        <TouchableOpacity
+          style={[styles.buttonBack, styleTheme.buttonPress]}
+          onPress={voltar}
+        >
+          <MaterialCommunityIcons
+            name="keyboard-backspace"
+            size={40}
+            color={styleTheme.buttonText.color}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -206,13 +223,11 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_700Bold",
   },
   buttonBack: {
-    backgroundColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 50,
-    width: 40,
-    height: 40,
-    padding: 25,
+    width: 55,
+    height: 55,
+    alignItems: "center",
+    justifyContent: "center",
   },
   containerButtonBack: {
     marginTop: "10%",

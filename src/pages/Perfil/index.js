@@ -17,9 +17,11 @@ import jwtDecode from "jwt-decode";
 import { api } from "../../services/api";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth";
+import { ThemeContext } from "../../context/theme";
 
 function Perfil({ navigation }) {
   const { user } = useContext(AuthContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ function Perfil({ navigation }) {
   }
 
   return (
-    <View style={{ backgroundColor: "#fff", flex: 1, padding: 20 }}>
+    <View style={[styles.container, styleTheme.container]}>
       {data.length === 0 ? (
         <View style={styles.activityStyle}>
           <ActivityIndicator size="large" color="#23AFFF" />
@@ -79,32 +81,50 @@ function Perfil({ navigation }) {
           )}
 
           <View style={styles.viewText}>
-            <Text style={styles.texNormal}>{data.nome}</Text>
-            <Text style={styles.texNormal}>{data.email}</Text>
+            <Text style={[styles.texNormal, styleTheme.textPrimary]}>
+              {data.nome}
+            </Text>
+            <Text style={[styles.texNormal, styleTheme.textPrimary]}>
+              {data.email}
+            </Text>
 
             <TouchableOpacity style={styles.editar} onPress={goToEditar}>
               <Text style={styles.textStyle}>Editar Perfil</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.viewDados}>
-            <Text style={styles.textBold}>Meus dados</Text>
+            <Text style={[styles.textBold, styleTheme.textPrimary]}>
+              Meus dados
+            </Text>
 
             <View style={styles.viewDados2}>
-              <Text style={styles.textDados}>
+              <Text style={[styles.textDados, styleTheme.textSecundary]}>
                 Matricula:
-                <Text style={styles.textDado}> {data.matricula}</Text>
+                <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                  {" "}
+                  {data.matricula}
+                </Text>
               </Text>
-              <Text style={styles.textDados}>
+              <Text style={[styles.textDados, styleTheme.textSecundary]}>
                 Especialidade:
-                <Text style={styles.textDado}> {data.especialidade}</Text>
+                <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                  {" "}
+                  {data.especialidade}
+                </Text>
               </Text>
-              <Text style={styles.textDados}>
+              <Text style={[styles.textDados, styleTheme.textSecundary]}>
                 CPF:
-                <Text style={styles.textDado}> {data.cpf}</Text>
+                <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                  {" "}
+                  {data.cpf}
+                </Text>
               </Text>
-              <Text style={styles.textDados}>
+              <Text style={[styles.textDados, styleTheme.textSecundary]}>
                 Telefone:
-                <Text style={styles.textDado}> {data.telefone}</Text>
+                <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                  {" "}
+                  {data.telefone}
+                </Text>
               </Text>
             </View>
           </View>
@@ -115,6 +135,11 @@ function Perfil({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#fff",
+    flex: 1,
+    padding: 20,
+  },
   viewImage: {
     width: "100%",
     alignItems: "center",
