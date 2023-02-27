@@ -36,9 +36,13 @@ function Header() {
 
   return (
     <View style={[styles.container, styleTheme.container]}>
-      <View>
+      <View style={styles.viewThemeMode}>
         <TouchableOpacity onPress={toggleTheme}>
-          <Text style={styleTheme.textPrimary}>Dark</Text>
+          <MaterialCommunityIcons
+            name="theme-light-dark"
+            size={35}
+            color={styleTheme.textPrimary.color}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.titulo}>
@@ -51,7 +55,7 @@ function Header() {
             <MaterialCommunityIcons
               name="logout"
               size={34}
-              color={theme === "light" ? "#000" : "#f0f6fc"}
+              color={styleTheme.textPrimary.color}
             />
           </TouchableOpacity>
         ) : null}
@@ -99,6 +103,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "50%",
     right: 15,
-    transform: [{ translateY: -10 }],
+    transform: [{ translateY: -11 }],
+  },
+  viewThemeMode: {
+    position: "absolute",
+    top: "50%",
+    left: 15,
+    transform: [{ translateY: -8 }],
   },
 });

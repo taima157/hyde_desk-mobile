@@ -15,9 +15,11 @@ import {
 import { AuthContext } from "../../context/auth";
 import ModalLoading from "../../components/ModalLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "../../context/theme";
 
 export default function Login({ navigation }) {
   const { login, errorToast } = useContext(AuthContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
@@ -63,10 +65,9 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     navigation.addListener("focus", async () => {
-      await AsyncStorage.setItem("cadastro", JSON.stringify({}))
-    })
-
-  }, [navigation])
+      await AsyncStorage.setItem("cadastro", JSON.stringify({}));
+    });
+  }, [navigation]);
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
@@ -78,26 +79,26 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View>
         <View style={styles.container_login}>
-          <Text style={styles.login}>Login</Text>
+          <Text style={[styles.login, styleTheme.textPrimary]}>Login</Text>
         </View>
         <View style={styles.container_TextoInput}>
           <TextInput
-            style={styles.TextoInput}
+            style={[styles.TextoInput, styleTheme.inputPrimary]}
             placeholder="CPF:"
-            placeholderTextColor="#909090"
+            placeholderTextColor={styleTheme.textSecundary.color}
             value={user.cpf}
             onChangeText={(e) => setUser({ ...user, cpf: e })}
             keyboardType="numeric"
             maxLength={11}
           />
           <TextInput
-            style={styles.TextoSenha}
+            style={[styles.TextoSenha, styleTheme.inputPrimary]}
             placeholder="Senha:"
             secureTextEntry={true}
-            placeholderTextColor="#909090"
+            placeholderTextColor={styleTheme.textSecundary.color}
             value={user.senha}
             onChangeText={(e) => setUser({ ...user, senha: e })}
           />
@@ -113,12 +114,22 @@ export default function Login({ navigation }) {
               {mensagemErro}
             </Text>
           ) : null}
-          <TouchableOpacity style={styles.Botao} onPress={() => handleLogin()}>
-            <Text style={styles.TextoBotao}>Login</Text>
+          <TouchableOpacity
+            style={[styles.Botao, styleTheme.buttonPress]}
+            onPress={() => handleLogin()}
+          >
+            <Text style={[styles.TextoBotao, styleTheme.buttonText]}>
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.container_link}>
-          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+          <Text
+            style={[
+              { fontFamily: "Poppins_400Regular" },
+              styleTheme.textPrimary,
+            ]}
+          >
             Ainda não é um técnico?
           </Text>
           <TouchableOpacity
@@ -129,10 +140,18 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container_link2}>
-          <Text style={{ fontFamily: "Poppins_400Regular" }}>
+          <Text
+            style={[
+              { fontFamily: "Poppins_400Regular" },
+              styleTheme.textPrimary,
+            ]}
+          >
             Esqueceu a senha?
           </Text>
-          <TouchableOpacity style={styles.LinkCadastro} onPress={() => goToRecuperarSenha()}>
+          <TouchableOpacity
+            style={styles.LinkCadastro}
+            onPress={() => goToRecuperarSenha()}
+          >
             <Text style={styles.TextoLinkCadastro}>Recuperar senha</Text>
           </TouchableOpacity>
         </View>
@@ -172,26 +191,21 @@ const styles = StyleSheet.create({
   TextoInput: {
     width: "95%",
     height: 50,
-    backgroundColor: "#fff",
     borderRadius: 10,
-    borderBottomColor: "#000",
     borderWidth: 2,
     padding: 10,
     fontFamily: "Poppins_400Regular",
   },
   TextoSenha: {
     width: "95%",
-    height: 52,
-    backgroundColor: "#fff",
+    height: 50,
     borderRadius: 10,
-    borderBottomColor: "#000",
     borderWidth: 2,
     marginTop: 10,
     fontFamily: "Poppins_400Regular",
     padding: 10,
   },
   Botao: {
-    backgroundColor: "#000",
     borderRadius: 10,
     width: "95%",
     height: 52,
@@ -200,9 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   TextoBotao: {
-    color: "#fff",
     fontSize: 16,
     textTransform: "uppercase",
     fontFamily: "Poppins_700Bold",
@@ -215,37 +227,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-
   TextoLinkCadastro: {
     paddingLeft: 5,
     color: "#23AFFF",
     fontFamily: "Poppins_400Regular",
   },
-
   container_link2: {
     paddingTop: 5,
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
-  },
-  modalLoading: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  viewModalLoading: {
-    backgroundColor: "#FFF",
-    width: "80%",
-    paddingTop: 30,
-    paddingBottom: 20,
-    borderRadius: 10,
-    elevation: 10,
-  },
-  textoLoading: {
-    fontSize: 18,
-    textAlign: "center",
-    marginTop: 20,
-    fontFamily: "Poppins_400Regular",
   },
   textRecuperar: {
     fontFamily: "Poppins_400Regular",

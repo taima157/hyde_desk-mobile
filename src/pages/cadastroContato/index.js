@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,8 +15,12 @@ import {
 import * as yup from "yup";
 import { Formik } from "formik";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "../../context/theme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function CadastroContato({ navigation }) {
+  const { theme, styleTheme } = useContext(ThemeContext);
+
   async function handleSubmit(values) {
     const cadastroLocal = await AsyncStorage.getItem("cadastro");
     const cadastroParse = JSON.parse(cadastroLocal);
@@ -54,9 +58,11 @@ function CadastroContato({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.containerTextCadastro}>
-        <Text style={styles.textCadastro}>Cadastro</Text>
+        <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
+          Cadastro
+        </Text>
       </View>
 
       <Formik
@@ -75,7 +81,7 @@ function CadastroContato({ navigation }) {
                 onChangeText={handleChange("email")}
                 value={values.email}
                 keyboardType="email-address"
-                style={styles.inputs}
+                style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="E-mail:"
                 placeholderTextColor="#909090"
               />
@@ -87,7 +93,7 @@ function CadastroContato({ navigation }) {
                 onChangeText={handleChange("telefone")}
                 value={values.telefone}
                 keyboardType="number-pad"
-                style={styles.inputs}
+                style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="Telefone:"
                 placeholderTextColor="#909090"
                 maxLength={11}
@@ -100,7 +106,7 @@ function CadastroContato({ navigation }) {
               <TextInput
                 onChangeText={handleChange("senha")}
                 value={values.senha}
-                style={styles.inputs}
+                style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="Senha:"
                 placeholderTextColor="#909090"
                 secureTextEntry={true}
@@ -114,10 +120,12 @@ function CadastroContato({ navigation }) {
 
             <View style={styles.containerButtonNext}>
               <TouchableOpacity
-                style={styles.buttonNext}
+                style={[styles.buttonNext, styleTheme.buttonPress]}
                 onPress={handleSubmit}
               >
-                <Text style={styles.textNext}>Próximo</Text>
+                <Text style={[styles.textNext, styleTheme.buttonText]}>
+                  Próximo
+                </Text>
               </TouchableOpacity>
             </View>
           </>
@@ -125,8 +133,23 @@ function CadastroContato({ navigation }) {
       </Formik>
 
       <View style={styles.containerButtonBack}>
-        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
-          <Image source={require("../../../assets/arrow.png")} />
+        <TouchableOpacity
+          style={[
+            styles.buttonBack,
+            {
+              backgroundColor:
+                theme === "light"
+                  ? "#000"
+                  : styleTheme.containerSecundary.backgroundColor,
+            },
+          ]}
+          onPress={voltar}
+        >
+          <MaterialCommunityIcons
+            name="keyboard-backspace"
+            size={40}
+            color={theme === "light" ? "#FFF" : styleTheme.textPrimary.color}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -188,16 +211,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_700Bold",
   },
   buttonBack: {
-    backgroundColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 50,
-    width: 40,
-    height: 40,
-    padding: 25,
+    width: 55,
+    height: 55,
+    alignItems: "center",
+    justifyContent: "center",
   },
   containerButtonBack: {
-    marginTop: "15%",
+    marginTop: "10%",
     justifyContent: "center",
     alignItems: "center",
   },

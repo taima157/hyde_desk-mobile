@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,12 +15,14 @@ import {
   Poppins_400Regular,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
+import { ThemeContext } from "../../context/theme";
 
 export default function ModalDetalhes({
   chamado,
   aceitarChamado,
   toggleModal,
 }) {
+  const { theme, styleTheme } = useContext(ThemeContext);
   const [modalImage, setModalImage] = useState(false);
 
   function toggleModalImage() {
@@ -37,47 +39,66 @@ export default function ModalDetalhes({
   }
 
   return (
-    <View style={styles.modalView}>
-      <Text style={styles.tituloDetalhe}>Detalhes</Text>
+    <View style={[styles.modalView, styleTheme.containerSecundary]}>
+      <Text style={[styles.tituloDetalhe, styleTheme.textPrimary]}>
+        Detalhes
+      </Text>
       <ScrollView>
         <View style={styles.detalhesChamado}>
           <View style={styles.field}>
-            <Text style={styles.label}>Empresa:</Text>
-            <Text style={styles.valorField}>{chamado.nome_empresa}</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>Empresa:</Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
+              {chamado.nome_empresa}
+            </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Endereco:</Text>
-            <Text style={styles.valorField}>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Endereco:
+            </Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
               {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
               {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
               {chamado.endereco.uf}
             </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Contato:</Text>
-            <Text style={styles.valorField}>
+            <Text style={[styles.label, styleTheme.textPrimary]}>Contato:</Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
               Tel: {chamado.telefone}
             </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Data do chamado:</Text>
-            <Text style={styles.valorField}>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Data do chamado:
+            </Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
               {chamado.dataChamado} - {chamado.horaChamado}
             </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Problema:</Text>
-            <Text style={[styles.valorField, { textTransform: "capitalize" }]}>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Problema:
+            </Text>
+            <Text
+              style={[
+                [styles.valorField, styleTheme.textPrimary],
+                { textTransform: "capitalize" },
+              ]}
+            >
               {chamado.problema}
             </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Descrição:</Text>
-            <Text style={styles.valorField}>{chamado.descricao}</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Descrição:
+            </Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
+              {chamado.descricao}
+            </Text>
           </View>
           {chamado.anexo !== null ? (
             <View style={styles.field}>
-              <Text style={styles.label}>Anexo:</Text>
+              <Text style={[styles.label, styleTheme.textPrimary]}>Anexo:</Text>
               <TouchableOpacity onPress={toggleModalImage}>
                 <Image
                   style={styles.anexo}
@@ -116,16 +137,26 @@ export default function ModalDetalhes({
             </View>
           ) : null}
           <View style={styles.field}>
-            <Text style={styles.label}>Setor:</Text>
-            <Text style={styles.valorField}>{chamado.setor}</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>Setor:</Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
+              {chamado.setor}
+            </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Patrimônio:</Text>
-            <Text style={styles.valorField}>{chamado.patrimonio}</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Patrimônio:
+            </Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
+              {chamado.patrimonio}
+            </Text>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>Código de verificação:</Text>
-            <Text style={styles.valorField}>{chamado.cod_verificacao}</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Código de verificação:
+            </Text>
+            <Text style={[styles.valorField, styleTheme.textPrimary]}>
+              {chamado.cod_verificacao}
+            </Text>
           </View>
         </View>
       </ScrollView>

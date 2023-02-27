@@ -6,9 +6,12 @@ import { api } from "../../services/api";
 import ModalLoading from "../../components/ModalLoading";
 import { AuthContext } from "../../context/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeContext } from "../../context/theme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function CadastrarFoto({ navigation }) {
   const { errorToast, successToast } = useContext(AuthContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
   const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -108,13 +111,15 @@ export default function CadastrarFoto({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleTheme.container]}>
       <View style={styles.container_CadastrarFoto}>
-        <Text style={styles.CadastrarFoto}>Cadastro</Text>
+        <Text style={[styles.CadastrarFoto, styleTheme.textPrimary]}>
+          Cadastro
+        </Text>
       </View>
 
       <View style={styles.container_card}>
-        <View style={styles.card_AdicionarUsuarios}>
+        <View style={[styles.card_AdicionarUsuarios, styleTheme.inputPrimary]}>
           <View style={styles.container_ImageCard}>
             <TouchableOpacity
               style={styles.container_foto}
@@ -134,14 +139,26 @@ export default function CadastrarFoto({ navigation }) {
       </View>
 
       <View style={styles.containerButtonNext}>
-        <TouchableOpacity style={styles.buttonNext} onPress={cadastrar}>
-          <Text style={styles.textNext}>Finalizar</Text>
+        <TouchableOpacity
+          style={[styles.buttonNext, styleTheme.buttonPress]}
+          onPress={cadastrar}
+        >
+          <Text style={[styles.textNext, styleTheme.buttonText]}>
+            Finalizar
+          </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.containerButtonBack}>
-        <TouchableOpacity style={styles.buttonBack} onPress={voltar}>
-          <Image source={require("../../../assets/arrow.png")} />
+        <TouchableOpacity
+          style={[styles.buttonBack, styleTheme.buttonPress]}
+          onPress={voltar}
+        >
+          <MaterialCommunityIcons
+            name="keyboard-backspace"
+            size={40}
+            color={styleTheme.buttonText.color}
+          />
         </TouchableOpacity>
       </View>
       <ModalLoading isVisible={modalVisible} />
@@ -154,10 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
-    // alignItems: 'center'
-    // width: "100%",
   },
-
   container_CadastrarFoto: {
     display: "flex",
     alignItems: "center",
@@ -166,13 +180,11 @@ const styles = StyleSheet.create({
     paddingBottom: "1%",
     paddingLeft: "1%",
   },
-
   CadastrarFoto: {
     paddingLeft: "2%",
     fontSize: 36,
     fontFamily: "Poppins_700Bold",
   },
-
   container_card: {
     width: "100%",
     display: "flex",
@@ -180,18 +192,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-
   card_AdicionarUsuarios: {
     width: "80%",
     height: "80%",
     borderRadius: 10,
-    borderColor: "#000",
     borderWidth: 2,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-
   container_ImageCard: {
     backgroundColor: "#D9D9D9",
     width: 125,
@@ -200,19 +209,16 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
-
   container_foto: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-
   ImgCamera: {
     width: 125,
     height: 125,
     borderRadius: 100,
   },
-
   buttonNext: {
     backgroundColor: "#000000",
     height: 50,
@@ -227,33 +233,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   containerButtonBack: {
     marginTop: "15%",
     justifyContent: "center",
     alignItems: "center",
   },
-
   textNext: {
     color: "#fff",
     fontSize: 16,
     textTransform: "uppercase",
     fontWeight: "bold",
   },
-
   containerButtonBack: {
     marginTop: "10%",
     justifyContent: "center",
     alignItems: "center",
   },
-
   buttonBack: {
-    backgroundColor: "#000000",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 50,
-    width: 40,
-    height: 40,
-    padding: 25,
+    width: 55,
+    height: 55,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
