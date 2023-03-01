@@ -16,18 +16,36 @@ import {
 } from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export default function Chamados({ navigation }) {
   const { user } = useContext(AuthContext);
   const { theme, styleTheme } = useContext(ThemeContext);
+  const [prioridade, setPrioridade] = useState("1");
+
+  const filtroItem = [
+    { key: "1", value: "Tudo" },
+    { key: "2", value: "Baixa" },
+    { key: "3", value: "Média" },
+    { key: "4", value: "Alta" },
+  ];
 
   const [chamados, setChamados] = useState([]);
   const [chamadosAndamento, setChamadoAndamento] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   async function getChamados() {
+    setChamados([])
+    setChamadoAndamento(null)
     try {
-      const response = await api.get("/chamados?status_chamado=pendente");
+      let endpoint = "/chamados?status_chamado=pendente"
+      let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
+  
+      if (prioridadeTexto !== "Tudo") {
+        endpoint += `&prioridade=${prioridadeTexto}`
+      }
+
+      const response = await api.get(endpoint);
 
       setChamados(response.data);
       setRefreshing(false);
@@ -61,7 +79,7 @@ export default function Chamados({ navigation }) {
       setChamados([]);
       setChamadoAndamento(null);
     });
-  }, [refreshing, navigation]);
+  }, [refreshing, navigation, prioridade]);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -77,6 +95,45 @@ export default function Chamados({ navigation }) {
       <View style={styles.viewTitulo}>
         <Text style={[styles.titulo, styleTheme.textPrimary]}>Chamados</Text>
       </View>
+      <View style={styles.viewFiltro}>
+        <View style={styles.fieldFiltro}>
+          <Text style={[styles.textPrioridade, styleTheme.textPrimary]}>
+            Prioridade:
+          </Text>
+          <SelectList
+            data={filtroItem}
+            value={prioridade}
+            setSelected={(e) => setPrioridade(e)}
+            placeholder="Tudo"
+            search={false}
+            boxStyles={[
+              {
+                borderWidth: 2,
+                borderColor: "#23AFFF",
+                height: 50,
+                width: 150,
+              },
+              styleTheme.containerSecundary
+            ]}
+            fontFamily="Poppins_400Regular"
+            inputStyles={{
+              color: styleTheme.textPrimary.color,
+              fontSize: 15,
+              marginLeft: -10,
+            }}
+            dropdownStyles={{
+              width: 150,
+              position: "absolute",
+              backgroundColor: styleTheme.containerSecundary.backgroundColor,
+              zIndex: 10,
+              top: 50,
+              borderWidth: 2,
+              borderColor: "#23AFFF",
+            }}
+            dropdownTextStyles={styleTheme.textPrimary}
+          />
+        </View>
+      </View>
       <View style={styles.viewChamados}>
         {chamadosAndamento === null ? (
           <View
@@ -89,10 +146,14 @@ export default function Chamados({ navigation }) {
           </View>
         ) : chamadosAndamento.length !== 0 ? (
           <View>
-            <Text style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}>
+            <Text
+              style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}
+            >
               Você já possui um chamado em andamento.
             </Text>
-            <Text style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}>
+            <Text
+              style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}
+            >
               Vá até a Home para mais detalhes.
             </Text>
           </View>
@@ -175,10 +236,29 @@ const styles = StyleSheet.create({
   viewSemChamados: {
     position: "absolute",
     top: "50%",
-    left: "25%",
+    left: "20%",
+    width: "100%",
   },
   textoSemChamados: {
     fontFamily: "Poppins_400Regular",
-    textAlign: "center",
+
+  },
+  viewFiltro: {
+    width: "100%",
+    paddingLeft: 20,
+    paddingRight: 20,
+    display: "flex",
+    alignItems: "flex-end",
+    paddingBottom: 5
+  },
+  fieldFiltro: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  textPrioridade: {
+    fontFamily: "Poppins_400Regular",
+    fontSize: 16,
+    paddingRight: 5,
+    marginTop: 10,
   },
 });

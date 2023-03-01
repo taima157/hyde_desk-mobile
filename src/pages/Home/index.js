@@ -200,7 +200,7 @@ export default function Home({ navigation }) {
         ) : chamado.length !== 0 ? (
           <>
             <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>Chamado em andamento</Text>
-            <View style={[styles.containerChamado]}>
+            <View style={[styles.containerChamado, styleTheme.containerSecundary]}>
               <ScrollView>
                 <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>{chamado.nome_empresa}</Text>
                 <View style={styles.field}>

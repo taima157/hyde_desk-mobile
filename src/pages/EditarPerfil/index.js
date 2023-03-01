@@ -97,7 +97,10 @@ export default function EditarPerfil({ route, navigation }) {
               color="#23AFFF"
             />
             <Image
-              style={styles.ImgCamera}
+              style={[
+                styles.ImgCamera,
+                { borderColor: "#23AFFF", borderWidth: 2 },
+              ]}
               source={
                 image.uri.length != 0
                   ? { uri: image.uri }

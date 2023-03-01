@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     display: "flex",
     textAlign: "center",
     fontFamily: "Poppins_600SemiBold",
-    color: "#000",
+    color: "red",
     fontSize: 15,
     marginTop: 20,
   },

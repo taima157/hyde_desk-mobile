@@ -12,8 +12,6 @@ import {
   Poppins_600SemiBold,
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import jwtDecode from "jwt-decode";
 import { api } from "../../services/api";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth";
@@ -65,20 +63,20 @@ function Perfil({ navigation }) {
         </View>
       ) : (
         <>
-          {data.foto ? (
-            <View style={styles.viewImage}>
-              <Image
-                style={{ width: 150, height: 150, borderRadius: 75 }}
-                source={{
-                  uri: `https://hdteste.azurewebsites.net/${data.foto}`,
-                }}
-              />
-            </View>
-          ) : (
-            <View style={styles.activityStyle2}>
-              <ActivityIndicator size="large" color="#23AFFF" />
-            </View>
-          )}
+          <View style={styles.viewImage}>
+            <Image
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: 75,
+                borderColor: "#23AFFF",
+                borderWidth: 2,
+              }}
+              source={{
+                uri: `https://hdteste.azurewebsites.net/${data.foto}`,
+              }}
+            />
+          </View>
 
           <View style={styles.viewText}>
             <Text style={[styles.texNormal, styleTheme.textPrimary]}>
