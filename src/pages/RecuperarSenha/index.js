@@ -14,14 +14,33 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/theme";
-
+import { useState } from "react";
+import { api } from "../../services/api";
 export default function Login({ navigation }) {
+  const [email, setEmail] = useState("")
+
+  const form = {
+    toemail: email,
+    tipoTabela: "tecnicos"
+  }
   const { styleTheme } = useContext(ThemeContext);
 
+  console.log(email)
   function voltar() {
     navigation.navigate("Login");
   }
 
+
+  async function getToken() {
+    try{
+      const response = await api.post("/email", form)
+
+      console.log(response)
+
+    }catch(error){
+      console.log(error)
+    }
+  }
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -43,11 +62,12 @@ export default function Login({ navigation }) {
         <TextInput
           style={[styles.TextoInput, styleTheme.inputPrimary]}
           placeholder="E-mail"
+          onChangeText={(e) => setEmail(e)}
           placeholderTextColor={styleTheme.textSecundary.color}
           keyboardType="email-address"
         />
 
-        <TouchableOpacity style={[styles.Botao, styleTheme.buttonPress]} onPress={() => ""}>
+        <TouchableOpacity style={[styles.Botao, styleTheme.buttonPress]} onPress={getToken}>
           <Text style={[styles.TextoBotao, styleTheme.buttonText]}>Enviar Email</Text>
         </TouchableOpacity>
 
