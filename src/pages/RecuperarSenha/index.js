@@ -16,31 +16,45 @@ import { useContext } from "react";
 import { ThemeContext } from "../../context/theme";
 import { useState } from "react";
 import { api } from "../../services/api";
+import { AuthContext } from "../../context/auth";
+import ModalLoading from "../../components/ModalLoading";
+import { Formik } from "formik";
+import * as yup from "yup";
+
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("")
-
-  const form = {
-    toemail: email,
-    tipoTabela: "tecnicos"
-  }
+  const { successToast, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
+  const [loading, setLoading] = useState(false);
 
-  console.log(email)
+  const yupSchema = yup.object({
+    email: yup
+      .string()
+      .email("E-mail inválido")
+      .required("Digite um e-mail válido"),
+  });
+
   function voltar() {
     navigation.navigate("Login");
   }
 
+  async function handleSubmit(values) {
+    setLoading(true);
 
-  async function getToken() {
-    try{
-      const response = await api.post("/email", form)
+    try {
+      const form = {
+        toemail: values.email,
+        tipoTabela: "tecnicos",
+      };
 
-      console.log(response)
-
-    }catch(error){
-      console.log(error)
+      const response = await api.post("/email", form);
+      successToast("Recuperar senha", response.data.menssage);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      errorToast("Recuperar senha", "Não foi possível enviar E-mail.");
     }
   }
+
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -59,18 +73,41 @@ export default function Login({ navigation }) {
       </View>
 
       <View style={styles.container_TextoInput}>
-        <TextInput
-          style={[styles.TextoInput, styleTheme.inputPrimary]}
-          placeholder="E-mail"
-          onChangeText={(e) => setEmail(e)}
-          placeholderTextColor={styleTheme.textSecundary.color}
-          keyboardType="email-address"
-        />
+        <Formik
+          validationSchema={yupSchema}
+          initialValues={{
+            email: "",
+          }}
+          onSubmit={(values, { resetForm }) => {
+            handleSubmit(values);
+            resetForm({ values: "" });
+          }}
+        >
+          {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+            <>
+              <TextInput
+                onChangeText={handleChange("email")}
+                value={values.email}
+                keyboardType="email-address"
+                style={[styles.TextoInput, styleTheme.inputPrimary]}
+                placeholder="E-mail"
+                placeholderTextColor={styleTheme.textSecundary.color}
+              />
+              {errors.email && submitCount ? (
+                <Text style={styles.labelError}>{errors.email}</Text>
+              ) : null}
 
-        <TouchableOpacity style={[styles.Botao, styleTheme.buttonPress]} onPress={getToken}>
-          <Text style={[styles.TextoBotao, styleTheme.buttonText]}>Enviar Email</Text>
-        </TouchableOpacity>
-
+              <TouchableOpacity
+                style={[styles.Botao, styleTheme.buttonPress]}
+                onPress={handleSubmit}
+              >
+                <Text style={[styles.TextoBotao, styleTheme.buttonText]}>
+                  Enviar Email
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
         <View style={styles.containerTextoInfo}>
           <Text style={[styles.TextoInfo, styleTheme.textPrimary]}>
             Um link será enviado para que você possa redefinir sua senha.
@@ -90,6 +127,7 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      <ModalLoading isVisible={loading} />
     </View>
   );
 }
@@ -98,13 +136,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center",
   },
   container_login: {
+    marginTop: "40%",
     display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "flex-start",
     paddingBottom: "2%",
     paddingLeft: "1%",
   },
@@ -118,11 +153,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   TextoInput: {
-    width: "95%",
-    height: 52,
-    borderRadius: 10,
+    height: 50,
     borderWidth: 2,
-    padding: 15,
+    padding: 10,
+    borderRadius: 10,
+    height: 50,
+    width: "95%",
+    color: "#000",
+    fontSize: 15,
     fontFamily: "Poppins_400Regular",
   },
   TextoSenha: {
@@ -173,5 +211,13 @@ const styles = StyleSheet.create({
     marginTop: "15%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  labelError: {
+    color: "#ff375b",
+    marginTop: 5,
+    marginLeft: 20,
+    fontSize: 14,
+    alignSelf: "flex-start",
+    fontFamily: "Poppins_400Regular",
   },
 });

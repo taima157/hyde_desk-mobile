@@ -83,7 +83,7 @@ function CadastroContato({ navigation }) {
                 keyboardType="email-address"
                 style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="E-mail:"
-                placeholderTextColor="#909090"
+                placeholderTextColor={styleTheme.textSecundary.color}
               />
               {errors.email && submitCount ? (
                 <Text style={styles.labelError}>{errors.email}</Text>
@@ -95,7 +95,7 @@ function CadastroContato({ navigation }) {
                 keyboardType="number-pad"
                 style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="Telefone:"
-                placeholderTextColor="#909090"
+                placeholderTextColor={styleTheme.textSecundary.color}
                 maxLength={11}
               />
 
@@ -108,7 +108,7 @@ function CadastroContato({ navigation }) {
                 value={values.senha}
                 style={[styles.inputs, styleTheme.inputPrimary]}
                 placeholder="Senha:"
-                placeholderTextColor="#909090"
+                placeholderTextColor={styleTheme.textSecundary.color}
                 secureTextEntry={true}
                 maxLength={11}
               />
