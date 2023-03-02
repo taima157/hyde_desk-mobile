@@ -9,7 +9,7 @@ import { ThemeContext } from "../context/theme";
 const { Screen, Navigator } = createBottomTabNavigator();
 
 export default function TabRoutes({ route }) {
-  const { theme } = useContext(ThemeContext);
+  const { theme, styleTheme } = useContext(ThemeContext);
 
   return (
     <Navigator
@@ -20,7 +20,7 @@ export default function TabRoutes({ route }) {
           display: "flex",
           alignItems: "center",
           height: 65,
-          backgroundColor: theme === "light" ? "#FFF" : "#161b22",
+          backgroundColor: styleTheme.containerSecundary.backgroundColor,
           marginBottom: -1
         },
       }}

@@ -16,7 +16,7 @@ export function ThemeProvider({ children }) {
       backgroundColor: theme === "light" ? "#FFF" : "#0d1117",
     },
     containerSecundary: {
-      backgroundColor: theme === "light" ? "#FFF" : "#161b22",
+      backgroundColor: theme === "light" ? "#f8fafc" : "#1f2937",
     },
     textPrimary: {
       color: theme === "light" ? "#000" : "#e2e8f0",
@@ -25,13 +25,13 @@ export function ThemeProvider({ children }) {
       color: theme === "light" ? "#909090" : "#9ca3af",
     },
     buttonPress: {
-      backgroundColor: theme === "light" ? "#000" : "#161b22",
+      backgroundColor: theme === "light" ? "#000" : "#1f2937",
     },
     buttonText: {
       color: theme === "light" ? "#FFF" : "#e2e8f0",
     },
     inputPrimary: {
-      borderColor: theme === "light" ? "#000" : "#161b22",
+      borderColor: theme === "light" ? "#000" : "#1f2937",
       color: theme === "light" ? "#000" : "#e2e8f0",
     },
     inputSecundary: {

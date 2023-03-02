@@ -40,7 +40,7 @@ function Cadastro({ navigation }) {
 
   async function handleSubmit(values) {
     if (values.especialidade.length < 2) {
-      values.especialidade = data[Number(values.especialidade)].value;
+      values.especialidade = data[Number(values.especialidade ) - 1].value;
     }
 
     await AsyncStorage.setItem("cadastro", JSON.stringify(values));
