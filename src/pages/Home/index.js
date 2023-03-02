@@ -82,7 +82,7 @@ export default function Home({ navigation }) {
     }
   }
 
-  async function cancelarChamado() {
+  async function suspenderChamado() {
     try {
       await api.put(`/chamados/suspender/${chamado.id_chamado}`);
 
@@ -291,7 +291,7 @@ export default function Home({ navigation }) {
                   onPress={toggleModalCancelar}
                 >
                   <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
-                    Cancelar
+                    Suspender
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -338,8 +338,8 @@ export default function Home({ navigation }) {
       <ConfirmModal
         isVisible={modalCancelar}
         fecharModal={toggleModalCancelar}
-        confirmarAcao={cancelarChamado}
-        mensagem="Deseja cancelar esse chamado?"
+        confirmarAcao={suspenderChamado}
+        mensagem="Deseja suspender esse chamado?"
       />
       <Modal isVisible={modalFinalizar} backdropOpacity={0.3}>
         <View style={[styles.viewFinalizar, styleTheme.containerSecundary]}>
