@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { api } from "../../services/api";
 import CardChamados from "../../components/CardChamados";
@@ -30,19 +31,19 @@ export default function Chamados({ navigation }) {
     { key: "4", value: "Alta" },
   ];
 
-  const [chamados, setChamados] = useState([]);
+  const [chamados, setChamados] = useState(null);
   const [chamadosAndamento, setChamadoAndamento] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   async function getChamados() {
-    setChamados([])
-    setChamadoAndamento(null)
+    setChamados(null);
+    setChamadoAndamento(null);
     try {
-      let endpoint = "/chamados?status_chamado=pendente"
+      let endpoint = "/chamados?status_chamado=pendente";
       let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
-  
+
       if (prioridadeTexto !== "Tudo") {
-        endpoint += `&prioridade=${prioridadeTexto}`
+        endpoint += `&prioridade=${prioridadeTexto}`;
       }
 
       const response = await api.get(endpoint);
@@ -61,6 +62,7 @@ export default function Chamados({ navigation }) {
       );
 
       setChamadoAndamento(response.data);
+      setRefreshing(false);
     } catch (error) {
       console.log(error);
     }
@@ -73,11 +75,6 @@ export default function Chamados({ navigation }) {
     navigation.addListener("focus", () => {
       getChamados();
       getChamadosAndamento();
-    });
-
-    navigation.addListener("blur", () => {
-      setChamados([]);
-      setChamadoAndamento(null);
     });
   }, [refreshing, navigation, prioridade]);
 
@@ -113,7 +110,7 @@ export default function Chamados({ navigation }) {
                 height: 50,
                 width: 150,
               },
-              styleTheme.containerSecundary
+              styleTheme.containerSecundary,
             ]}
             fontFamily="Poppins_400Regular"
             inputStyles={{
@@ -134,8 +131,9 @@ export default function Chamados({ navigation }) {
           />
         </View>
       </View>
+
       <View style={styles.viewChamados}>
-        {chamadosAndamento === null ? (
+        {chamadosAndamento === null || chamados === null ? (
           <View
             style={{
               justifyContent: "center",
@@ -144,7 +142,7 @@ export default function Chamados({ navigation }) {
           >
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>
-        ) : chamadosAndamento.length !== 0 ? (
+        ) : chamadosAndamento?.length !== 0 ? (
           <View>
             <Text
               style={[styles.textoChamadoAndamento, styleTheme.textPrimary]}
@@ -159,23 +157,27 @@ export default function Chamados({ navigation }) {
           </View>
         ) : (
           <View style={styles.viewFlatList}>
-            <FlatList
+            <ScrollView
               style={styles.flatlist}
-              data={chamados}
-              renderItem={({ item }) => (
-                <CardChamados
-                  chamado={item}
-                  setRefreshing={(e) => setRefreshing(e)}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => {
+                    setRefreshing(true);
+                  }}
                 />
-              )}
-              keyExtractor={(item) => item.id_chamado}
-              refreshing={refreshing}
-              onRefresh={() => {
-                setRefreshing(true);
-                setChamados([]);
-                setChamadoAndamento(null);
-              }}
-            />
+              }
+            >
+              {chamados.map((chamado) => {
+                return (
+                  <CardChamados
+                    key={chamado.id_chamado}
+                    chamado={chamado}
+                    setRefreshing={(e) => setRefreshing(e)}
+                  />
+                );
+              })}
+            </ScrollView>
             {chamados.length === 0 ? (
               <View style={styles.viewSemChamados}>
                 <Text style={[styles.textoSemChamados, styleTheme.textPrimary]}>
@@ -241,7 +243,6 @@ const styles = StyleSheet.create({
   },
   textoSemChamados: {
     fontFamily: "Poppins_400Regular",
-
   },
   viewFiltro: {
     width: "100%",
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     display: "flex",
     alignItems: "flex-end",
-    paddingBottom: 5
+    paddingBottom: 5,
   },
   fieldFiltro: {
     display: "flex",
