@@ -24,9 +24,10 @@ import ConfirmModal from "../../components/ConfirmModal";
 import * as ImagePicker from "expo-image-picker";
 import CardChamadoConcluido from "../../components/CardChamadoConcluido";
 import { ThemeContext } from "../../context/theme";
+import ModalLoading from "../../components/ModalLoading";
 
 export default function Home({ navigation }) {
-  const { user } = useContext(AuthContext);
+  const { user, successToast, errorToast } = useContext(AuthContext);
   const { styleTheme, toggleTheme } = useContext(ThemeContext);
 
   const [chamado, setChamado] = useState(null);
@@ -40,6 +41,8 @@ export default function Home({ navigation }) {
       name: "",
     },
   });
+
+  const [loading, setLoading] = useState(false);
   const [erroDescricao, setErroDescricao] = useState("");
 
   const [modalImage, setModalImage] = useState(false);
@@ -83,14 +86,25 @@ export default function Home({ navigation }) {
   }
 
   async function suspenderChamado() {
+    setLoading(true);
+
     try {
-      await api.put(`/chamados/suspender/${chamado.id_chamado}`);
+      const response = await api.put(
+        `/chamados/suspender/${chamado.id_chamado}`
+      );
 
       setChamado([]);
       setCancelar(!cancelar);
       toggleModalCancelar();
+
+      setLoading(false);
+      successToast("Suspender", response.data.message);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+
+      if (error.response.data.message) {
+        errorToast("Suspender", error.response.data.message);
+      }
     }
   }
 
@@ -129,6 +143,8 @@ export default function Home({ navigation }) {
   }
 
   async function getChamadoAndamento() {
+    setChamado(null);
+
     try {
       const response = await api.get(
         `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
@@ -146,6 +162,8 @@ export default function Home({ navigation }) {
   }
 
   async function getChamadosConcluidos() {
+    setChamadosConcluido([]);
+
     try {
       const response = await api.get(
         `/chamados?status_chamado=concluido&tecnico_id=${user.id_tecnico}`
@@ -168,11 +186,6 @@ export default function Home({ navigation }) {
     navigation.addListener("focus", () => {
       getChamadoAndamento();
       getChamadosConcluidos();
-    });
-
-    navigation.addListener("blur", () => {
-      setChamado(null);
-      setChamadosConcluido([]);
     });
   }, [navigation, cancelar]);
 
@@ -199,12 +212,20 @@ export default function Home({ navigation }) {
           </View>
         ) : chamado.length !== 0 ? (
           <>
-            <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>Chamado em andamento</Text>
-            <View style={[styles.containerChamado, styleTheme.containerSecundary]}>
+            <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>
+              Chamado em andamento
+            </Text>
+            <View
+              style={[styles.containerChamado, styleTheme.containerSecundary]}
+            >
               <ScrollView>
-                <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>{chamado.nome_empresa}</Text>
+                <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>
+                  {chamado.nome_empresa}
+                </Text>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Endereco:</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Endereco:
+                  </Text>
                   <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
                     {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
@@ -213,30 +234,48 @@ export default function Home({ navigation }) {
                 </View>
 
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Contato:</Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>Tel: {chamado.telefone}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Contato:
+                  </Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
+                    Tel: {chamado.telefone}
+                  </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Data do chamado:</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Data do chamado:
+                  </Text>
                   <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.dataChamado} - {chamado.horaChamado}
                   </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Problema:</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Problema:
+                  </Text>
                   <Text
-                    style={[styles.valorField, styleTheme.textPrimary, { textTransform: "capitalize" }]}
+                    style={[
+                      styles.valorField,
+                      styleTheme.textPrimary,
+                      { textTransform: "capitalize" },
+                    ]}
                   >
                     {chamado.problema}
                   </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Descrição:</Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.descricao}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Descrição:
+                  </Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
+                    {chamado.descricao}
+                  </Text>
                 </View>
                 {chamado.anexo !== null ? (
                   <View style={styles.field}>
-                    <Text style={[styles.label, styleTheme.textPrimary]}>Anexo:</Text>
+                    <Text style={[styles.label, styleTheme.textPrimary]}>
+                      Anexo:
+                    </Text>
                     <TouchableOpacity onPress={toggleModalImage}>
                       <Image
                         style={styles.anexo}
@@ -271,15 +310,25 @@ export default function Home({ navigation }) {
                   </View>
                 ) : null}
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Setor:</Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.setor}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Setor:
+                  </Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
+                    {chamado.setor}
+                  </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Patrimônio:</Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>{chamado.patrimonio}</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Patrimônio:
+                  </Text>
+                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
+                    {chamado.patrimonio}
+                  </Text>
                 </View>
                 <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>Código de verificação:</Text>
+                  <Text style={[styles.label, styleTheme.textPrimary]}>
+                    Código de verificação:
+                  </Text>
                   <Text style={[styles.valorField, styleTheme.textPrimary]}>
                     {chamado.cod_verificacao}
                   </Text>
@@ -327,7 +376,9 @@ export default function Home({ navigation }) {
               </ScrollView>
             ) : (
               <View style={styles.viewSemConcluidos}>
-                <Text style={[styles.textSemConcluidos, styleTheme.textPrimary]}>
+                <Text
+                  style={[styles.textSemConcluidos, styleTheme.textPrimary]}
+                >
                   Você não há chamados concluidos.
                 </Text>
               </View>
@@ -343,9 +394,13 @@ export default function Home({ navigation }) {
       />
       <Modal isVisible={modalFinalizar} backdropOpacity={0.3}>
         <View style={[styles.viewFinalizar, styleTheme.containerSecundary]}>
-          <Text style={[styles.tituloFinalizar, styleTheme.textPrimary]}>Finalizar Chamado</Text>
+          <Text style={[styles.tituloFinalizar, styleTheme.textPrimary]}>
+            Finalizar Chamado
+          </Text>
           <View style={styles.viewDescricao}>
-            <Text style={[styles.label, styleTheme.textPrimary]}>Descrição:</Text>
+            <Text style={[styles.label, styleTheme.textPrimary]}>
+              Descrição:
+            </Text>
             <TextInput
               style={styles.inputDescricao}
               value={concluirChamado.descricao}
@@ -357,7 +412,9 @@ export default function Home({ navigation }) {
           </View>
           <View style={styles.viewAnexo}>
             <View style={styles.inputAnexo}>
-              <Text style={[styles.label, styleTheme.textPrimary]}>Anexar alguma imagem:</Text>
+              <Text style={[styles.label, styleTheme.textPrimary]}>
+                Anexar alguma imagem:
+              </Text>
               <TouchableOpacity
                 style={styles.botaoAnexo}
                 onPress={anexarImagem}
@@ -406,6 +463,7 @@ export default function Home({ navigation }) {
           </View>
         </View>
       </Modal>
+      <ModalLoading isVisible={loading} />
     </View>
   );
 }

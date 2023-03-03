@@ -48,6 +48,10 @@ export default function Login({ navigation }) {
 
       const response = await api.post("/email", form);
       successToast("Recuperar senha", response.data.menssage);
+
+      if(response.data.token){
+        navigation.navigate("ConfirmarToken", response.data.token)
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);
