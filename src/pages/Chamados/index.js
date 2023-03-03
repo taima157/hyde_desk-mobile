@@ -37,7 +37,6 @@ export default function Chamados({ navigation }) {
 
   async function getChamados() {
     setChamados(null);
-    setChamadoAndamento(null);
     try {
       let endpoint = "/chamados?status_chamado=pendente";
       let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
@@ -56,6 +55,7 @@ export default function Chamados({ navigation }) {
   }
 
   async function getChamadosAndamento() {
+    setChamadoAndamento(null);
     try {
       const response = await api.get(
         `/chamados?status_chamado=andamento&tecnico_id=${user.id_tecnico}`
