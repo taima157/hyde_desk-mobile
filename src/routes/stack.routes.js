@@ -11,6 +11,7 @@ import { AuthProvider } from "../context/auth";
 import { ThemeProvider } from "../context/theme";
 import RecuperarSenha from "../pages/RecuperarSenha";
 import { StatusBar } from "react-native";
+import ConfirmarToken from "../pages/ConfirmarToken";
 
 const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
@@ -30,6 +31,7 @@ export function StackRoutes() {
             <Screen name="Logado" component={TabRoutes} />
             <Screen name="Editar Perfil" component={EditarPerfil} />
             <Screen name="Recuperar Senha" component={RecuperarSenha} />
+            <Screen name="ConfirmarToken" component={ConfirmarToken}/>
           </Navigator>
         </AuthProvider>
       </ThemeProvider>
