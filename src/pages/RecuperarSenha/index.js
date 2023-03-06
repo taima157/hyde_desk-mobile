@@ -50,7 +50,12 @@ export default function Login({ navigation }) {
       successToast("Recuperar senha", response.data.menssage);
 
       if(response.data.token){
-        navigation.navigate("ConfirmarToken", response.data.token)
+
+        const data = {
+          email: values.email,
+          token: response.data.token
+        }
+        navigation.navigate("ConfirmarToken", data)
       }
       setLoading(false);
     } catch (error) {
