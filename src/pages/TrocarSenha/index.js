@@ -21,16 +21,17 @@ import ModalLoading from "../../components/ModalLoading";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, route }) {
+  const email = route.params;
   const { successToast, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
   const [loading, setLoading] = useState(false);
 
   const yupSchema = yup.object({
-    email: yup
+    senha: yup
       .string()
-      .email("E-mail inválido")
-      .required("Digite um e-mail válido"),
+      .min(6, "A senha deve conter no mínimo 6 dígitos")
+      .required("Digite sua senha"),
   });
 
   function voltar() {
@@ -42,25 +43,22 @@ export default function Login({ navigation }) {
 
     try {
       const form = {
-        toemail: values.email,
-        tipoTabela: "tecnicos",
+        senha: values.senha,
       };
+      const response = await api.put(
+        `/tecnicos/redefinir-senha/${email}`,
+        form
+      );
 
-      const response = await api.post("/email", form);
-      successToast("Recuperar senha", response.data.menssage);
-
-      if(response.data.token){
-
-        const data = {
-          email: values.email,
-          token: response.data.token
-        }
-        navigation.navigate("ConfirmarToken", data)
-      }
-      setLoading(false);
+      successToast("Alterar senha", response.data.message);
+      navigation.navigate("Login");
     } catch (error) {
       setLoading(false);
-      errorToast("Recuperar senha", "Não foi possível enviar E-mail.");
+      if (error.response.data.message) {
+        errorToast("Recuperar senha", error.response.data.message);
+      } else {
+        errorToast("Recuperar senha", "Não foi possível alterar a senha.");
+      }
     }
   }
 
@@ -77,7 +75,7 @@ export default function Login({ navigation }) {
     <View style={[styles.container, styleTheme.container]}>
       <View style={styles.container_login}>
         <Text style={[styles.login, styleTheme.textPrimary]}>
-          Recuperar Senha
+          Alterar Senha
         </Text>
       </View>
 
@@ -85,7 +83,7 @@ export default function Login({ navigation }) {
         <Formik
           validationSchema={yupSchema}
           initialValues={{
-            email: "",
+            senha: "",
           }}
           onSubmit={(values, { resetForm }) => {
             handleSubmit(values);
@@ -95,15 +93,16 @@ export default function Login({ navigation }) {
           {({ handleChange, handleSubmit, values, errors, submitCount }) => (
             <>
               <TextInput
-                onChangeText={handleChange("email")}
-                value={values.email}
-                keyboardType="email-address"
+                onChangeText={handleChange("senha")}
+                secureTextEntry={true}
+                value={values.senha}
+                keyboardType="password"
                 style={[styles.TextoInput, styleTheme.inputPrimary]}
-                placeholder="E-mail"
+                placeholder="Senha"
                 placeholderTextColor={styleTheme.textSecundary.color}
               />
-              {errors.email && submitCount ? (
-                <Text style={styles.labelError}>{errors.email}</Text>
+              {errors.senha && submitCount ? (
+                <Text style={styles.labelError}>{errors.senha}</Text>
               ) : null}
 
               <TouchableOpacity
@@ -111,18 +110,12 @@ export default function Login({ navigation }) {
                 onPress={handleSubmit}
               >
                 <Text style={[styles.TextoBotao, styleTheme.buttonText]}>
-                  Enviar Email
+                  Alterar senha
                 </Text>
               </TouchableOpacity>
             </>
           )}
         </Formik>
-        <View style={styles.containerTextoInfo}>
-          <Text style={[styles.TextoInfo, styleTheme.textPrimary]}>
-            Um link será enviado para que você possa redefinir sua senha.
-          </Text>
-        </View>
-
         <View style={styles.containerButtonBack}>
           <TouchableOpacity
             style={[styles.buttonBack, styleTheme.buttonPress]}
