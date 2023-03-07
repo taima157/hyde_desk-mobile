@@ -131,8 +131,6 @@ export default function Home({ navigation }) {
           }
         );
 
-        console.log(response);
-
         toggleModalFinalizar();
       } catch (error) {
         console.log(error);

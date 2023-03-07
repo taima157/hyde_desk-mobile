@@ -22,7 +22,6 @@ export default function ConfirmarToken({ route, navigation }) {
 
   const data = route.params;
 
-  console.log(data)
   const [inputValues, setInputValues] = useState([
     { value: "", ref: useRef(null) },
     { value: "", ref: useRef(null) },
@@ -57,8 +56,6 @@ export default function ConfirmarToken({ route, navigation }) {
     } else {
       setAviso(true)
     }
-
-    console.log(tokenCompare);
   }
   return (
     <View style={[styles.container, styleTheme.container]}>
