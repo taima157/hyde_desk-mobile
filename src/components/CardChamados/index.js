@@ -21,7 +21,7 @@ import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 
 export default function CardChamados({ chamado, setRefreshing }) {
-  const { user } = useContext(AuthContext);
+  const { user, successToast, errorToast } = useContext(AuthContext);
   const { theme, styleTheme } = useContext(ThemeContext);
   const [detalhesChamado, setDetalhesChamado] = useState([]);
 
@@ -44,8 +44,9 @@ export default function CardChamados({ chamado, setRefreshing }) {
 
       toggleModal();
       setRefreshing(true);
+      successToast("Aceitar chamado", response.data.message);
     } catch (error) {
-      console.log(error);
+      errorToast("Aceitar chamado", error.response.data.message);
     }
   }
 
