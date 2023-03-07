@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   ScrollView,
   ActivityIndicator,
-  FlatList,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import { api } from "../../services/api";
 import CardChamados from "../../components/CardChamados";
@@ -18,11 +18,15 @@ import {
 import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 import { SelectList } from "react-native-dropdown-select-list";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import PaginationButton from "../../components/PaginationButton";
 
 export default function Chamados({ navigation }) {
   const { user } = useContext(AuthContext);
   const { theme, styleTheme } = useContext(ThemeContext);
   const [prioridade, setPrioridade] = useState("1");
+
+  const scrollRef = useRef(null);
 
   const filtroItem = [
     { key: "1", value: "Tudo" },
@@ -68,6 +72,52 @@ export default function Chamados({ navigation }) {
     }
   }
 
+  const [pagination, setPagination] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [paginationButtons, setPaginationButtons] = useState(null);
+
+  function genPagination(from, to) {
+    setPagination(
+      chamados?.map((chamado, index) => {
+        if (index >= from && index < to) {
+          return (
+            <CardChamados
+              key={chamado.id_chamado}
+              chamado={chamado}
+              setRefreshing={(e) => setRefreshing(e)}
+            />
+          );
+        }
+      })
+    );
+  }
+
+  function handleChangePage(index) {
+    changePage(index);
+    setCurrentPage(index);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  }
+
+  function changePage(numberPage) {
+    const { from, to } = paginationButtons[numberPage];
+    genPagination(from, to);
+  }
+
+  function prevPage() {
+    if (currentPage - 1 >= 0) {
+      changePage(currentPage - 1);
+      setCurrentPage(currentPage - 1);
+    }
+  }
+
+  function nextPage() {
+    if (currentPage + 1 < totalPages) {
+      changePage(currentPage + 1);
+      setCurrentPage(currentPage + 1);
+    }
+  }
+
   useEffect(() => {
     getChamados();
     getChamadosAndamento();
@@ -77,6 +127,27 @@ export default function Chamados({ navigation }) {
       getChamadosAndamento();
     });
   }, [refreshing, navigation, prioridade]);
+
+  useEffect(() => {
+    setPagination(null);
+    const totalItems = 8;
+    setCurrentPage(0);
+
+    function calcPagination() {
+      let pages = Math.round(chamados?.length / totalItems);
+      setTotalPages(pages);
+      let buttons = [];
+
+      for (let i = 0; i < pages; i++) {
+        buttons.push({ from: i * totalItems, to: (i + 1) * totalItems });
+      }
+
+      setPaginationButtons(buttons);
+    }
+
+    calcPagination();
+    genPagination(0, totalItems);
+  }, [chamados]);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -158,6 +229,7 @@ export default function Chamados({ navigation }) {
         ) : (
           <View style={styles.viewFlatList}>
             <ScrollView
+              ref={scrollRef}
               style={styles.flatlist}
               refreshControl={
                 <RefreshControl
@@ -168,15 +240,70 @@ export default function Chamados({ navigation }) {
                 />
               }
             >
-              {chamados.map((chamado) => {
-                return (
-                  <CardChamados
-                    key={chamado.id_chamado}
-                    chamado={chamado}
-                    setRefreshing={(e) => setRefreshing(e)}
-                  />
-                );
-              })}
+              {pagination}
+              {totalPages > 1 && (
+                <View
+                  style={[
+                    styles.viewPaginationButtons,
+                    styleTheme.containerSecundary,
+                  ]}
+                >
+                  <TouchableOpacity onPress={prevPage}>
+                    <MaterialCommunityIcons
+                      name="chevron-left"
+                      size={30}
+                      color="#23AFFF"
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.pageButtons}>
+                    {paginationButtons?.map((button, index) => {
+                      if (currentPage < 2) {
+                        if (index >= 0 && index < 5) {
+                          return (
+                            <PaginationButton
+                              key={index}
+                              index={index}
+                              handleChangePage={(e) => handleChangePage(e)}
+                              select={index === currentPage ? true : false}
+                            />
+                          );
+                        }
+                      }
+
+                      if (currentPage > totalPages - 3) {
+                        if (index >= totalPages - 5 && index < totalPages) {
+                          return (
+                            <PaginationButton
+                              key={index}
+                              index={index}
+                              handleChangePage={(e) => handleChangePage(e)}
+                              select={index === currentPage ? true : false}
+                            />
+                          );
+                        }
+                      }
+
+                      if (index >= currentPage - 2 && index < currentPage + 3) {
+                        return (
+                          <PaginationButton
+                            key={index}
+                            index={index}
+                            handleChangePage={(e) => handleChangePage(e)}
+                            select={index === currentPage ? true : false}
+                          />
+                        );
+                      }
+                    })}
+                  </View>
+                  <TouchableOpacity onPress={nextPage}>
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={30}
+                      color="#23AFFF"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </ScrollView>
             {chamados.length === 0 ? (
               <View style={styles.viewSemChamados}>
@@ -261,5 +388,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingRight: 5,
     marginTop: 10,
+  },
+  viewPaginationButtons: {
+    marginBottom: 40,
+    display: "flex",
+    flexDirection: "row",
+    elevation: 1,
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20,
+  },
+  pageButtons: {
+    display: "flex",
+    flexDirection: "row",
+    width: "70%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
