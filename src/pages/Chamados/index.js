@@ -96,12 +96,12 @@ export default function Chamados({ navigation }) {
   function handleChangePage(index) {
     changePage(index);
     setCurrentPage(index);
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
   function changePage(numberPage) {
     const { from, to } = paginationButtons[numberPage];
     genPagination(from, to);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   }
 
   function prevPage() {
@@ -119,14 +119,16 @@ export default function Chamados({ navigation }) {
   }
 
   useEffect(() => {
-    getChamados();
-    getChamadosAndamento();
-
     navigation.addListener("focus", () => {
       getChamados();
       getChamadosAndamento();
     });
-  }, [refreshing, navigation, prioridade]);
+  }, [navigation]);
+
+  useEffect(() => {
+    getChamados();
+    getChamadosAndamento();
+  }, [refreshing, prioridade]);
 
   useEffect(() => {
     setPagination(null);
@@ -134,7 +136,7 @@ export default function Chamados({ navigation }) {
     setCurrentPage(0);
 
     function calcPagination() {
-      let pages = Math.round(chamados?.length / totalItems);
+      let pages = Math.ceil(chamados?.length / totalItems);
       setTotalPages(pages);
       let buttons = [];
 

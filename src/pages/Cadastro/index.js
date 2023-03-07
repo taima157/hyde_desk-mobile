@@ -28,19 +28,69 @@ function Cadastro({ navigation }) {
     { key: "4", value: "Software" },
   ];
 
+  function validarCPF(cpf) {
+    if (cpf === undefined) {
+      return false;
+    }
+
+    cpf = cpf.replace(/[^\d]+/g, "");
+
+    if (cpf.length !== 11) {
+      return false;
+    }
+
+    if (/^(\d)\1{10}$/.test(cpf)) {
+      return false;
+    }
+
+    var soma = 0;
+    var resto;
+
+    for (var i = 1; i <= 9; i++) {
+      soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    resto = (soma * 10) % 11;
+
+    if (resto === 10 || resto === 11) {
+      resto = 0;
+    }
+
+    if (resto !== parseInt(cpf.substring(9, 10))) {
+      return false;
+    }
+
+    soma = 0;
+
+    for (i = 1; i <= 10; i++) {
+      soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+
+    resto = (soma * 10) % 11;
+
+    if (resto === 10 || resto === 11) {
+      resto = 0;
+    }
+
+    if (resto !== parseInt(cpf.substring(10, 11))) {
+      return false;
+    }
+
+    return true;
+  }
+
   const yupSchema = yup.object({
     nome: yup.string().required("Digite seu nome"),
     cpf: yup
       .string()
-      .min(11, "CPF inválido")
-      .max(11, "CPF inválido")
-      .required("Informe seu CPF"),
+      .required("Informe seu CPF")
+      .test("test-invalid-cpf", "CPF inválido", (cpf) => validarCPF(cpf)),
     especialidade: yup.string().required("Selecione uma especialidade"),
   });
 
   async function handleSubmit(values) {
     if (values.especialidade.length < 2) {
-      values.especialidade = data[Number(values.especialidade ) - 1].value;
+      values.especialidade = data[Number(values.especialidade) - 1].value;
     }
 
     await AsyncStorage.setItem("cadastro", JSON.stringify(values));
