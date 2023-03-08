@@ -181,6 +181,9 @@ function Cadastro({ navigation }) {
                     marginLeft: -10,
                   }}
                   dropdownTextStyles={styleTheme.textPrimary}
+                  dropdownStyles={{
+                    borderColor: styleTheme.inputPrimary.borderColor,
+                  }}
                 />
               </View>
               {errors.especialidade && submitCount ? (

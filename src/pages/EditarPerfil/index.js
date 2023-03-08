@@ -26,25 +26,23 @@ import { ThemeContext } from "../../context/theme";
 export default function EditarPerfil({ route, navigation }) {
   const dados = route.params;
 
-  console.log(dados)
   const yupSchema = yup.object({
     nome: yup.string().required("Digite seu nome"),
-    email: yup
-      .string()
-      .required("Informe seu e-mail"),
+    email: yup.string().required("Informe seu e-mail"),
     telefone: yup
       .string()
       .min(11, "Telefone inválido")
       .required("Digite seu telefone"),
     especialidade: yup.string().required("Selecione uma especialidade"),
-
   });
+
   const { theme, styleTheme } = useContext(ThemeContext);
   const [modal, setModal] = useState(false);
 
   function handleSubmit(values) {
     if (values.especialidade.length < 2) {
-      values.especialidade = especialidade[Number(values.especialidade) - 1].value;
+      values.especialidade =
+        especialidade[Number(values.especialidade) - 1].value;
     }
 
     setNovosDados({
@@ -54,11 +52,8 @@ export default function EditarPerfil({ route, navigation }) {
       telefone: values.telefone,
     });
 
-    console.log(novosDados)
     setModal(!modal);
   }
-
-
 
   const [novosDados, setNovosDados] = useState({
     nome: dados.nome,
@@ -66,17 +61,20 @@ export default function EditarPerfil({ route, navigation }) {
     especialidade: dados.especialidade,
     telefone: dados.telefone,
   });
+
   const [image, setImage] = useState({
     uri: "",
     type: "",
     name: "",
   });
+
   const especialidade = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },
     { key: "3", value: "Sistema Operacional" },
     { key: "4", value: "Software" },
   ];
+
   const ObterImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -135,8 +133,8 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                    uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
-                  }
+                      uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
+                    }
               }
             />
           </TouchableOpacity>
@@ -170,8 +168,6 @@ export default function EditarPerfil({ route, navigation }) {
                     placeholderTextColor={styleTheme.textSecundary.color}
                   />
 
-
-
                   {errors.email && submitCount ? (
                     <Text style={styles.labelError}>{errors.email}</Text>
                   ) : null}
@@ -182,7 +178,6 @@ export default function EditarPerfil({ route, navigation }) {
                     value={values.email}
                     placeholderTextColor={styleTheme.textSecundary.color}
                   />
-
 
                   {errors.telefone && submitCount ? (
                     <Text style={styles.labelError}>{errors.telefone}</Text>
@@ -195,11 +190,11 @@ export default function EditarPerfil({ route, navigation }) {
                     placeholderTextColor={styleTheme.textSecundary.color}
                   />
 
-
-
                   <View style={styles.containerSelectList}>
                     {errors.especialidade && submitCount ? (
-                      <Text style={styles.labelError}>{errors.especialidade}</Text>
+                      <Text style={styles.labelError}>
+                        {errors.especialidade}
+                      </Text>
                     ) : null}
                     <SelectList
                       data={especialidade}
@@ -214,8 +209,14 @@ export default function EditarPerfil({ route, navigation }) {
                         width: "100%",
                       }}
                       dropdownTextStyles={styleTheme.textPrimary}
-                      inputStyles={[{ marginLeft: -10 }, styleTheme.textPrimary]}
+                      inputStyles={[
+                        { marginLeft: -10 },
+                        styleTheme.textPrimary,
+                      ]}
                       fontFamily="Poppins_400Regular"
+                      dropdownStyles={{
+                        borderColor: styleTheme.textSecundary.color,
+                      }}
                     />
                   </View>
                 </View>

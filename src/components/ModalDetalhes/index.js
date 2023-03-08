@@ -129,7 +129,7 @@ export default function ModalDetalhes({
           </View>
           <View style={styles.field}>
             <Text style={[styles.label, styleTheme.textPrimary]}>
-              Código de verificação:
+              Protocolo:
             </Text>
             <Text style={[styles.valorField, styleTheme.textPrimary]}>
               {chamado.cod_verificacao}

@@ -49,7 +49,6 @@ export default function Login({ navigation }) {
       const response = await api.post("/email", form);
       successToast("Recuperar senha", response.data.menssage);
 
-      console.log(response)
       if (response.data.token) {
         const data = {
           email: values.email,
