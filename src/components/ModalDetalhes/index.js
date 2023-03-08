@@ -6,16 +6,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  StatusBar,
 } from "react-native";
-import Modal from "react-native-modal";
-import ImageViewer from "react-native-image-zoom-viewer";
 import {
   useFonts,
   Poppins_400Regular,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 import { ThemeContext } from "../../context/theme";
+import ModalImagem from "../ModalImagem";
 
 export default function ModalDetalhes({
   chamado,
@@ -108,32 +106,11 @@ export default function ModalDetalhes({
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              <Modal
+              <ModalImagem
                 isVisible={modalImage}
-                backdropOpacity={0.1}
-                style={{ width: "100%", margin: 0, height: "100%" }}
-              >
-                <ImageViewer
-                  imageUrls={[
-                    {
-                      url: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
-                    },
-                  ]}
-                  saveToLocalByLongPress={false}
-                />
-                <TouchableOpacity
-                  style={styles.botaoModalImagem}
-                  onPress={toggleModalImage}
-                  activeOpacity={0.9}
-                >
-                  <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
-                </TouchableOpacity>
-                <StatusBar
-                  barStyle="default"
-                  backgroundColor="#000"
-                  animated={true}
-                />
-              </Modal>
+                url={`https://hdteste.azurewebsites.net/${chamado.anexo}`}
+                close={toggleModalImage}
+              />
             </View>
           ) : null}
           <View style={styles.field}>
