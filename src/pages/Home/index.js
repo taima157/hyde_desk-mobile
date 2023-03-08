@@ -132,8 +132,10 @@ export default function Home({ navigation }) {
         );
 
         toggleModalFinalizar();
+        successToast("Concluir chamado", response.data.message);
       } catch (error) {
-        console.log(error);
+        toggleModalFinalizar();
+        errorToast("Concluir chamado", error.response.data.message);
       }
     } else {
       setErroDescricao("A descrição é obrigatória!");
