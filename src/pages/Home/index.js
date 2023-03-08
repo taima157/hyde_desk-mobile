@@ -3,11 +3,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  TouchableOpacity,
-  Image,
-  StatusBar,
   ActivityIndicator,
-  TextInput,
 } from "react-native";
 import {
   useFonts,
@@ -17,14 +13,13 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
-import Modal from "react-native-modal";
-import ImageViewer from "react-native-image-zoom-viewer";
 import { AuthContext } from "../../context/auth";
-import ConfirmModal from "../../components/ConfirmModal";
 import * as ImagePicker from "expo-image-picker";
 import CardChamadoConcluido from "../../components/CardChamadoConcluido";
+import CardChamadoAndamento from "../../components/CardChamadoAndamento";
 import { ThemeContext } from "../../context/theme";
 import ModalLoading from "../../components/ModalLoading";
+import ModalFinalizar from "../../components/ModalFinalizar";
 
 export default function Home({ navigation }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
@@ -108,37 +103,36 @@ export default function Home({ navigation }) {
     }
   }
 
-  async function finalizarChamado() {
-    setErroDescricao("");
+  async function finalizarChamado(concluirChamado) {
+    setLoading(true);
 
-    if (concluirChamado.descricao) {
-      const form = new FormData();
+    const form = new FormData();
+    form.append("descricao", concluirChamado.descricao);
 
-      form.append("descricao", concluirChamado.descricao);
+    if (concluirChamado.anexo.uri !== "") {
+      form.append("anexo", concluirChamado.anexo);
+    }
 
-      if (concluirChamado.anexo.uri !== "") {
-        form.append("anexo", concluirChamado.anexo);
-      }
+    try {
+      const response = await api.put(
+        `/chamados/concluir/${chamado.id_chamado}`,
+        form,
+        {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        }
+      );
 
-      try {
-        const response = await api.put(
-          `/chamados/concluir/${chamado.id_chamado}`,
-          form,
-          {
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          }
-        );
+      toggleModalFinalizar();
+      setLoading(false);
+      successToast("Concluir chamado", response.data.message);
 
-        toggleModalFinalizar();
-        successToast("Concluir chamado", response.data.message);
-      } catch (error) {
-        toggleModalFinalizar();
-        errorToast("Concluir chamado", error.response.data.message);
-      }
-    } else {
-      setErroDescricao("A descrição é obrigatória!");
+      setChamado([]);
+      setCancelar(!cancelar);
+    } catch (error) {
+      toggleModalFinalizar();
+      errorToast("Concluir chamado", error.response.data.message);
     }
   }
 
@@ -215,144 +209,11 @@ export default function Home({ navigation }) {
             <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>
               Chamado em andamento
             </Text>
-            <View
-              style={[styles.containerChamado, styleTheme.containerSecundary]}
-            >
-              <ScrollView>
-                <Text style={[styles.nomeEmpresa, styleTheme.textPrimary]}>
-                  {chamado.nome_empresa}
-                </Text>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Endereco:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.endereco.logradouro}, {chamado.numero_endereco},{" "}
-                    {chamado.endereco.bairro}, {chamado.endereco.localidade} -{" "}
-                    {chamado.endereco.uf}
-                  </Text>
-                </View>
-
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Contato:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    Tel: {chamado.telefone}
-                  </Text>
-                </View>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Data do chamado:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.dataChamado} - {chamado.horaChamado}
-                  </Text>
-                </View>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Problema:
-                  </Text>
-                  <Text
-                    style={[
-                      styles.valorField,
-                      styleTheme.textPrimary,
-                      { textTransform: "capitalize" },
-                    ]}
-                  >
-                    {chamado.problema}
-                  </Text>
-                </View>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Descrição:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.descricao}
-                  </Text>
-                </View>
-                {chamado.anexo !== null ? (
-                  <View style={styles.field}>
-                    <Text style={[styles.label, styleTheme.textPrimary]}>
-                      Anexo:
-                    </Text>
-                    <TouchableOpacity onPress={toggleModalImage}>
-                      <Image
-                        style={styles.anexo}
-                        source={{
-                          uri: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
-                        }}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                    <Modal
-                      isVisible={modalImage}
-                      backdropOpacity={0.1}
-                      style={{ width: "100%", margin: 0, height: "100%" }}
-                    >
-                      <ImageViewer
-                        imageUrls={[
-                          {
-                            url: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
-                          },
-                        ]}
-                        saveToLocalByLongPress={false}
-                      />
-                      <TouchableOpacity
-                        style={styles.botaoModalImagem}
-                        onPress={toggleModalImage}
-                        activeOpacity={0.9}
-                      >
-                        <Text style={styles.textoBotaoModalImagem}>Fechar</Text>
-                      </TouchableOpacity>
-                      <StatusBar backgroundColor="#000" />
-                    </Modal>
-                  </View>
-                ) : null}
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Setor:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.setor}
-                  </Text>
-                </View>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Patrimônio:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.patrimonio}
-                  </Text>
-                </View>
-                <View style={styles.field}>
-                  <Text style={[styles.label, styleTheme.textPrimary]}>
-                    Código de verificação:
-                  </Text>
-                  <Text style={[styles.valorField, styleTheme.textPrimary]}>
-                    {chamado.cod_verificacao}
-                  </Text>
-                </View>
-              </ScrollView>
-              <View style={styles.botoesChamado}>
-                <TouchableOpacity
-                  style={styles.botao}
-                  onPress={toggleModalCancelar}
-                >
-                  <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
-                    Suspender
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.botao, { backgroundColor: "#23AFFF" }]}
-                  onPress={toggleModalFinalizar}
-                >
-                  <Text style={[styles.textoBotao, { color: "#FFF" }]}>
-                    Finalizar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <CardChamadoAndamento
+              chamado={chamado}
+              suspenderChamado={suspenderChamado}
+              toggleModalFinalizar={toggleModalFinalizar}
+            />
           </>
         ) : (
           <>
@@ -386,83 +247,11 @@ export default function Home({ navigation }) {
           </>
         )}
       </View>
-      <ConfirmModal
-        isVisible={modalCancelar}
-        fecharModal={toggleModalCancelar}
-        confirmarAcao={suspenderChamado}
-        mensagem="Deseja suspender esse chamado?"
+      <ModalFinalizar
+        isVisible={modalFinalizar}
+        finalizarChamado={(e) => finalizarChamado(e)}
+        toggleModalFinalizar={toggleModalFinalizar}
       />
-      <Modal isVisible={modalFinalizar} backdropOpacity={0.3}>
-        <View style={[styles.viewFinalizar, styleTheme.containerSecundary]}>
-          <Text style={[styles.tituloFinalizar, styleTheme.textPrimary]}>
-            Finalizar Chamado
-          </Text>
-          <View style={styles.viewDescricao}>
-            <Text style={[styles.label, styleTheme.textPrimary]}>
-              Descrição:
-            </Text>
-            <TextInput
-              style={styles.inputDescricao}
-              value={concluirChamado.descricao}
-              onChangeText={(e) =>
-                setConcluirChamado({ ...concluirChamado, descricao: e })
-              }
-            />
-            <Text style={styles.erroDescricao}>{erroDescricao}</Text>
-          </View>
-          <View style={styles.viewAnexo}>
-            <View style={styles.inputAnexo}>
-              <Text style={[styles.label, styleTheme.textPrimary]}>
-                Anexar alguma imagem:
-              </Text>
-              <TouchableOpacity
-                style={styles.botaoAnexo}
-                onPress={anexarImagem}
-              >
-                <Text style={styles.textoBotaoAnexo}>Selecionar</Text>
-              </TouchableOpacity>
-            </View>
-            {concluirChamado.anexo.uri !== "" ? (
-              <Image
-                style={styles.imagemAnexo}
-                source={{
-                  uri: concluirChamado.anexo.uri,
-                }}
-                resizeMode="contain"
-              />
-            ) : null}
-          </View>
-          <View style={styles.botoesFinalizar}>
-            <TouchableOpacity
-              style={styles.botao}
-              onPress={() => {
-                setConcluirChamado({
-                  decricao: "",
-                  anexo: {
-                    uri: "",
-                    type: "",
-                    name: "",
-                  },
-                });
-                setErroDescricao("");
-                toggleModalFinalizar();
-              }}
-            >
-              <Text style={[styles.textoBotao, { color: "#23AFFF" }]}>
-                Cancelar
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.botao, { backgroundColor: "#23AFFF" }]}
-              onPress={finalizarChamado}
-            >
-              <Text style={[styles.textoBotao, { color: "#FFF" }]}>
-                Concluir
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
       <ModalLoading isVisible={loading} />
     </View>
   );
@@ -541,16 +330,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     marginTop: 5,
   },
-  botaoModalImagem: {
-    width: "100%",
-    alignItems: "center",
-    backgroundColor: "#000",
-  },
-  textoBotaoModalImagem: {
-    color: "#FFF",
-    padding: 10,
-    fontFamily: "Poppins_600SemiBold",
-  },
   botoesChamado: {
     display: "flex",
     flexDirection: "row",
@@ -589,6 +368,7 @@ const styles = StyleSheet.create({
     borderColor: "#23AFFF",
     height: 40,
     paddingLeft: 10,
+    fontFamily: "Poppins_400Regular",
   },
   viewAnexo: {
     width: "100%",
