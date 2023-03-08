@@ -18,6 +18,7 @@ import { api } from "../../services/api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ModalLoading from "../ModalLoading";
 import { ThemeContext } from "../../context/theme";
+import { AuthContext } from "../../context/auth";
 export default function ConfirmarSenha({
   navigation,
   senha,
@@ -27,6 +28,7 @@ export default function ConfirmarSenha({
   visibilidade,
   mudarVisibilidade,
 }) {
+  const { successToast, errorToast } = useContext(AuthContext);
   const { theme, styleTheme } = useContext(ThemeContext);
   const [comparar, setComparar] = useState("");
   const [visivel, setVisivel] = useState(false);
@@ -59,12 +61,18 @@ export default function ConfirmarSenha({
                   },
                 }
               );
+
+              successToast("Alterar dados", response.data.mensagem)
             } catch (error) {
               console.log(error);
+              if (error.response.data.message) {
+                errorToast("Alterar dados", error.response.data.message);
+              } else {
+                errorToast("Alterar dados", "Não foi possível alterar os dados.");
+              }
             }
           }
           enviarDados();
-
           navigation.navigate("Home");
         } else {
           setTextVazio(false);

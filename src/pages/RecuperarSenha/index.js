@@ -49,6 +49,7 @@ export default function Login({ navigation }) {
       const response = await api.post("/email", form);
       successToast("Recuperar senha", response.data.menssage);
 
+      console.log(response)
       if (response.data.token) {
         const data = {
           email: values.email,
@@ -59,6 +60,7 @@ export default function Login({ navigation }) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      console.log(error)
       errorToast("Recuperar senha", "Não foi possível enviar E-mail.");
     }
   }

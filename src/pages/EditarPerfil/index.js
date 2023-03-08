@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
+import * as yup from "yup";
+import { Formik } from "formik";
 import {
   useFonts,
   Poppins_700Bold,
@@ -22,24 +24,52 @@ import ConfirmarSenha from "../../components/ConfirmarSenha";
 import { ThemeContext } from "../../context/theme";
 
 export default function EditarPerfil({ route, navigation }) {
+  const dados = route.params;
+
+  console.log(dados)
+  const yupSchema = yup.object({
+    nome: yup.string().required("Digite seu nome"),
+    email: yup
+      .string()
+      .required("Informe seu e-mail"),
+    telefone: yup
+      .string()
+      .min(11, "Telefone inválido")
+      .required("Digite seu telefone"),
+    especialidade: yup.string().required("Selecione uma especialidade"),
+
+  });
   const { theme, styleTheme } = useContext(ThemeContext);
   const [modal, setModal] = useState(false);
 
-  function toggleModal() {
+  function handleSubmit(values) {
+    if (values.especialidade.length < 2) {
+      values.especialidade = especialidade[Number(values.especialidade) - 1].value;
+    }
+
+    setNovosDados({
+      nome: values.nome,
+      email: values.email,
+      especialidade: values.especialidade,
+      telefone: values.telefone,
+    });
+
+    console.log(novosDados)
     setModal(!modal);
   }
-  const dados = route.params;
 
-  const [image, setImage] = useState({
-    uri: "",
-    type: "",
-    name: "",
-  });
+
+
   const [novosDados, setNovosDados] = useState({
     nome: dados.nome,
     email: dados.email,
     especialidade: dados.especialidade,
     telefone: dados.telefone,
+  });
+  const [image, setImage] = useState({
+    uri: "",
+    type: "",
+    name: "",
   });
   const especialidade = [
     { key: "1", value: "Hardware" },
@@ -105,8 +135,8 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                      uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
-                    }
+                    uri: `https://hdteste.azurewebsites.net/${dados.foto}`,
+                  }
               }
             />
           </TouchableOpacity>
@@ -115,65 +145,98 @@ export default function EditarPerfil({ route, navigation }) {
           <Text style={[styles.editarText, styleTheme.textPrimary]}>
             Editar Perfil
           </Text>
-          <TextInput
-            value={novosDados.nome}
-            style={[styles.inputs, styleTheme.textPrimary]}
-            onChangeText={(e) => setNovosDados({ ...novosDados, nome: e })}
-            placeholder={`Nome: ${dados.nome}`}
-            placeholderTextColor={styleTheme.textSecundary.color}
-          ></TextInput>
-          <TextInput
-            style={[styles.inputs, styleTheme.textPrimary]}
-            value={novosDados.email}
-            onChangeText={(e) => setNovosDados({ ...novosDados, email: e })}
-            placeholder={`Email: ${dados.email}`}
-            placeholderTextColor={styleTheme.textSecundary.color}
-          ></TextInput>
 
-          <TextInput
-            style={[styles.inputs, styleTheme.textPrimary]}
-            value={novosDados.telefone}
-            maxLength={11}
-            onChangeText={(e) => setNovosDados({ ...novosDados, telefone: e })}
-            keyboardType="numeric"
-            placeholder={`Telefone: ${dados.telefone}`}
-            placeholderTextColor={styleTheme.textSecundary.color}
-          ></TextInput>
-          <SelectList
-            data={especialidade}
-            search={false}
-            save="value"
-            setSelected={(e) =>
-              setNovosDados({ ...novosDados, especialidade: e })
-            }
-            boxStyles={{
-              borderWidth: 1,
-              borderColor: "#a8a7a7",
-              height: 50,
-              width: "100%",
+          <Formik
+            validationSchema={yupSchema}
+            initialValues={{
+              nome: dados.nome_tecnico,
+              email: dados.email_tecnico,
+              telefone: dados.telefone,
+              especialidade: dados.especialidade,
             }}
-            dropdownTextStyles={styleTheme.textPrimary}
-            inputStyles={[{ marginLeft: -10 }, styleTheme.textPrimary]}
-            fontFamily="Poppins_400Regular"
-            placeholder={`Especialidade: ${dados.especialidade}`}
-          ></SelectList>
-          <View style={styles.viewBotoes}>
-            <TouchableOpacity style={styles.botoes} onPress={goBack}>
-              <Text style={styles.textColor}>Cancelar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.botoes}
-              onPress={() => {
-                setModal(!modal);
-              }}
-            >
-              <Text style={styles.textColor}>Editar</Text>
-            </TouchableOpacity>
-          </View>
+            onSubmit={(values) => handleSubmit(values)}
+          >
+            {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+              <>
+                <View style={styles.containerInputs}>
+                  {errors.nome && submitCount ? (
+                    <Text style={styles.labelError}>{errors.nome}</Text>
+                  ) : null}
+                  <TextInput
+                    style={[styles.inputs, styleTheme.textPrimary]}
+                    placeholder={`Nome: ${dados.nome_tecnico}`}
+                    onChangeText={handleChange("nome")}
+                    value={values.nome}
+                    placeholderTextColor={styleTheme.textSecundary.color}
+                  />
 
+
+
+                  {errors.email && submitCount ? (
+                    <Text style={styles.labelError}>{errors.email}</Text>
+                  ) : null}
+                  <TextInput
+                    style={[styles.inputs, styleTheme.inputPrimary]}
+                    placeholder={`Email: ${dados.email_tecnico}`}
+                    onChangeText={handleChange("email")}
+                    value={values.email}
+                    placeholderTextColor={styleTheme.textSecundary.color}
+                  />
+
+
+                  {errors.telefone && submitCount ? (
+                    <Text style={styles.labelError}>{errors.telefone}</Text>
+                  ) : null}
+                  <TextInput
+                    style={[styles.inputs, styleTheme.inputPrimary]}
+                    placeholder={`Telefone: ${dados.telefone}`}
+                    onChangeText={handleChange("telefone")}
+                    value={values.telefone}
+                    placeholderTextColor={styleTheme.textSecundary.color}
+                  />
+
+
+
+                  <View style={styles.containerSelectList}>
+                    {errors.especialidade && submitCount ? (
+                      <Text style={styles.labelError}>{errors.especialidade}</Text>
+                    ) : null}
+                    <SelectList
+                      data={especialidade}
+                      value={values.especialidade}
+                      setSelected={handleChange("especialidade")}
+                      search={false}
+                      placeholder={`Especialidade: ${dados.especialidade}`}
+                      boxStyles={{
+                        borderWidth: 1,
+                        borderColor: "#a8a7a7",
+                        height: 50,
+                        width: "100%",
+                      }}
+                      dropdownTextStyles={styleTheme.textPrimary}
+                      inputStyles={[{ marginLeft: -10 }, styleTheme.textPrimary]}
+                      fontFamily="Poppins_400Regular"
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.viewBotoes}>
+                  <TouchableOpacity style={styles.botoes} onPress={goBack}>
+                    <Text style={styles.textColor}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.botoes}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.textColor}>Editar</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </Formik>
           {modal ? (
             <ConfirmarSenha
-              mudarVisibilidade={toggleModal}
+              mudarVisibilidade={handleSubmit}
               visibilidade={modal}
               navigation={navigation}
               id_tecnico={dados.id_tecnico}
@@ -244,6 +307,13 @@ const styles = StyleSheet.create({
     marginLeft: "35%",
 
     zIndex: 10,
+  },
+  labelError: {
+    color: "#ff375b",
+    marginTop: 5,
+    fontSize: 14,
+    alignSelf: "flex-start",
+    fontFamily: "Poppins_400Regular",
   },
   imageOpacity: {},
 });
