@@ -80,10 +80,10 @@ function Perfil({ navigation }) {
 
           <View style={styles.viewText}>
             <Text style={[styles.texNormal, styleTheme.textPrimary]}>
-              {data.nome}
+              {data.nome_tecnico}
             </Text>
             <Text style={[styles.texNormal, styleTheme.textPrimary]}>
-              {data.email}
+              {data.email_tecnico}
             </Text>
 
             <TouchableOpacity style={styles.editar} onPress={goToEditar}>
