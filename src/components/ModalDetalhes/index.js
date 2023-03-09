@@ -20,7 +20,7 @@ export default function ModalDetalhes({
   aceitarChamado,
   toggleModal,
 }) {
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
   const [modalImage, setModalImage] = useState(false);
 
   function toggleModalImage() {

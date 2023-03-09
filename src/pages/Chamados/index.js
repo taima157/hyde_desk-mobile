@@ -22,8 +22,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PaginationButton from "../../components/PaginationButton";
 
 export default function Chamados({ navigation }) {
-  const { user } = useContext(AuthContext);
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { user, errorToast } = useContext(AuthContext);
+  const { styleTheme } = useContext(ThemeContext);
   const [prioridade, setPrioridade] = useState("1");
 
   const scrollRef = useRef(null);
@@ -54,7 +54,7 @@ export default function Chamados({ navigation }) {
       setChamados(response.data);
       setRefreshing(false);
     } catch (error) {
-      console.log(error);
+      errorToast("Erro", "Houve um erro.");
     }
   }
 
@@ -68,7 +68,7 @@ export default function Chamados({ navigation }) {
       setChamadoAndamento(response.data);
       setRefreshing(false);
     } catch (error) {
-      console.log(error);
+      errorToast("Erro", "Houve um erro.");
     }
   }
 

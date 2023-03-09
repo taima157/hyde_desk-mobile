@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../../context/theme";
 
 export default function ModalLoading({ isVisible }) {
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
 
   return (
     <Modal

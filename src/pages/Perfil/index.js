@@ -18,22 +18,17 @@ import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 
 function Perfil({ navigation }) {
-  const { user } = useContext(AuthContext);
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { user, errorToast } = useContext(AuthContext);
+  const { styleTheme } = useContext(ThemeContext);
   const [data, setData] = useState([]);
 
   useEffect(() => {
     async function getDados() {
       try {
-        try {
-          const response = await api.get(`/tecnicos/${user.id_tecnico}`);
-          console.log(data)
-          setData(response.data);
-        } catch (error) {
-          console.log(error);
-        }
+        const response = await api.get(`/tecnicos/${user.id_tecnico}`);
+        setData(response.data);
       } catch (error) {
-        console.log(error);
+        errorToast("Erro", "Houve um erro.");
       }
     }
 
@@ -41,6 +36,10 @@ function Perfil({ navigation }) {
       getDados();
     });
   }, [navigation]);
+
+  function goToEditar() {
+    navigation.navigate("Editar Perfil", data);
+  }
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -50,10 +49,6 @@ function Perfil({ navigation }) {
 
   if (!fontsLoaded) {
     return null;
-  }
-
-  function goToEditar() {
-    navigation.navigate("Editar Perfil", data);
   }
 
   return (

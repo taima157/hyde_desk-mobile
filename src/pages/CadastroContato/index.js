@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import {
   useFonts,

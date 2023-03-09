@@ -5,7 +5,6 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  ActivityIndicator,
 } from "react-native";
 import {
   useFonts,
@@ -19,14 +18,13 @@ import { ThemeContext } from "../../context/theme";
 
 export default function Login({ navigation }) {
   const { login, errorToast } = useContext(AuthContext);
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
   const [user, setUser] = useState({
     cpf: "",
     senha: "",
   });
 
   const [loading, setLoading] = useState(false);
-
   const [mensagemErro, setMensagemErro] = useState("");
 
   async function handleLogin() {

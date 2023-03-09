@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import {
   useFonts,
@@ -20,7 +19,7 @@ import { ThemeContext } from "../../context/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function Cadastro({ navigation }) {
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
   const data = [
     { key: "1", value: "Hardware" },
     { key: "2", value: "Rede" },

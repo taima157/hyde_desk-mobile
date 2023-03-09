@@ -3,19 +3,20 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { ThemeContext } from "../../context/theme";
 
-export default function ConfirmModal({
+export default function ModalConfirmar({
   isVisible,
   fecharModal,
   confirmarAcao,
   mensagem,
-  route
 }) {
-  const {styleTheme} = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
 
   return (
     <Modal isVisible={isVisible} backdropOpacity={0.1}>
       <View style={[styles.modalConfirmar, styleTheme.containerSecundary]}>
-        <Text style={[styles.textoMensagem, styleTheme.textPrimary]}>{mensagem}</Text>
+        <Text style={[styles.textoMensagem, styleTheme.textPrimary]}>
+          {mensagem}
+        </Text>
         <View style={styles.viewBotoes}>
           <TouchableOpacity
             onPress={fecharModal}

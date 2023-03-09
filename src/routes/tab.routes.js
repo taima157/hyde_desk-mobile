@@ -21,7 +21,7 @@ export default function TabRoutes({ route }) {
           alignItems: "center",
           height: 65,
           backgroundColor: styleTheme.containerSecundary.backgroundColor,
-          marginBottom: -1
+          marginBottom: -1,
         },
       }}
     >

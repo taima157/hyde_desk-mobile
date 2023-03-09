@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Image,
 } from "react-native";
 import {
   useFonts,

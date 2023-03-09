@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { ThemeContext } from "../../context/theme";
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import ModalImagem from "../ModalImagem";
-import ConfirmModal from "../ConfirmModal";
+import ModalConfirmar from "../ModalConfirmar";
 
 export default function CardChamadoAndamento({
   chamado,
@@ -122,7 +122,7 @@ export default function CardChamadoAndamento({
           <Text style={[styles.textoBotao, { color: "#FFF" }]}>Finalizar</Text>
         </TouchableOpacity>
       </View>
-      <ConfirmModal
+      <ModalConfirmar
         isVisible={modalCancelar}
         fecharModal={toggleModalCancelar}
         confirmarAcao={suspenderChamado}

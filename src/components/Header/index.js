@@ -13,7 +13,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/auth";
-import ConfirmModal from "../ConfirmModal";
+import ModalConfirmar from "../ModalConfirmar";
 import { ThemeContext } from "../../context/theme";
 
 function Header() {
@@ -60,7 +60,7 @@ function Header() {
           </TouchableOpacity>
         ) : null}
       </View>
-      <ConfirmModal
+      <ModalConfirmar
         isVisible={isModalVisible}
         fecharModal={toggleModal}
         confirmarAcao={logout}

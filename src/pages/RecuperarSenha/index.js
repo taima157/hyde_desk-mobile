@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Image,
 } from "react-native";
 import {
   useFonts,
@@ -59,7 +58,6 @@ export default function Login({ navigation }) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error)
       errorToast("Recuperar senha", "Não foi possível enviar E-mail.");
     }
   }

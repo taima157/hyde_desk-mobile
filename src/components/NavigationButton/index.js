@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../../context/theme";
 
 export default function NavigationButton(props) {
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
   const { name, pageName, onPress, accessibilityState } = props;
   const focused = accessibilityState.selected;
 

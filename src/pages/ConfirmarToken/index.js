@@ -14,11 +14,9 @@ import {
   Poppins_600SemiBold,
   useFonts,
 } from "@expo-google-fonts/poppins";
-import { api } from "../../services/api";
 export default function ConfirmarToken({ route, navigation }) {
-
-  const { theme, styleTheme, toggleTheme } = useContext(ThemeContext);
-  const [aviso, setAviso] = useState(false)
+  const { theme, styleTheme } = useContext(ThemeContext);
+  const [aviso, setAviso] = useState(false);
 
   const data = route.params;
 
@@ -34,7 +32,7 @@ export default function ConfirmarToken({ route, navigation }) {
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
-    Poppins_600SemiBold
+    Poppins_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -42,7 +40,7 @@ export default function ConfirmarToken({ route, navigation }) {
   }
 
   function voltar() {
-    navigation.navigate("Recuperar Senha")
+    navigation.navigate("Recuperar Senha");
   }
 
   async function comparar() {
@@ -52,15 +50,18 @@ export default function ConfirmarToken({ route, navigation }) {
     });
 
     if (tokenCompare === data.token) {
-      navigation.navigate("TrocarSenha", data.email)
+      navigation.navigate("TrocarSenha", data.email);
     } else {
-      setAviso(true)
+      setAviso(true);
     }
   }
+
   return (
     <View style={[styles.container, styleTheme.container]}>
       <View style={styles.viewAlign}>
-        <Text style={[styles.textToken, styleTheme.textPrimary]}>Verificar Token</Text>
+        <Text style={[styles.textToken, styleTheme.textPrimary]}>
+          Verificar Token
+        </Text>
         <View style={styles.viewInput}>
           {inputValues.map((input, index) => {
             return (
@@ -115,7 +116,9 @@ export default function ConfirmarToken({ route, navigation }) {
               Verficar
             </Text>
           </TouchableOpacity>
-          {aviso ? <Text style={styles.tokenInvalido}>Token inválido</Text> : null}
+          {aviso ? (
+            <Text style={styles.tokenInvalido}>Token inválido</Text>
+          ) : null}
         </View>
         <View style={styles.containerButtonBack}>
           <TouchableOpacity
@@ -136,11 +139,8 @@ export default function ConfirmarToken({ route, navigation }) {
               color={theme === "light" ? "#FFF" : styleTheme.textPrimary.color}
             />
           </TouchableOpacity>
-
         </View>
       </View>
-
-
     </View>
   );
 }
@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#fff",
   },
-  viewAlign:{
-    marginTop: "40%"
+  viewAlign: {
+    marginTop: "40%",
   },
   textToken: {
     padding: "2%",
@@ -214,6 +214,6 @@ const styles = StyleSheet.create({
   },
   viewBotao: {
     width: "100%",
-    alignItems: 'center'
-  }
+    alignItems: "center",
+  },
 });
