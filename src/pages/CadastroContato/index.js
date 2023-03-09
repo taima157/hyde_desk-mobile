@@ -110,7 +110,6 @@ function CadastroContato({ navigation }) {
                 placeholder="Senha:"
                 placeholderTextColor={styleTheme.textSecundary.color}
                 secureTextEntry={true}
-                maxLength={11}
               />
 
               {errors.senha && submitCount ? (
