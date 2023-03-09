@@ -1,7 +1,10 @@
-import { api } from "../services/api";
 import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../context/auth";
 
 export async function getDetalhesChamados(chamado) {
+  const { errorToast } = useContext(AuthContext);
+
   const dataHora = chamado.data.split("T");
   let data = dataHora[0];
   let hora = dataHora[1];
@@ -18,7 +21,7 @@ export async function getDetalhesChamados(chamado) {
 
     endereco = await responseEndereco.data;
   } catch (error) {
-    console.log(error);
+    errorToast("Erro", "Houve um erro.");
   }
 
   return { ...chamado, horaChamado, dataChamado, endereco };

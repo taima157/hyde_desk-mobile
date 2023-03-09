@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import { ThemeContext } from "../../context/theme";
 
 export default function EditarPerfil({ route, navigation }) {
   const dados = route.params;
+  const { styleTheme } = useContext(ThemeContext);
 
   const yupSchema = yup.object({
     nome: yup.string().required("Digite seu nome"),
@@ -36,7 +37,6 @@ export default function EditarPerfil({ route, navigation }) {
     especialidade: yup.string().required("Selecione uma especialidade"),
   });
 
-  const { theme, styleTheme } = useContext(ThemeContext);
   const [modal, setModal] = useState(false);
 
   function handleSubmit(values) {
@@ -75,7 +75,7 @@ export default function EditarPerfil({ route, navigation }) {
     { key: "4", value: "Software" },
   ];
 
-  const ObterImage = async () => {
+  async function ObterImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -95,11 +95,12 @@ export default function EditarPerfil({ route, navigation }) {
         name: imageName,
       });
     }
-  };
+  }
 
   function goBack() {
-    navigation.navigate("Perfil", dados.receitas);
+    navigation.navigate("Perfil");
   }
+
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
@@ -114,10 +115,7 @@ export default function EditarPerfil({ route, navigation }) {
     <ScrollView style={styleTheme.container}>
       <View style={[styles.container, styleTheme.container]}>
         <View style={styles.viewImage}>
-          <TouchableOpacity
-            style={styles.imageOpacity}
-            onPress={() => ObterImage()}
-          >
+          <TouchableOpacity style={styles.imageOpacity} onPress={ObterImage}>
             <MaterialCommunityIcons
               style={styles.caneta}
               name="pencil-outline"
@@ -306,7 +304,6 @@ const styles = StyleSheet.create({
   caneta: {
     position: "absolute",
     marginLeft: "35%",
-
     zIndex: 10,
   },
   labelError: {
@@ -316,5 +313,4 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     fontFamily: "Poppins_400Regular",
   },
-  imageOpacity: {},
 });

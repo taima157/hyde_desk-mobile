@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function CadastrarFoto({ navigation }) {
   const { errorToast, successToast } = useContext(AuthContext);
-  const { theme, styleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
   const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -30,13 +30,6 @@ export default function CadastrarFoto({ navigation }) {
     type: "",
     name: "",
   });
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-  });
-  if (!fontsLoaded) {
-    return null;
-  }
 
   async function cadastrar() {
     if (image.uri === "") {
@@ -80,7 +73,7 @@ export default function CadastrarFoto({ navigation }) {
     }
   }
 
-  const ObterImage = async () => {
+  async function ObterImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -102,12 +95,15 @@ export default function CadastrarFoto({ navigation }) {
     }
   };
 
-  const usuarioFoto = {
-    uri: image,
-  };
-
   function voltar() {
     navigation.navigate("CadastroContato");
+  }
+
+  let [fontsLoaded] = useFonts({
+    Poppins_700Bold,
+  });
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (

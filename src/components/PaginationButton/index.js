@@ -8,7 +8,7 @@ import {
 } from "@expo-google-fonts/poppins";
 
 export default function PaginationButton({ index, select, handleChangePage }) {
-  const {styleTheme} = useContext(ThemeContext)
+  const { styleTheme } = useContext(ThemeContext);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -20,9 +20,21 @@ export default function PaginationButton({ index, select, handleChangePage }) {
   }
 
   return (
-    <TouchableOpacity style={styles.botaoPagination} onPress={() => handleChangePage(index)}>
-      <View style={[styles.viewBotao, select ? {borderBottomColor: "#23AFFF", borderBottomWidth: 2} : null]}>
-        <Text style={[styles.textoBotao, styleTheme.textPrimary]}>{index + 1}</Text>
+    <TouchableOpacity
+      style={styles.botaoPagination}
+      onPress={() => handleChangePage(index)}
+    >
+      <View
+        style={[
+          styles.viewBotao,
+          select
+            ? { borderBottomColor: "#23AFFF", borderBottomWidth: 2 }
+            : null,
+        ]}
+      >
+        <Text style={[styles.textoBotao, styleTheme.textPrimary]}>
+          {index + 1}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -31,16 +43,16 @@ export default function PaginationButton({ index, select, handleChangePage }) {
 const styles = StyleSheet.create({
   botaoPagination: {
     marginLeft: "6%",
-    marginRight: "6%"
+    marginRight: "6%",
   },
   viewBotao: {
     width: 25,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   textoBotao: {
     fontFamily: "Poppins_600SemiBold",
-    fontSize: 16
-  }
-})
+    fontSize: 16,
+  },
+});

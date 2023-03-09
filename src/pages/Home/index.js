@@ -14,7 +14,6 @@ import { useContext, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
 import { AuthContext } from "../../context/auth";
-import * as ImagePicker from "expo-image-picker";
 import CardChamadoConcluido from "../../components/CardChamadoConcluido";
 import CardChamadoAndamento from "../../components/CardChamadoAndamento";
 import { ThemeContext } from "../../context/theme";
@@ -23,30 +22,16 @@ import ModalFinalizar from "../../components/ModalFinalizar";
 
 export default function Home({ navigation }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
-  const { styleTheme, toggleTheme } = useContext(ThemeContext);
+  const { styleTheme } = useContext(ThemeContext);
 
   const [chamado, setChamado] = useState(null);
   const [chamadosConcluido, setChamadosConcluido] = useState([]);
   const [cancelar, setCancelar] = useState(false);
-  const [concluirChamado, setConcluirChamado] = useState({
-    descricao: "",
-    anexo: {
-      uri: "",
-      type: "",
-      name: "",
-    },
-  });
 
   const [loading, setLoading] = useState(false);
-  const [erroDescricao, setErroDescricao] = useState("");
 
-  const [modalImage, setModalImage] = useState(false);
   const [modalCancelar, setModalCancelar] = useState(false);
   const [modalFinalizar, setModalFinalizar] = useState(false);
-
-  function toggleModalImage() {
-    setModalImage(!modalImage);
-  }
 
   function toggleModalCancelar() {
     setModalCancelar(!modalCancelar);
@@ -54,30 +39,6 @@ export default function Home({ navigation }) {
 
   function toggleModalFinalizar() {
     setModalFinalizar(!modalFinalizar);
-  }
-
-  async function anexarImagem() {
-    let resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!resultado.canceled) {
-      let imageName = resultado.assets[0].uri.split("/");
-      imageName = imageName[imageName.length - 1];
-
-      let tipo = imageName.split(".")[1];
-
-      setConcluirChamado({
-        ...concluirChamado,
-        anexo: {
-          uri: resultado.assets[0].uri,
-          type: `image/${tipo}`,
-          name: imageName,
-        },
-      });
-    }
   }
 
   async function suspenderChamado() {
@@ -151,7 +112,7 @@ export default function Home({ navigation }) {
         setChamado([]);
       }
     } catch (error) {
-      console.log(error);
+      errorToast("Erro", "Houve um erro.");
     }
   }
 
@@ -169,19 +130,21 @@ export default function Home({ navigation }) {
         setChamadosConcluido([]);
       }
     } catch (error) {
-      console.log(error);
+      errorToast("Erro", "Houve um erro.");
     }
   }
 
   useEffect(() => {
-    getChamadoAndamento();
-    getChamadosConcluidos();
-
     navigation.addListener("focus", () => {
       getChamadoAndamento();
       getChamadosConcluidos();
     });
-  }, [navigation, cancelar]);
+  }, [navigation]);
+
+  useEffect(() => {
+    getChamadoAndamento();
+    getChamadosConcluidos();
+  }, [cancelar]);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
