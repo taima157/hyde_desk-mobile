@@ -64,7 +64,8 @@ export default function ConfirmarSenha({
                 }
               );
 
-              successToast("Alterar dados", response.data.mensagem);
+              console.log(response);
+              successToast("Alterar dados", response.data.message);
             } catch (error) {
               if (error.response.data.message) {
                 errorToast("Alterar dados", error.response.data.message);
@@ -103,7 +104,7 @@ export default function ConfirmarSenha({
   return (
     <Modal isVisible={visibilidade} backdropOpacity={0.2}>
       <View style={[styles.modalView, styleTheme.containerSecundary]}>
-        <View styles={styles.viewFechar}>
+        {/* <View styles={styles.viewFechar}>
           <TouchableOpacity
             onPress={mudarVisibilidade}
             style={styles.botaoVoltar}
@@ -113,7 +114,7 @@ export default function ConfirmarSenha({
               name="close"
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <Text style={[styles.title, styleTheme.textPrimary]}>
           Confirmar senha
         </Text>
@@ -128,15 +129,24 @@ export default function ConfirmarSenha({
           {textVazio ? (
             <Text style={styles.textSenha}>Digite alguma senha válida</Text>
           ) : null}
+          <View style={styles.viewBotoes}>
           <TouchableOpacity
-            onPress={() => {
-              setVisivel(!visivel);
-              senhas();
-            }}
-            style={styles.buttonConfirmar}
-          >
-            <Text style={styles.textConfirmar}>Confirmar</Text>
-          </TouchableOpacity>
+              onPress={mudarVisibilidade}
+              style={styles.buttonConfirmar}
+            >
+              <Text style={styles.textConfirmar}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setVisivel(!visivel);
+                senhas();
+              }}
+              style={styles.buttonConfirmar}
+            >
+              <Text style={styles.textConfirmar}>Confirmar</Text>
+            </TouchableOpacity>
+         
+          </View>
         </View>
       </View>
       <ModalLoading isVisible={visivel} />
@@ -150,6 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   title: {
+    marginTop: 20,
     fontFamily: "Poppins_700Bold",
     fontSize: 22,
     textAlign: "center",
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
-    width: "80%",
+    width: "40%",
     marginTop: 30,
     marginBottom: 30,
   },
@@ -196,5 +207,11 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 15,
     marginTop: 20,
+  },
+  viewBotoes: {
+    width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
 });
