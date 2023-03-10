@@ -69,7 +69,7 @@ function Perfil({ navigation }) {
                 borderWidth: 2,
               }}
               source={{
-                uri: `https://hdteste.azurewebsites.net/${data.foto}`,
+                uri: `https://hdteste-teste.azurewebsites.net/${data.foto}`,
               }}
             />
           </View>

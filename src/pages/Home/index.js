@@ -112,7 +112,7 @@ export default function Home({ navigation }) {
         setChamado([]);
       }
     } catch (error) {
-      errorToast("Erro", "Houve um erro.");
+      console.log(error)
     }
   }
 
@@ -130,7 +130,7 @@ export default function Home({ navigation }) {
         setChamadosConcluido([]);
       }
     } catch (error) {
-      errorToast("Erro", "Houve um erro.");
+      console.log(error)
     }
   }
 
