@@ -52,7 +52,6 @@ export default function CardChamados({ chamado, setRefreshing }) {
   useEffect(() => {
     async function getDetalhes() {
       let detalhes = await getDetalhesChamados(chamado);
-
       setDetalhesChamado(detalhes);
     }
 
@@ -67,6 +66,8 @@ export default function CardChamados({ chamado, setRefreshing }) {
   if (!fontsLoaded) {
     return null;
   }
+
+  console.log
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>

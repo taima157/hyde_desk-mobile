@@ -101,14 +101,14 @@ export default function ModalDetalhes({
                 <Image
                   style={styles.anexo}
                   source={{
-                    uri: `https://hdteste.azurewebsites.net/${chamado.anexo}`,
+                    uri: `https://hdteste-teste.azurewebsites.net/${chamado.anexo}`,
                   }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
               <ModalImagem
                 isVisible={modalImage}
-                url={`https://hdteste.azurewebsites.net/${chamado.anexo}`}
+                url={`https://hdteste-teste.azurewebsites.net/${chamado.anexo}`}
                 close={toggleModalImage}
               />
             </View>
