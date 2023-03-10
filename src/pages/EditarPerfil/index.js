@@ -40,10 +40,11 @@ export default function EditarPerfil({ route, navigation }) {
   const [modal, setModal] = useState(false);
 
   function handleSubmit(values) {
-    if (values.especialidade.length < 2) {
-      values.especialidade =
-        especialidade[Number(values.especialidade) - 1].value;
-    }
+      if (values.especialidade.length < 2) {
+        values.especialidade =
+          especialidade[Number(values.especialidade) - 1].value;
+      }
+  
 
     setNovosDados({
       nome: values.nome,
@@ -52,6 +53,9 @@ export default function EditarPerfil({ route, navigation }) {
       telefone: values.telefone,
     });
 
+    
+  }
+  function toggle(){
     setModal(!modal);
   }
 
@@ -199,7 +203,7 @@ export default function EditarPerfil({ route, navigation }) {
                       value={values.especialidade}
                       setSelected={handleChange("especialidade")}
                       search={false}
-                      placeholder={`Especialidade: ${dados.especialidade}`}
+                      placeholder={`Especialidade: ${values.especialidade}`}
                       boxStyles={{
                         borderWidth: 1,
                         borderColor: "#a8a7a7",
@@ -225,7 +229,8 @@ export default function EditarPerfil({ route, navigation }) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.botoes}
-                    onPress={handleSubmit}
+                    onPress={()=>{handleSubmit(), 
+                    toggle()}}
                   >
                     <Text style={styles.textColor}>Editar</Text>
                   </TouchableOpacity>
@@ -235,7 +240,7 @@ export default function EditarPerfil({ route, navigation }) {
           </Formik>
           {modal ? (
             <ConfirmarSenha
-              mudarVisibilidade={handleSubmit}
+              mudarVisibilidade={toggle}
               visibilidade={modal}
               navigation={navigation}
               id_tecnico={dados.id_tecnico}
