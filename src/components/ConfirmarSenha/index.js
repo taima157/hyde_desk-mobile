@@ -64,7 +64,6 @@ export default function ConfirmarSenha({
                 }
               );
 
-              console.log(response);
               successToast("Alterar dados", response.data.message);
             } catch (error) {
               if (error.response.data.message) {

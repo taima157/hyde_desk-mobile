@@ -33,6 +33,7 @@ function Perfil({ navigation }) {
     }
 
     navigation.addListener("focus", (e) => {
+      setData([])
       getDados();
     });
   }, [navigation]);
