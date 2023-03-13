@@ -4,6 +4,7 @@ import { ThemeContext } from "../../context/theme";
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import ModalImagem from "../ModalImagem";
 import ModalConfirmar from "../ModalConfirmar";
+import { API_URL } from "@env";
 
 export default function CardChamadoAndamento({
   chamado,
@@ -76,7 +77,7 @@ export default function CardChamadoAndamento({
               <Image
                 style={styles.anexo}
                 source={{
-                  uri: `https://hdteste-teste.azurewebsites.net/${chamado.anexo}`,
+                  uri: API_URL + chamado.anexo,
                 }}
                 resizeMode="contain"
               />   
@@ -84,7 +85,7 @@ export default function CardChamadoAndamento({
             <ModalImagem
               isVisible={modalImage}
               close={toggleModalImage}
-              url={`https://hdteste-teste.azurewebsites.net/${chamado.anexo}`}
+              url={API_URL + chamado.anexo}
             />
           </View>
         ) : null}

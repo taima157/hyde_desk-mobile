@@ -41,7 +41,6 @@
     "react-hook-form": "^7.43.0",
     "react-jwt": "^1.1.8",
     "react-native": "^0.70.5",
-    "react-native-confirmation-code-field": "^7.3.1",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-gesture-handler": "~2.8.0",
     "react-native-image-picker": "^5.0.2",
@@ -53,10 +52,12 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-web": "~0.18.9",
     "react-navigation": "^4.4.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "expo-constants": "~14.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "react-native-dotenv": "^3.4.8"
   },
   "private": true
 }

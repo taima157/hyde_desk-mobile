@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { ThemeContext } from "../../context/theme";
 import ModalImagem from "../ModalImagem";
+import { API_URL } from "@env";
 
 export default function ModalDetalhes({
   chamado,
@@ -101,14 +102,14 @@ export default function ModalDetalhes({
                 <Image
                   style={styles.anexo}
                   source={{
-                    uri: `https://hdteste-teste.azurewebsites.net/${chamado.anexo}`,
+                    uri: API_URL + chamado.anexo,
                   }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
               <ModalImagem
                 isVisible={modalImage}
-                url={`https://hdteste-teste.azurewebsites.net/${chamado.anexo}`}
+                url={API_URL + chamado.anexo}
                 close={toggleModalImage}
               />
             </View>
