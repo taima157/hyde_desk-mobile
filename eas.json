@@ -3,6 +3,9 @@
     "preview": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "https://hdteste-teste.azurewebsites.net/"
       }
     },
     "preview2": {

@@ -16,6 +16,7 @@ import { api } from "../../services/api";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
+import { API_URL } from "@env";
 
 function Perfil({ navigation }) {
   const { user, errorToast } = useContext(AuthContext);
@@ -33,7 +34,7 @@ function Perfil({ navigation }) {
     }
 
     navigation.addListener("focus", (e) => {
-      setData([])
+      setData([]);
       getDados();
     });
   }, [navigation]);
@@ -70,7 +71,7 @@ function Perfil({ navigation }) {
                 borderWidth: 2,
               }}
               source={{
-                uri: `https://hdteste-teste.azurewebsites.net/${data.foto}`,
+                uri: API_URL + data.foto,
               }}
             />
           </View>

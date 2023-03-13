@@ -36,55 +36,56 @@ export default function ConfirmarSenha({
   const [textVazio, setTextVazio] = useState(false);
 
   function senhas() {
-    bcrypt.compare(comparar, senha, (error, valid) => {
+    if (comparar.length === 0) {
+      errorToast("Alterar dados", "Digite uma senha válida");
+      return;
+    }
+
+    setVisivel(true);
+
+    bcrypt.compare(comparar, senha, async (error, valid) => {
       if (error) {
         return;
       }
       if (valid) {
-        if (comparar.length > 0) {
-          async function enviarDados() {
-            const form = new FormData();
+        async function enviarDados() {
+          const form = new FormData();
 
-            form.append("nome", dados.nome);
-            form.append("email", dados.email);
-            form.append("telefone", dados.telefone);
-            form.append("especialidade", dados.especialidade);
-            if (image.uri != "") {
-              form.append("foto", image);
-            }
-
-            try {
-              const response = await api.put(
-                `/tecnicos/editar/${id_tecnico}`,
-                form,
-                {
-                  headers: {
-                    "content-type": "multipart/form-data",
-                  },
-                }
-              );
-
-              successToast("Alterar dados", response.data.message);
-            } catch (error) {
-              if (error.response.data.message) {
-                errorToast("Alterar dados", error.response.data.message);
-              } else {
-                errorToast(
-                  "Alterar dados",
-                  "Não foi possível alterar os dados."
-                );
-              }
-            }
+          form.append("nome", dados.nome);
+          form.append("email", dados.email);
+          form.append("telefone", dados.telefone);
+          form.append("especialidade", dados.especialidade);
+          if (image.uri != "") {
+            form.append("foto", image);
           }
 
-          enviarDados();
-          navigation.navigate("Perfil");
-        } else {
-          setTextVazio(false);
-          setVisivel(false);
+          try {
+            const response = await api.put(
+              `/tecnicos/editar/${id_tecnico}`,
+              form,
+              {
+                headers: {
+                  "content-type": "multipart/form-data",
+                },
+              }
+            );
+
+            successToast("Alterar dados", response.data.message);
+            setVisivel(false);
+          } catch (error) {
+            setVisivel(false);
+            if (error.response.data.message) {
+              errorToast("Alterar dados", error.response.data.message);
+            } else {
+              errorToast("Alterar dados", "Não foi possível alterar os dados.");
+            }
+          }
         }
+
+        await enviarDados();
+        navigation.navigate("Perfil");
       } else {
-        setTextVazio(true);
+        errorToast("Alterar dados", "Senha incorreta");
         setVisivel(false);
       }
     });
@@ -103,17 +104,6 @@ export default function ConfirmarSenha({
   return (
     <Modal isVisible={visibilidade} backdropOpacity={0.2}>
       <View style={[styles.modalView, styleTheme.containerSecundary]}>
-        {/* <View styles={styles.viewFechar}>
-          <TouchableOpacity
-            onPress={mudarVisibilidade}
-            style={styles.botaoVoltar}
-          >
-            <MaterialCommunityIcons
-              style={[styles.textFechar, styleTheme.textPrimary]}
-              name="close"
-            />
-          </TouchableOpacity>
-        </View> */}
         <Text style={[styles.title, styleTheme.textPrimary]}>
           Confirmar senha
         </Text>
@@ -129,7 +119,7 @@ export default function ConfirmarSenha({
             <Text style={styles.textSenha}>Digite alguma senha válida</Text>
           ) : null}
           <View style={styles.viewBotoes}>
-          <TouchableOpacity
+            <TouchableOpacity
               onPress={mudarVisibilidade}
               style={styles.buttonConfirmar}
             >
@@ -137,14 +127,12 @@ export default function ConfirmarSenha({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setVisivel(!visivel);
                 senhas();
               }}
               style={styles.buttonConfirmar}
             >
               <Text style={styles.textConfirmar}>Confirmar</Text>
             </TouchableOpacity>
-         
           </View>
         </View>
       </View>

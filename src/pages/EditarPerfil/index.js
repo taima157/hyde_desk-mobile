@@ -19,9 +19,9 @@ import {
   Poppins_400Regular,
 } from "@expo-google-fonts/poppins";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import ConfirmarSenha from "../../components/ConfirmarSenha";
 import { ThemeContext } from "../../context/theme";
+import { API_URL } from "@env";
 
 export default function EditarPerfil({ route, navigation }) {
   const dados = route.params;
@@ -40,11 +40,10 @@ export default function EditarPerfil({ route, navigation }) {
   const [modal, setModal] = useState(false);
 
   function handleSubmit(values) {
-      if (values.especialidade.length < 2) {
-        values.especialidade =
-          especialidade[Number(values.especialidade) - 1].value;
-      }
-  
+    if (values.especialidade.length < 2) {
+      values.especialidade =
+        especialidade[Number(values.especialidade) - 1].value;
+    }
 
     setNovosDados({
       nome: values.nome,
@@ -52,10 +51,9 @@ export default function EditarPerfil({ route, navigation }) {
       especialidade: values.especialidade,
       telefone: values.telefone,
     });
-
-    
   }
-  function toggle(){
+  
+  function toggle() {
     setModal(!modal);
   }
 
@@ -135,7 +133,7 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                      uri: `https://hdteste-teste.azurewebsites.net/${dados.foto}`,
+                      uri: API_URL + dados.foto,
                     }
               }
             />
@@ -229,8 +227,9 @@ export default function EditarPerfil({ route, navigation }) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.botoes}
-                    onPress={()=>{handleSubmit(), 
-                    toggle()}}
+                    onPress={() => {
+                      handleSubmit(), toggle();
+                    }}
                   >
                     <Text style={styles.textColor}>Editar</Text>
                   </TouchableOpacity>
