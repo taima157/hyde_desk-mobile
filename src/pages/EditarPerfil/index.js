@@ -29,7 +29,7 @@ export default function EditarPerfil({ route, navigation }) {
 
   const yupSchema = yup.object({
     nome: yup.string().required("Digite seu nome"),
-    email: yup.string().required("Informe seu e-mail"),
+    email: yup.string().email("E-mail inválido").required("Digite seu e-mail"),
     telefone: yup
       .string()
       .min(11, "Telefone inválido")
@@ -51,8 +51,10 @@ export default function EditarPerfil({ route, navigation }) {
       especialidade: values.especialidade,
       telefone: values.telefone,
     });
+
+    toggle()
   }
-  
+
   function toggle() {
     setModal(!modal);
   }
@@ -133,8 +135,8 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                      uri: API_URL + dados.foto,
-                    }
+                    uri: API_URL + dados.foto,
+                  }
               }
             />
           </TouchableOpacity>
@@ -227,9 +229,7 @@ export default function EditarPerfil({ route, navigation }) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.botoes}
-                    onPress={() => {
-                      handleSubmit(), toggle();
-                    }}
+                    onPress={handleSubmit}
                   >
                     <Text style={styles.textColor}>Editar</Text>
                   </TouchableOpacity>
@@ -237,17 +237,15 @@ export default function EditarPerfil({ route, navigation }) {
               </>
             )}
           </Formik>
-          {modal ? (
-            <ConfirmarSenha
-              mudarVisibilidade={toggle}
-              visibilidade={modal}
-              navigation={navigation}
-              id_tecnico={dados.id_tecnico}
-              image={image}
-              dados={novosDados}
-              senha={dados.senha}
-            />
-          ) : null}
+          <ConfirmarSenha
+            mudarVisibilidade={toggle}
+            visibilidade={modal}
+            navigation={navigation}
+            id_tecnico={dados.id_tecnico}
+            image={image}
+            dados={novosDados}
+            senha={dados.senha}
+          />
         </View>
       </View>
     </ScrollView>

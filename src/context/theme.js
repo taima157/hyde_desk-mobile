@@ -1,15 +1,34 @@
-import { createContext, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, useState, useEffect } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
 
 export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const deviceTheme = useColorScheme();
-  const [theme, setTheme] = useState(deviceTheme);
+  const [theme, setTheme] = useState("light");
 
-  function toggleTheme() {
-    setTheme(theme === "light" ? "dark" : "light");
+  async function toggleTheme() {
+    let changeTheme = theme === "light" ? "dark" : "light";
+
+    setTheme(changeTheme);
+    await AsyncStorage.setItem("theme", changeTheme);
   }
+
+  async function getLocalTheme() {
+    const theme = await AsyncStorage.getItem("theme");
+
+    if (theme !== null) {
+      setTheme(theme);
+    } else {
+      let firstTheme = useColorScheme();
+      setTheme(firstTheme);
+      await AsyncStorage.setItem("theme", firstTheme);
+    }
+  }
+
+  useEffect(() => {
+    getLocalTheme();
+  }, []);
 
   const styleTheme = StyleSheet.create({
     container: {
