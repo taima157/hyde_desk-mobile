@@ -5,6 +5,7 @@ import { StyleSheet, useColorScheme } from "react-native";
 export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+  const colorScheme = useColorScheme();
   const [theme, setTheme] = useState("light");
 
   async function toggleTheme() {
@@ -15,14 +16,13 @@ export function ThemeProvider({ children }) {
   }
 
   async function getLocalTheme() {
-    const theme = await AsyncStorage.getItem("theme");
+    const themeLocal = await AsyncStorage.getItem("theme");
 
-    if (theme !== null) {
-      setTheme(theme);
+    if (themeLocal !== null) {
+      setTheme(themeLocal);
     } else {
-      let firstTheme = useColorScheme();
-      setTheme(firstTheme);
-      await AsyncStorage.setItem("theme", firstTheme);
+      setTheme(colorScheme);
+      await AsyncStorage.setItem("theme", colorScheme);
     }
   }
 
