@@ -20,7 +20,7 @@ import ModalLoading from "../../components/ModalLoading";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-export default function Login({ navigation }) {
+export default function RecuperarSenha({ navigation }) {
   const { successToast, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
   const [loading, setLoading] = useState(false);

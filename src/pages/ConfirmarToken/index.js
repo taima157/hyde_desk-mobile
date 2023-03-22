@@ -14,6 +14,7 @@ import {
   Poppins_600SemiBold,
   useFonts,
 } from "@expo-google-fonts/poppins";
+
 export default function ConfirmarToken({ route, navigation }) {
   const { theme, styleTheme } = useContext(ThemeContext);
   const [aviso, setAviso] = useState(false);

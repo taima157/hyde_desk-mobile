@@ -53,7 +53,8 @@
     "react-native-web": "~0.18.9",
     "react-navigation": "^4.4.4",
     "yup": "^0.32.11",
-    "expo-constants": "~14.0.2"
+    "expo-constants": "~14.0.2",
+    "expo-notifications": "~0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

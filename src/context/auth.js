@@ -47,6 +47,7 @@ export function AuthProvider({ children }) {
 
       navigation.navigate("Logado");
     } catch (error) {
+      console.log(error)
       throw new Error("CPF ou senha inválidos");
     }
   }

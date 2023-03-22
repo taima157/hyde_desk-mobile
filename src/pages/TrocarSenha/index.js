@@ -20,7 +20,7 @@ import ModalLoading from "../../components/ModalLoading";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-export default function Login({ navigation, route }) {
+export default function TrocarSenha({ navigation, route }) {
   const email = route.params;
   const { successToast, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
