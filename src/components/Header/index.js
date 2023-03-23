@@ -16,7 +16,7 @@ import { AuthContext } from "../../context/auth";
 import ModalConfirmar from "../ModalConfirmar";
 import { ThemeContext } from "../../context/theme";
 
-function Header() {
+function Header({ route }) {
   const { user, logout } = useContext(AuthContext);
   const { toggleTheme, styleTheme, theme } = useContext(ThemeContext);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -50,7 +50,7 @@ function Header() {
         <Text style={[styles.desk, styleTheme.textPrimary]}>Desk</Text>
       </View>
       <View style={styles.viewLogout}>
-        {user !== null ? (
+        {user !== null && route.name === "Logado" && (
           <TouchableOpacity onPress={toggleModal}>
             <MaterialCommunityIcons
               name="logout"
@@ -58,7 +58,7 @@ function Header() {
               color={styleTheme.textPrimary.color}
             />
           </TouchableOpacity>
-        ) : null}
+        )}
       </View>
       <ModalConfirmar
         isVisible={isModalVisible}

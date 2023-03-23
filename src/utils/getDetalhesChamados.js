@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as Notifications from "expo-notifications";
 
 export async function getDetalhesChamados(chamado) {
   const dataHora = chamado.data.split("T");
@@ -17,8 +18,32 @@ export async function getDetalhesChamados(chamado) {
 
     endereco = await responseEndereco.data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
   return { ...chamado, horaChamado, dataChamado, endereco };
+}
+
+export async function sendNotification({ time, title, body }) {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+
+  const idNotification = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: title,
+      body: body,
+    },
+    trigger: time,
+  });
+
+  return idNotification;
+}
+
+export async function cancelNotification(idNotification) {
+  await Notifications.cancelScheduledNotificationAsync(idNotification);
 }
