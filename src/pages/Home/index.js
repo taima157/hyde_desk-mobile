@@ -213,7 +213,7 @@ export default function Home({ navigation }) {
                         title: "Teste",
                         body: "Testando body",
                         time: {
-                          seconds: 5,
+                          seconds: 10,
                         },
                       });
                     }}
