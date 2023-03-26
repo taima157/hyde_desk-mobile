@@ -135,7 +135,7 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                    uri: API_URL + dados.foto,
+                    uri: `${API_URL}` + dados.foto,
                   }
               }
             />

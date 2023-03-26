@@ -32,7 +32,7 @@ function Perfil({ navigation }) {
         errorToast("Erro", "Houve um erro.");
       }
     }
-
+    
     navigation.addListener("focus", (e) => {
       setData([]);
       getDados();
@@ -71,7 +71,7 @@ function Perfil({ navigation }) {
                 borderWidth: 2,
               }}
               source={{
-                uri: API_URL + data.foto,
+                uri: `${API_URL}` + data.foto,
               }}
             />
           </View>

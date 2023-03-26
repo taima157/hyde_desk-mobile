@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import {
   useFonts,
@@ -19,6 +20,8 @@ import CardChamadoAndamento from "../../components/CardChamadoAndamento";
 import { ThemeContext } from "../../context/theme";
 import ModalLoading from "../../components/ModalLoading";
 import ModalFinalizar from "../../components/ModalFinalizar";
+
+import { sendNotification } from "../../utils/getDetalhesChamados";
 
 export default function Home({ navigation }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
@@ -112,7 +115,7 @@ export default function Home({ navigation }) {
         setChamado([]);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -130,7 +133,7 @@ export default function Home({ navigation }) {
         setChamadosConcluido([]);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -204,6 +207,19 @@ export default function Home({ navigation }) {
                   style={[styles.textSemConcluidos, styleTheme.textPrimary]}
                 >
                   Você não há chamados concluidos.
+                  <TouchableOpacity
+                    onPress={() => {
+                      sendNotification({
+                        title: "Teste",
+                        body: "Testando body",
+                        time: {
+                          seconds: 10,
+                        },
+                      });
+                    }}
+                  >
+                    <Text>Teste</Text>
+                  </TouchableOpacity>
                 </Text>
               </View>
             )}

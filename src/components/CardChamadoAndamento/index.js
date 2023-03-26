@@ -77,7 +77,7 @@ export default function CardChamadoAndamento({
               <Image
                 style={styles.anexo}
                 source={{
-                  uri: API_URL + chamado.anexo,
+                  uri: `${API_URL}` + chamado.anexo,
                 }}
                 resizeMode="contain"
               />   
@@ -85,7 +85,7 @@ export default function CardChamadoAndamento({
             <ModalImagem
               isVisible={modalImage}
               close={toggleModalImage}
-              url={API_URL + chamado.anexo}
+              url={`${API_URL}` + chamado.anexo}
             />
           </View>
         ) : null}

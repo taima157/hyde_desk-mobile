@@ -102,14 +102,14 @@ export default function ModalDetalhes({
                 <Image
                   style={styles.anexo}
                   source={{
-                    uri: API_URL + chamado.anexo,
+                    uri: `${API_URL}` + chamado.anexo,
                   }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
               <ModalImagem
                 isVisible={modalImage}
-                url={API_URL + chamado.anexo}
+                url={`${API_URL}` + chamado.anexo}
                 close={toggleModalImage}
               />
             </View>
