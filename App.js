@@ -22,9 +22,7 @@ export default function App() {
         const idNotification = await sendNotification({
           title: "Notificação de ausência no sistema",
           body: "Faz mais de dois dias que você não acessa nosso sistema. Lembre-se de se conectar para  garantir um melhor desempenho em suas atividades.",
-          time: {
-            seconds: trigger
-          },
+          time: trigger,
         });
 
         notificationJSON.notificationLogin = idNotification;
