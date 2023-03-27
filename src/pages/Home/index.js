@@ -20,8 +20,8 @@ import CardChamadoAndamento from "../../components/CardChamadoAndamento";
 import { ThemeContext } from "../../context/theme";
 import ModalLoading from "../../components/ModalLoading";
 import ModalFinalizar from "../../components/ModalFinalizar";
-
-import { sendNotification } from "../../utils/getDetalhesChamados";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { sendNotification, cancelNotification } from "../../utils/getDetalhesChamados";
 
 export default function Home({ navigation }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
@@ -44,6 +44,19 @@ export default function Home({ navigation }) {
     setModalFinalizar(!modalFinalizar);
   }
 
+  async function handleCancelNotification() {
+    try{
+      const notifications = await AsyncStorage.getItem("notifications");
+
+      const notificationJSON = JSON.parse(notifications);
+  
+      await cancelNotification(notificationJSON.notificationAtraso);
+    } catch(error){
+      console.log(error)
+    }
+  
+  }
+
   async function suspenderChamado() {
     setLoading(true);
 
@@ -58,6 +71,7 @@ export default function Home({ navigation }) {
 
       setLoading(false);
       successToast("Suspender", response.data.message);
+      handleCancelNotification()
     } catch (error) {
       setLoading(false);
 
@@ -94,6 +108,7 @@ export default function Home({ navigation }) {
 
       setChamado([]);
       setCancelar(!cancelar);
+      handleCancelNotification()
     } catch (error) {
       toggleModalFinalizar();
       errorToast("Concluir chamado", error.response.data.message);
