@@ -15,14 +15,10 @@ import {
 } from "@expo-google-fonts/poppins";
 import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
-import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
+import { getDetalhesChamados, sendNotification } from "../../utils";
 import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  cancelNotification,
-  sendNotification,
-} from "../../utils/getDetalhesChamados";
 
 export default function CardChamados({ chamado, setRefreshing }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
@@ -49,43 +45,39 @@ export default function CardChamados({ chamado, setRefreshing }) {
       toggleModal();
       setRefreshing(true);
       successToast("Aceitar chamado", response.data.message);
-      notificarAtraso(chamado.id_chamado)
+      notificarAtraso(chamado.id_chamado);
     } catch (error) {
       errorToast("Aceitar chamado", error.response.data.message);
     }
   }
 
-  async function notificarAtraso(id_chamado){
-    console.log(id_chamado)
-    try{
-      const response = await api.get(`/chamados/${id_chamado}`)
+  async function notificarAtraso(id_chamado) {
+    console.log(id_chamado);
+    try {
+      const response = await api.get(`/chamados/${id_chamado}`);
 
       const notifications = await AsyncStorage.getItem("notifications");
 
       const notificationJSON = JSON.parse(notifications);
-  
+
       // const trigger = new Date(Date.now() + 60 * 60 * 1000 * 48);
-      const trigger = 20
+      const trigger = 20;
       const idNotification = await sendNotification({
         title: "Notificação de chamado pendente",
         body: `Chamado ${response.data[0].cod_verificacao} pendente há mais de 2 dias. Conclua-o rapidamente para um melhor atendimento aos clientes.`,
         time: {
-          seconds: trigger
+          seconds: trigger,
         },
       });
-      console.log(response.data)
+      console.log(response.data);
       notificationJSON.notificationAtraso = idNotification;
       await AsyncStorage.setItem(
         "notifications",
         JSON.stringify(notificationJSON)
       );
-
-
-    } catch(error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-
-
   }
 
   useEffect(() => {
@@ -106,7 +98,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
     return null;
   }
 
-  console.log
+  console.log;
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>
