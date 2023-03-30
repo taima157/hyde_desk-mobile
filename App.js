@@ -2,10 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { StackRoutes } from "./src/routes/stack.routes";
-import {
-  cancelNotification,
-  sendNotification,
-} from "./src/utils/getDetalhesChamados";
+import { cancelNotification, sendNotification } from "./src/utils";
 
 export default function App() {
   useEffect(() => {
@@ -31,10 +28,18 @@ export default function App() {
           JSON.stringify(notificationJSON)
         );
       } else {
+        const trigger = new Date(Date.now() + 60 * 60 * 1000 * 48);
+
+        const idNotification = await sendNotification({
+          title: "Notificação de ausência no sistema",
+          body: "Faz mais de dois dias que você não acessa nosso sistema. Lembre-se de se conectar para  garantir um melhor desempenho em suas atividades.",
+          time: trigger,
+        });
+
         await AsyncStorage.setItem(
           "notifications",
           JSON.stringify({
-            notificationLogin: "",
+            notificationLogin: idNotification,
           })
         );
       }

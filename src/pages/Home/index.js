@@ -13,7 +13,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { useContext, useEffect, useState } from "react";
 import { api } from "../../services/api";
-import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
+import { getDetalhesChamados, cancelNotification } from "../../utils";
 import { AuthContext } from "../../context/auth";
 import CardChamadoConcluido from "../../components/CardChamadoConcluido";
 import CardChamadoAndamento from "../../components/CardChamadoAndamento";
@@ -21,7 +21,6 @@ import { ThemeContext } from "../../context/theme";
 import ModalLoading from "../../components/ModalLoading";
 import ModalFinalizar from "../../components/ModalFinalizar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { sendNotification, cancelNotification } from "../../utils/getDetalhesChamados";
 
 export default function Home({ navigation }) {
   const { user, successToast, errorToast } = useContext(AuthContext);
@@ -45,16 +44,15 @@ export default function Home({ navigation }) {
   }
 
   async function handleCancelNotification() {
-    try{
+    try {
       const notifications = await AsyncStorage.getItem("notifications");
 
       const notificationJSON = JSON.parse(notifications);
-  
+
       await cancelNotification(notificationJSON.notificationAtraso);
-    } catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-  
   }
 
   async function suspenderChamado() {
@@ -71,7 +69,7 @@ export default function Home({ navigation }) {
 
       setLoading(false);
       successToast("Suspender", response.data.message);
-      handleCancelNotification()
+      handleCancelNotification();
     } catch (error) {
       setLoading(false);
 
@@ -108,7 +106,7 @@ export default function Home({ navigation }) {
 
       setChamado([]);
       setCancelar(!cancelar);
-      handleCancelNotification()
+      handleCancelNotification();
     } catch (error) {
       toggleModalFinalizar();
       errorToast("Concluir chamado", error.response.data.message);
@@ -222,19 +220,6 @@ export default function Home({ navigation }) {
                   style={[styles.textSemConcluidos, styleTheme.textPrimary]}
                 >
                   Você não há chamados concluidos.
-                  <TouchableOpacity
-                    onPress={() => {
-                      sendNotification({
-                        title: "Teste",
-                        body: "Testando body",
-                        time: {
-                          seconds: 10,
-                        },
-                      });
-                    }}
-                  >
-                    <Text>Teste</Text>
-                  </TouchableOpacity>
                 </Text>
               </View>
             )}

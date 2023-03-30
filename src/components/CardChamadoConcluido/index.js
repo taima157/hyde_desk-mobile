@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { getDetalhesChamados } from "../../utils/getDetalhesChamados";
+import { getDetalhesChamados } from "../../utils";
 import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../../context/theme";

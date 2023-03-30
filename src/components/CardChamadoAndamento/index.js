@@ -5,6 +5,8 @@ import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import ModalImagem from "../ModalImagem";
 import ModalConfirmar from "../ModalConfirmar";
 import { API_URL } from "@env";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { compartilharChamado } from "../../utils";
 
 export default function CardChamadoAndamento({
   chamado,
@@ -80,7 +82,7 @@ export default function CardChamadoAndamento({
                   uri: `${API_URL}` + chamado.anexo,
                 }}
                 resizeMode="contain"
-              />   
+              />
             </TouchableOpacity>
             <ModalImagem
               isVisible={modalImage}
@@ -108,6 +110,17 @@ export default function CardChamadoAndamento({
           <Text style={[styles.valorField, styleTheme.textPrimary]}>
             {chamado.cod_verificacao}
           </Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={[styles.botaoBaixar, { backgroundColor: "#23AFFF" }]}
+            onPress={() => compartilharChamado(chamado)}
+          >
+            <Text style={[styles.textoBotaoBaixar, { color: "#FFF" }]}>
+              Baixar chamado
+            </Text>
+            <MaterialCommunityIcons name="download" size={24} color="#FFF" />
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <View style={styles.botoesChamado}>
@@ -184,5 +197,22 @@ const styles = StyleSheet.create({
   textoBotao: {
     textAlign: "center",
     fontFamily: "Poppins_600SemiBold",
+  },
+  botaoBaixar: {
+    width: "100%",
+    borderWidth: 2,
+    borderRadius: 20,
+    borderColor: "#23AFFF",
+    padding: 5,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  textoBotaoBaixar: {
+    textAlign: "center",
+    fontFamily: "Poppins_600SemiBold",
+    marginRight: 5,
   },
 });
