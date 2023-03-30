@@ -60,16 +60,14 @@ export default function CardChamados({ chamado, setRefreshing }) {
 
       const notificationJSON = JSON.parse(notifications);
 
-      // const trigger = new Date(Date.now() + 60 * 60 * 1000 * 48);
-      const trigger = 20;
+      const trigger = new Date(Date.now() + 60 * 60 * 1000 * 48);
+      // const trigger = 20;
       const idNotification = await sendNotification({
         title: "Notificação de chamado pendente",
         body: `Chamado ${response.data[0].cod_verificacao} pendente há mais de 2 dias. Conclua-o rapidamente para um melhor atendimento aos clientes.`,
-        time: {
-          seconds: trigger,
-        },
+        time: trigger,
       });
-      console.log(response.data);
+
       notificationJSON.notificationAtraso = idNotification;
       await AsyncStorage.setItem(
         "notifications",

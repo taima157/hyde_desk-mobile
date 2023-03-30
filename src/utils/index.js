@@ -51,7 +51,6 @@ export async function cancelNotification(idNotification) {
 }
 
 export async function compartilharChamado(chamado) {
-  console.log(chamado);
   const htmlPDF = `
       <!DOCTYPE html>
       <html lang="pt-br">
@@ -80,11 +79,16 @@ export async function compartilharChamado(chamado) {
           <p><strong>Descrição: </strong>${chamado.descricao}</p>
           <p><strong>Patrimônio: </strong>${chamado.patrimonio}</p>
           <p><strong>Protocolo: </strong>${chamado.cod_verificacao}</p>
+          ${
+            chamado.anexo !== null
+              ? ` <p><strong>Anexo:</stron></p>
+          <img src='https://hydedesk-api.azurewebsites.net/${chamado.anexo}' style="width: 100vw;"/>`
+              : null
+          }
+         
         </body>
       </html>
   `;
-
-  console.log(htmlPDF);
 
   const file = await Print.printToFileAsync({
     html: htmlPDF,
