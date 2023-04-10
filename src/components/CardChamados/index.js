@@ -20,7 +20,11 @@ import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function CardChamados({ chamado, setRefreshing }) {
+export default function CardChamados({
+  chamado,
+  setRefreshing,
+  estaConcluido,
+}) {
   const { user, successToast, errorToast } = useContext(AuthContext);
   const { theme, styleTheme } = useContext(ThemeContext);
   const [detalhesChamado, setDetalhesChamado] = useState([]);
@@ -163,6 +167,7 @@ export default function CardChamados({ chamado, setRefreshing }) {
           aceitarChamado={aceitarChamado}
           toggleModal={toggleModal}
           chamado={detalhesChamado}
+          estaConcluido={estaConcluido}
         />
       </Modal>
     </TouchableOpacity>

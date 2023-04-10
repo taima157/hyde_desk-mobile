@@ -15,8 +15,8 @@ import { useContext, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { getDetalhesChamados, cancelNotification } from "../../utils";
 import { AuthContext } from "../../context/auth";
-import CardChamadoConcluido from "../../components/CardChamadoConcluido";
 import CardChamadoAndamento from "../../components/CardChamadoAndamento";
+import CardChamados from "../../components/CardChamados";
 import { ThemeContext } from "../../context/theme";
 import ModalLoading from "../../components/ModalLoading";
 import ModalFinalizar from "../../components/ModalFinalizar";
@@ -205,9 +205,10 @@ export default function Home({ navigation }) {
                   {chamadosConcluido.map((chamado, index) => {
                     if (index < 5) {
                       return (
-                        <CardChamadoConcluido
+                        <CardChamados
                           key={chamado.id_chamado}
                           chamado={chamado}
+                          estaConcluido={true}
                         />
                       );
                     }
@@ -219,7 +220,7 @@ export default function Home({ navigation }) {
                 <Text
                   style={[styles.textSemConcluidos, styleTheme.textPrimary]}
                 >
-                  Você não há chamados concluidos.
+                  Você não possui chamados concluidos.
                 </Text>
               </View>
             )}

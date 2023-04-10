@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -111,112 +112,114 @@ function Cadastro({ navigation }) {
   }
 
   return (
-    <View style={[styles.container, styleTheme.container]}>
-      <View style={styles.containerTextCadastro}>
-        <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
-          Cadastro
-        </Text>
-      </View>
+    <ScrollView style={styleTheme.container}>
+      <View style={[styles.container, styleTheme.container]}>
+        <View style={styles.containerTextCadastro}>
+          <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
+            Cadastro
+          </Text>
+        </View>
 
-      <Formik
-        validationSchema={yupSchema}
-        initialValues={{
-          nome: "",
-          cpf: "",
-          especialidade: "",
-        }}
-        onSubmit={(values) => handleSubmit(values)}
-      >
-        {({ handleChange, handleSubmit, values, errors, submitCount }) => (
-          <>
-            <View style={styles.containerInputs}>
-              <TextInput
-                style={[styles.inputs, styleTheme.inputPrimary]}
-                placeholder="Nome:"
-                onChangeText={handleChange("nome")}
-                value={values.nome}
-                placeholderTextColor={styleTheme.textSecundary.color}
-              />
-
-              {errors.nome && submitCount ? (
-                <Text style={styles.labelError}>{errors.nome}</Text>
-              ) : null}
-
-              <TextInput
-                keyboardType="numeric"
-                style={[styles.inputs, styleTheme.inputPrimary]}
-                placeholder="CPF:"
-                onChangeText={handleChange("cpf")}
-                value={values.cpf}
-                placeholderTextColor={styleTheme.textSecundary.color}
-                maxLength={11}
-              />
-
-              {errors.cpf && submitCount ? (
-                <Text style={styles.labelError}>{errors.cpf}</Text>
-              ) : null}
-
-              <View style={styles.containerSelectList}>
-                <SelectList
-                  data={data}
-                  value={values.especialidade}
-                  setSelected={handleChange("especialidade")}
-                  search={false}
-                  placeholder="Selecione sua especialidade"
-                  boxStyles={[
-                    {
-                      borderWidth: 2,
-                      height: 50,
-                    },
-                    styleTheme.inputPrimary,
-                  ]}
-                  fontFamily="Poppins_400Regular"
-                  inputStyles={{
-                    color:
-                      values.especialidade === ""
-                        ? styleTheme.textSecundary.color
-                        : styleTheme.textPrimary.color,
-                    fontSize: 15,
-                    marginLeft: -10,
-                  }}
-                  dropdownTextStyles={styleTheme.textPrimary}
-                  dropdownStyles={{
-                    borderColor: styleTheme.inputPrimary.borderColor,
-                  }}
-                />
-              </View>
-              {errors.especialidade && submitCount ? (
-                <Text style={styles.labelError}>{errors.especialidade}</Text>
-              ) : null}
-            </View>
-
-            <View style={styles.containerButtonNext}>
-              <TouchableOpacity
-                style={[styles.buttonNext, styleTheme.buttonPress]}
-                onPress={handleSubmit}
-              >
-                <Text style={[styles.textNext, styleTheme.buttonText]}>
-                  Próximo
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </Formik>
-
-      <View style={styles.containerButtonBack}>
-        <TouchableOpacity
-          style={[styles.buttonBack, styleTheme.buttonPress]}
-          onPress={voltar}
+        <Formik
+          validationSchema={yupSchema}
+          initialValues={{
+            nome: "",
+            cpf: "",
+            especialidade: "",
+          }}
+          onSubmit={(values) => handleSubmit(values)}
         >
-          <MaterialCommunityIcons
-            name="keyboard-backspace"
-            size={40}
-            color={styleTheme.buttonText.color}
-          />
-        </TouchableOpacity>
+          {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+            <>
+              <View style={styles.containerInputs}>
+                <TextInput
+                  style={[styles.inputs, styleTheme.inputPrimary]}
+                  placeholder="Nome:"
+                  onChangeText={handleChange("nome")}
+                  value={values.nome}
+                  placeholderTextColor={styleTheme.textSecundary.color}
+                />
+
+                {errors.nome && submitCount ? (
+                  <Text style={styles.labelError}>{errors.nome}</Text>
+                ) : null}
+
+                <TextInput
+                  keyboardType="numeric"
+                  style={[styles.inputs, styleTheme.inputPrimary]}
+                  placeholder="CPF:"
+                  onChangeText={handleChange("cpf")}
+                  value={values.cpf}
+                  placeholderTextColor={styleTheme.textSecundary.color}
+                  maxLength={11}
+                />
+
+                {errors.cpf && submitCount ? (
+                  <Text style={styles.labelError}>{errors.cpf}</Text>
+                ) : null}
+
+                <View style={styles.containerSelectList}>
+                  <SelectList
+                    data={data}
+                    value={values.especialidade}
+                    setSelected={handleChange("especialidade")}
+                    search={false}
+                    placeholder="Selecione sua especialidade"
+                    boxStyles={[
+                      {
+                        borderWidth: 2,
+                        height: 50,
+                      },
+                      styleTheme.inputPrimary,
+                    ]}
+                    fontFamily="Poppins_400Regular"
+                    inputStyles={{
+                      color:
+                        values.especialidade === ""
+                          ? styleTheme.textSecundary.color
+                          : styleTheme.textPrimary.color,
+                      fontSize: 15,
+                      marginLeft: -10,
+                    }}
+                    dropdownTextStyles={styleTheme.textPrimary}
+                    dropdownStyles={{
+                      borderColor: styleTheme.inputPrimary.borderColor,
+                    }}
+                  />
+                </View>
+                {errors.especialidade && submitCount ? (
+                  <Text style={styles.labelError}>{errors.especialidade}</Text>
+                ) : null}
+              </View>
+
+              <View style={styles.containerButtonNext}>
+                <TouchableOpacity
+                  style={[styles.buttonNext, styleTheme.buttonPress]}
+                  onPress={handleSubmit}
+                >
+                  <Text style={[styles.textNext, styleTheme.buttonText]}>
+                    Próximo
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </Formik>
+
+        <View style={styles.containerButtonBack}>
+          <TouchableOpacity
+            style={[styles.buttonBack, styleTheme.buttonPress]}
+            onPress={voltar}
+          >
+            <MaterialCommunityIcons
+              name="keyboard-backspace"
+              size={40}
+              color={styleTheme.buttonText.color}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -226,6 +229,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
+    paddingBottom: 20,
   },
   textCadastro: {
     fontSize: 36,

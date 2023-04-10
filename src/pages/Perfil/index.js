@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -32,7 +33,7 @@ function Perfil({ navigation }) {
         errorToast("Erro", "Houve um erro.");
       }
     }
-    
+
     navigation.addListener("focus", (e) => {
       setData([]);
       getDados();
@@ -54,79 +55,81 @@ function Perfil({ navigation }) {
   }
 
   return (
-    <View style={[styles.container, styleTheme.container]}>
-      {data.length === 0 ? (
-        <View style={styles.activityStyle}>
-          <ActivityIndicator size="large" color="#23AFFF" />
-        </View>
-      ) : (
-        <>
-          <View style={styles.viewImage}>
-            <Image
-              style={{
-                width: 150,
-                height: 150,
-                borderRadius: 75,
-                borderColor: "#23AFFF",
-                borderWidth: 2,
-              }}
-              source={{
-                uri: `${API_URL}` + data.foto,
-              }}
-            />
+    <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
+      <View style={[styles.container, styleTheme.container]}>
+        {data.length === 0 ? (
+          <View style={styles.activityStyle}>
+            <ActivityIndicator size="large" color="#23AFFF" />
           </View>
-
-          <View style={styles.viewText}>
-            <Text style={[styles.texNormal, styleTheme.textPrimary]}>
-              {data.nome_tecnico}
-            </Text>
-            <Text style={[styles.texNormal, styleTheme.textPrimary]}>
-              {data.email_tecnico}
-            </Text>
-
-            <TouchableOpacity style={styles.editar} onPress={goToEditar}>
-              <Text style={styles.textStyle}>Editar Perfil</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.viewDados}>
-            <Text style={[styles.textBold, styleTheme.textPrimary]}>
-              Meus dados
-            </Text>
-
-            <View style={styles.viewDados2}>
-              <Text style={[styles.textDados, styleTheme.textSecundary]}>
-                Matricula:
-                <Text style={[styles.textDado, styleTheme.textSecundary]}>
-                  {" "}
-                  {data.matricula}
-                </Text>
-              </Text>
-              <Text style={[styles.textDados, styleTheme.textSecundary]}>
-                Especialidade:
-                <Text style={[styles.textDado, styleTheme.textSecundary]}>
-                  {" "}
-                  {data.especialidade}
-                </Text>
-              </Text>
-              <Text style={[styles.textDados, styleTheme.textSecundary]}>
-                CPF:
-                <Text style={[styles.textDado, styleTheme.textSecundary]}>
-                  {" "}
-                  {data.cpf}
-                </Text>
-              </Text>
-              <Text style={[styles.textDados, styleTheme.textSecundary]}>
-                Telefone:
-                <Text style={[styles.textDado, styleTheme.textSecundary]}>
-                  {" "}
-                  {data.telefone}
-                </Text>
-              </Text>
+        ) : (
+          <>
+            <View style={styles.viewImage}>
+              <Image
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 75,
+                  borderColor: "#23AFFF",
+                  borderWidth: 2,
+                }}
+                source={{
+                  uri: `${API_URL}` + data.foto,
+                }}
+              />
             </View>
-          </View>
-        </>
-      )}
-    </View>
+
+            <View style={styles.viewText}>
+              <Text style={[styles.texNormal, styleTheme.textPrimary]}>
+                {data.nome_tecnico}
+              </Text>
+              <Text style={[styles.texNormal, styleTheme.textPrimary]}>
+                {data.email_tecnico}
+              </Text>
+
+              <TouchableOpacity style={styles.editar} onPress={goToEditar}>
+                <Text style={styles.textStyle}>Editar Perfil</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.viewDados}>
+              <Text style={[styles.textBold, styleTheme.textPrimary]}>
+                Meus dados
+              </Text>
+
+              <View style={styles.viewDados2}>
+                <Text style={[styles.textDados, styleTheme.textSecundary]}>
+                  Matrícula:
+                  <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                    {" "}
+                    {data.matricula}
+                  </Text>
+                </Text>
+                <Text style={[styles.textDados, styleTheme.textSecundary]}>
+                  Especialidade:
+                  <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                    {" "}
+                    {data.especialidade}
+                  </Text>
+                </Text>
+                <Text style={[styles.textDados, styleTheme.textSecundary]}>
+                  CPF:
+                  <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                    {" "}
+                    {data.cpf}
+                  </Text>
+                </Text>
+                <Text style={[styles.textDados, styleTheme.textSecundary]}>
+                  Telefone:
+                  <Text style={[styles.textDado, styleTheme.textSecundary]}>
+                    {" "}
+                    {data.telefone}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 

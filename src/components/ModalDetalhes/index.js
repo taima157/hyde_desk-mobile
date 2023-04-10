@@ -20,6 +20,7 @@ export default function ModalDetalhes({
   chamado,
   aceitarChamado,
   toggleModal,
+  estaConcluido,
 }) {
   const { styleTheme } = useContext(ThemeContext);
   const [modalImage, setModalImage] = useState(false);
@@ -44,6 +45,18 @@ export default function ModalDetalhes({
       </Text>
       <ScrollView>
         <View style={styles.detalhesChamado}>
+          {estaConcluido && (
+            <View style={styles.field}>
+              <Text
+                style={[
+                  styles.label,
+                  { textAlign: "center", color: "#00bb65" },
+                ]}
+              >
+                Concluido
+              </Text>
+            </View>
+          )}
           <View style={styles.field}>
             <Text style={[styles.label, styleTheme.textPrimary]}>Empresa:</Text>
             <Text style={[styles.valorField, styleTheme.textPrimary]}>
@@ -138,20 +151,38 @@ export default function ModalDetalhes({
           </View>
         </View>
       </ScrollView>
-      <View style={styles.botoesModal}>
-        <TouchableOpacity
-          onPress={toggleModal}
-          style={[styles.botaoModal, { borderBottomLeftRadius: 20 }]}
-        >
-          <Text style={styles.textoBotao}>Voltar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={aceitarChamado}
-          style={[styles.botaoModal, { borderBottomRightRadius: 20 }]}
-        >
-          <Text style={styles.textoBotao}>Aceitar</Text>
-        </TouchableOpacity>
-      </View>
+      {estaConcluido ? (
+        <View style={styles.botoesModal}>
+          <TouchableOpacity
+            onPress={toggleModal}
+            style={[
+              styles.botaoModal,
+              {
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+                width: "100%",
+              },
+            ]}
+          >
+            <Text style={styles.textoBotao}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.botoesModal}>
+          <TouchableOpacity
+            onPress={toggleModal}
+            style={[styles.botaoModal, { borderBottomLeftRadius: 20 }]}
+          >
+            <Text style={styles.textoBotao}>Voltar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={aceitarChamado}
+            style={[styles.botaoModal, { borderBottomRightRadius: 20 }]}
+          >
+            <Text style={styles.textoBotao}>Aceitar</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
