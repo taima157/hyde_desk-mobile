@@ -22,10 +22,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 function Cadastro({ navigation }) {
   const { styleTheme } = useContext(ThemeContext);
   const data = [
-    { key: "1", value: "Hardware" },
-    { key: "2", value: "Rede" },
-    { key: "3", value: "Sistema Operacional" },
-    { key: "4", value: "Software" },
+    { key: "1", value: "Software" },
+    { key: "2", value: "Infraestrutura" },
+    { key: "3", value: "Hardware" },
   ];
 
   function validarCPF(cpf) {

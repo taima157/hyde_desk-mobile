@@ -12,6 +12,7 @@ import { AuthContext } from "../../context/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from "../../context/theme";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { sendNotification } from "../../utils";
 
 export default function CadastrarFoto({ navigation }) {
   const { errorToast, successToast } = useContext(AuthContext);
@@ -64,6 +65,14 @@ export default function CadastrarFoto({ navigation }) {
       successToast("Cadastro", response.data.message);
 
       navigation.navigate("Login");
+
+      await sendNotification({
+        title: "Boas-vindas.",
+        body: "Seja bem-vindo ao nosso aplicativo! Estamos felizes em tê-lo conosco.",
+        time: {
+          seconds: 1,
+        },
+      });
     } catch (error) {
       setModalVisible(false);
 

@@ -12,6 +12,7 @@ import { ThemeProvider } from "../context/theme";
 import RecuperarSenha from "../pages/RecuperarSenha";
 import ConfirmarToken from "../pages/ConfirmarToken";
 import TrocarSenha from "../pages/TrocarSenha";
+import Autenticado from "../pages/Autenticado";
 
 const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
@@ -33,6 +34,7 @@ export function StackRoutes() {
             <Screen name="Recuperar Senha" component={RecuperarSenha} />
             <Screen name="ConfirmarToken" component={ConfirmarToken} />
             <Screen name="TrocarSenha" component={TrocarSenha} />
+            <Screen name="Autenticado" component={Autenticado} />
           </Navigator>
         </AuthProvider>
       </ThemeProvider>

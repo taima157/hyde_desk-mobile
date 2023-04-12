@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
   const { styleTheme } = useContext(ThemeContext);
 
   const [chamado, setChamado] = useState(null);
-  const [chamadosConcluido, setChamadosConcluido] = useState([]);
+  const [chamadosConcluido, setChamadosConcluido] = useState(null);
   const [cancelar, setCancelar] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -133,7 +133,7 @@ export default function Home({ navigation }) {
   }
 
   async function getChamadosConcluidos() {
-    setChamadosConcluido([]);
+    setChamadosConcluido(null);
 
     try {
       const response = await api.get(
@@ -149,6 +149,20 @@ export default function Home({ navigation }) {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    function haChamados() {
+      if (chamadosConcluido === null) return;
+
+      if (chamado === null) {
+        if (chamadosConcluido.length === 0) {
+          navigation.navigate("Chamados");
+        }
+      }
+    }
+
+    haChamados();
+  }, [chamadosConcluido, chamado]);
 
   useEffect(() => {
     navigation.addListener("focus", () => {
@@ -199,30 +213,44 @@ export default function Home({ navigation }) {
             <Text style={[styles.tituloChamado, styleTheme.textPrimary]}>
               Últimos chamados concluídos
             </Text>
-            {chamadosConcluido.length !== 0 ? (
-              <ScrollView>
-                <View style={styles.containerChamadosConcluidos}>
-                  {chamadosConcluido.map((chamado, index) => {
-                    if (index < 5) {
-                      return (
-                        <CardChamados
-                          key={chamado.id_chamado}
-                          chamado={chamado}
-                          estaConcluido={true}
-                        />
-                      );
-                    }
-                  })}
-                </View>
-              </ScrollView>
-            ) : (
-              <View style={styles.viewSemConcluidos}>
-                <Text
-                  style={[styles.textSemConcluidos, styleTheme.textPrimary]}
-                >
-                  Você não possui chamados concluidos.
-                </Text>
+            {chamadosConcluido === null ? (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ActivityIndicator size="large" color="#23AFFF" />
               </View>
+            ) : (
+              <>
+                {chamadosConcluido?.length !== 0 ? (
+                  <ScrollView>
+                    <View style={styles.containerChamadosConcluidos}>
+                      {chamadosConcluido.map((chamado, index) => {
+                        if (index < 5) {
+                          return (
+                            <CardChamados
+                              key={chamado.id_chamado}
+                              chamado={chamado}
+                              estaConcluido={true}
+                            />
+                          );
+                        }
+                      })}
+                    </View>
+                  </ScrollView>
+                ) : (
+                  <View style={styles.viewSemConcluidos}>
+                    <Text
+                      style={[styles.textSemConcluidos, styleTheme.textPrimary]}
+                    >
+                      Você não possui chamados concluidos.
+                    </Text>
+                  </View>
+                )}
+              </>
             )}
           </>
         )}

@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
 
       navigation.navigate("Logado");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new Error("CPF ou senha inválidos");
     }
   }
@@ -77,7 +77,8 @@ export function AuthProvider({ children }) {
           if (!expired) {
             setUser(userDecode);
             api.defaults.headers.Authorization = `Basic ${userLocal[0]}`;
-            navigation.navigate("Logado");
+
+            navigation.navigate("Autenticado");
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));
           }

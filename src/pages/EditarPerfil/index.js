@@ -52,7 +52,7 @@ export default function EditarPerfil({ route, navigation }) {
       telefone: values.telefone,
     });
 
-    toggle()
+    toggle();
   }
 
   function toggle() {
@@ -73,10 +73,9 @@ export default function EditarPerfil({ route, navigation }) {
   });
 
   const especialidade = [
-    { key: "1", value: "Hardware" },
-    { key: "2", value: "Rede" },
-    { key: "3", value: "Sistema Operacional" },
-    { key: "4", value: "Software" },
+    { key: "1", value: "Software" },
+    { key: "2", value: "Infraestrutura" },
+    { key: "3", value: "Hardware" },
   ];
 
   async function ObterImage() {
@@ -135,8 +134,8 @@ export default function EditarPerfil({ route, navigation }) {
                 image.uri.length != 0
                   ? { uri: image.uri }
                   : {
-                    uri: `${API_URL}` + dados.foto,
-                  }
+                      uri: `${API_URL}` + dados.foto,
+                    }
               }
             />
           </TouchableOpacity>
