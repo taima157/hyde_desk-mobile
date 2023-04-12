@@ -11,7 +11,7 @@ import {
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 
-export default function Autenticado() {
+export default function Autenticar() {
   const navigation = useNavigation();
   const { styleTheme } = useContext(ThemeContext);
 

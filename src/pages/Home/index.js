@@ -141,7 +141,7 @@ export default function Home({ navigation }) {
       );
 
       if (response.data.length !== 0) {
-        setChamadosConcluido(response.data);
+        setChamadosConcluido(response.data.reverse());
       } else {
         setChamadosConcluido([]);
       }
@@ -149,21 +149,7 @@ export default function Home({ navigation }) {
       console.log(error);
     }
   }
-
-  useEffect(() => {
-    function haChamados() {
-      if (chamadosConcluido === null) return;
-
-      if (chamado === null) {
-        if (chamadosConcluido.length === 0) {
-          navigation.navigate("Chamados");
-        }
-      }
-    }
-
-    haChamados();
-  }, [chamadosConcluido, chamado]);
-
+  
   useEffect(() => {
     navigation.addListener("focus", () => {
       getChamadoAndamento();
@@ -247,6 +233,12 @@ export default function Home({ navigation }) {
                       style={[styles.textSemConcluidos, styleTheme.textPrimary]}
                     >
                       Você não possui chamados concluidos.
+                    </Text>
+                    <Text
+                      style={[styles.textSemConcluidos, styleTheme.textPrimary]}
+                    >
+                      Vá até a tela de Chamados para aceitar um chamado
+                      pendente.
                     </Text>
                   </View>
                 )}

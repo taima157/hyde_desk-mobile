@@ -34,7 +34,7 @@ function Header({ route }) {
     return null;
   }
 
-  if (route.name === "Autenticado") {
+  if (route.name === "Autenticar") {
     return <View></View>;
   }
 

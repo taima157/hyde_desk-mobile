@@ -49,17 +49,14 @@ export default function CardChamados({
       toggleModal();
       setRefreshing(true);
       successToast("Aceitar chamado", response.data.message);
-      notificarAtraso(chamado.id_chamado);
+      notificarAtraso();
     } catch (error) {
       errorToast("Aceitar chamado", error.response.data.message);
     }
   }
 
-  async function notificarAtraso(id_chamado) {
-    console.log(id_chamado);
+  async function notificarAtraso() {
     try {
-      const response = await api.get(`/chamados/${id_chamado}`);
-
       const notifications = await AsyncStorage.getItem("notifications");
 
       const notificationJSON = JSON.parse(notifications);
@@ -68,7 +65,7 @@ export default function CardChamados({
       // const trigger = 20;
       const idNotification = await sendNotification({
         title: "Notificação de chamado pendente",
-        body: `Chamado ${response.data[0].cod_verificacao} pendente há mais de 2 dias. Conclua-o rapidamente para um melhor atendimento aos clientes.`,
+        body: `Chamado ${chamado.cod_verificacao} pendente há mais de 2 dias. Conclua-o rapidamente para um melhor atendimento aos clientes.`,
         time: trigger,
       });
 

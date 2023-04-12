@@ -35,7 +35,7 @@ export default function Chamados({ navigation }) {
     { key: "4", value: "Alta" },
   ];
 
-  const [chamados, setChamados] = useState(null);
+  const [chamados, setChamados] = useState([]);
   const [chamadosAndamento, setChamadoAndamento] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -166,43 +166,48 @@ export default function Chamados({ navigation }) {
         <Text style={[styles.titulo, styleTheme.textPrimary]}>Chamados</Text>
       </View>
       <View style={styles.viewFiltro}>
-        <View style={styles.fieldFiltro}>
-          <Text style={[styles.textPrioridade, styleTheme.textPrimary]}>
-            Prioridade:
-          </Text>
-          <SelectList
-            data={filtroItem}
-            value={prioridade}
-            setSelected={(e) => setPrioridade(e)}
-            placeholder="Tudo"
-            search={false}
-            boxStyles={[
-              {
-                borderWidth: 2,
-                borderColor: "#23AFFF",
-                height: 50,
-                width: 150,
-              },
-              styleTheme.containerSecundary,
-            ]}
-            fontFamily="Poppins_400Regular"
-            inputStyles={{
-              color: styleTheme.textPrimary.color,
-              fontSize: 15,
-              marginLeft: -10,
-            }}
-            dropdownStyles={{
-              width: 150,
-              position: "absolute",
-              backgroundColor: styleTheme.containerSecundary.backgroundColor,
-              zIndex: 10,
-              top: 50,
-              borderWidth: 2,
-              borderColor: "#23AFFF",
-            }}
-            dropdownTextStyles={styleTheme.textPrimary}
-          />
-        </View>
+        {chamados !== null
+          ? chamados.length !== 0 && (
+              <View style={styles.fieldFiltro}>
+                <Text style={[styles.textPrioridade, styleTheme.textPrimary]}>
+                  Prioridade:
+                </Text>
+                <SelectList
+                  data={filtroItem}
+                  value={prioridade}
+                  setSelected={(e) => setPrioridade(e)}
+                  placeholder="Tudo"
+                  search={false}
+                  boxStyles={[
+                    {
+                      borderWidth: 2,
+                      borderColor: "#23AFFF",
+                      height: 50,
+                      width: 150,
+                    },
+                    styleTheme.containerSecundary,
+                  ]}
+                  fontFamily="Poppins_400Regular"
+                  inputStyles={{
+                    color: styleTheme.textPrimary.color,
+                    fontSize: 15,
+                    marginLeft: -10,
+                  }}
+                  dropdownStyles={{
+                    width: 150,
+                    position: "absolute",
+                    backgroundColor:
+                      styleTheme.containerSecundary.backgroundColor,
+                    zIndex: 10,
+                    top: 50,
+                    borderWidth: 2,
+                    borderColor: "#23AFFF",
+                  }}
+                  dropdownTextStyles={styleTheme.textPrimary}
+                />
+              </View>
+            )
+          : null}
       </View>
 
       <View style={styles.viewChamados}>
@@ -230,90 +235,94 @@ export default function Chamados({ navigation }) {
           </View>
         ) : (
           <View style={styles.viewFlatList}>
-            <ScrollView
-              ref={scrollRef}
-              style={styles.flatlist}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => {
-                    setRefreshing(true);
-                  }}
-                />
-              }
-            >
-              {pagination}
-              {totalPages > 1 && (
-                <View
-                  style={[
-                    styles.viewPaginationButtons,
-                    styleTheme.containerSecundary,
-                  ]}
-                >
-                  <TouchableOpacity onPress={prevPage}>
-                    <MaterialCommunityIcons
-                      name="chevron-left"
-                      size={30}
-                      color="#23AFFF"
-                    />
-                  </TouchableOpacity>
-                  <View style={styles.pageButtons}>
-                    {paginationButtons?.map((button, index) => {
-                      if (currentPage < 2) {
-                        if (index >= 0 && index < 5) {
-                          return (
-                            <PaginationButton
-                              key={index}
-                              index={index}
-                              handleChangePage={(e) => handleChangePage(e)}
-                              select={index === currentPage ? true : false}
-                            />
-                          );
-                        }
-                      }
-
-                      if (currentPage > totalPages - 3) {
-                        if (index >= totalPages - 5 && index < totalPages) {
-                          return (
-                            <PaginationButton
-                              key={index}
-                              index={index}
-                              handleChangePage={(e) => handleChangePage(e)}
-                              select={index === currentPage ? true : false}
-                            />
-                          );
-                        }
-                      }
-
-                      if (index >= currentPage - 2 && index < currentPage + 3) {
-                        return (
-                          <PaginationButton
-                            key={index}
-                            index={index}
-                            handleChangePage={(e) => handleChangePage(e)}
-                            select={index === currentPage ? true : false}
-                          />
-                        );
-                      }
-                    })}
-                  </View>
-                  <TouchableOpacity onPress={nextPage}>
-                    <MaterialCommunityIcons
-                      name="chevron-right"
-                      size={30}
-                      color="#23AFFF"
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </ScrollView>
             {chamados.length === 0 ? (
               <View style={styles.viewSemChamados}>
                 <Text style={[styles.textoSemChamados, styleTheme.textPrimary]}>
                   Não há chamados pendentes.
                 </Text>
               </View>
-            ) : null}
+            ) : (
+              <ScrollView
+                ref={scrollRef}
+                style={styles.flatlist}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => {
+                      setRefreshing(true);
+                    }}
+                  />
+                }
+              >
+                {pagination}
+                {totalPages > 1 && (
+                  <View
+                    style={[
+                      styles.viewPaginationButtons,
+                      styleTheme.containerSecundary,
+                    ]}
+                  >
+                    <TouchableOpacity onPress={prevPage}>
+                      <MaterialCommunityIcons
+                        name="chevron-left"
+                        size={30}
+                        color="#23AFFF"
+                      />
+                    </TouchableOpacity>
+                    <View style={styles.pageButtons}>
+                      {paginationButtons?.map((button, index) => {
+                        if (currentPage < 2) {
+                          if (index >= 0 && index < 5) {
+                            return (
+                              <PaginationButton
+                                key={index}
+                                index={index}
+                                handleChangePage={(e) => handleChangePage(e)}
+                                select={index === currentPage ? true : false}
+                              />
+                            );
+                          }
+                        }
+
+                        if (currentPage > totalPages - 3) {
+                          if (index >= totalPages - 5 && index < totalPages) {
+                            return (
+                              <PaginationButton
+                                key={index}
+                                index={index}
+                                handleChangePage={(e) => handleChangePage(e)}
+                                select={index === currentPage ? true : false}
+                              />
+                            );
+                          }
+                        }
+
+                        if (
+                          index >= currentPage - 2 &&
+                          index < currentPage + 3
+                        ) {
+                          return (
+                            <PaginationButton
+                              key={index}
+                              index={index}
+                              handleChangePage={(e) => handleChangePage(e)}
+                              select={index === currentPage ? true : false}
+                            />
+                          );
+                        }
+                      })}
+                    </View>
+                    <TouchableOpacity onPress={nextPage}>
+                      <MaterialCommunityIcons
+                        name="chevron-right"
+                        size={30}
+                        color="#23AFFF"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </ScrollView>
+            )}
           </View>
         )}
       </View>
@@ -355,7 +364,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   viewFlatList: {
-    position: "relative",
+    flex: 1,
     width: "100%",
   },
   flatlist: {
@@ -365,10 +374,9 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   viewSemChamados: {
-    position: "absolute",
-    top: "50%",
-    left: "20%",
-    width: "100%",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   textoSemChamados: {
     fontFamily: "Poppins_400Regular",

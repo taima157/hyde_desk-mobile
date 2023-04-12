@@ -115,7 +115,7 @@ export default function EditarPerfil({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styleTheme.container}>
+    <ScrollView style={[{ flex: 1 }, styleTheme.container]}>
       <View style={[styles.container, styleTheme.container]}>
         <View style={styles.viewImage}>
           <TouchableOpacity style={styles.imageOpacity} onPress={ObterImage}>
@@ -253,7 +253,6 @@ export default function EditarPerfil({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
     padding: 20,
   },

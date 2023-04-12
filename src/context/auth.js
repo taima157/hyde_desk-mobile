@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
             setUser(userDecode);
             api.defaults.headers.Authorization = `Basic ${userLocal[0]}`;
 
-            navigation.navigate("Autenticado");
+            navigation.navigate("Autenticar");
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));
           }

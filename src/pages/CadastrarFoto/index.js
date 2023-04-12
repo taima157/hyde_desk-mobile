@@ -20,6 +20,8 @@ export default function CadastrarFoto({ navigation }) {
   const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
+
   useEffect(() => {
     async function getStorage() {
       const cadastroLocal = await AsyncStorage.getItem("cadastro");
@@ -87,22 +89,37 @@ export default function CadastrarFoto({ navigation }) {
   }
 
   async function ObterImage(tipo) {
-    let result;
+    let result = null;
 
     if (tipo === "galeria") {
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [4, 4],
         quality: 1,
       });
     } else {
-      result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+      try {
+        const permission =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!permission.granted) {
+          return;
+        }
+
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 4],
+          quality: 1,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (result === null) {
+      return;
     }
 
     if (!result.canceled) {

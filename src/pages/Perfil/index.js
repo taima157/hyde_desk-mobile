@@ -55,7 +55,7 @@ function Perfil({ navigation }) {
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <ScrollView style={[{ flex: 1 }, styleTheme.container]}>
       <View style={[styles.container, styleTheme.container]}>
         {data.length === 0 ? (
           <View style={styles.activityStyle}>
