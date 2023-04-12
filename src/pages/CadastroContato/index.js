@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import {
   useFonts,
@@ -57,100 +58,102 @@ function CadastroContato({ navigation }) {
   }
 
   return (
-    <View style={[styles.container, styleTheme.container]}>
-      <View style={styles.containerTextCadastro}>
-        <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
-          Cadastro
-        </Text>
-      </View>
+    <ScrollView style={styleTheme.container}>
+      <View style={[styles.container, styleTheme.container]}>
+        <View style={styles.containerTextCadastro}>
+          <Text style={[styles.textCadastro, styleTheme.textPrimary]}>
+            Cadastro
+          </Text>
+        </View>
 
-      <Formik
-        validationSchema={yupSchema}
-        initialValues={{
-          email: "",
-          telefone: "",
-          senha: "",
-        }}
-        onSubmit={(values) => handleSubmit(values)}
-      >
-        {({ handleChange, handleSubmit, values, errors, submitCount }) => (
-          <>
-            <View style={styles.containerInputs}>
-              <TextInput
-                onChangeText={handleChange("email")}
-                value={values.email}
-                keyboardType="email-address"
-                style={[styles.inputs, styleTheme.inputPrimary]}
-                placeholder="E-mail:"
-                placeholderTextColor={styleTheme.textSecundary.color}
-              />
-              {errors.email && submitCount ? (
-                <Text style={styles.labelError}>{errors.email}</Text>
-              ) : null}
-
-              <TextInput
-                onChangeText={handleChange("telefone")}
-                value={values.telefone}
-                keyboardType="number-pad"
-                style={[styles.inputs, styleTheme.inputPrimary]}
-                placeholder="Telefone:"
-                placeholderTextColor={styleTheme.textSecundary.color}
-                maxLength={11}
-              />
-
-              {errors.telefone && submitCount ? (
-                <Text style={styles.labelError}>{errors.telefone}</Text>
-              ) : null}
-
-              <TextInput
-                onChangeText={handleChange("senha")}
-                value={values.senha}
-                style={[styles.inputs, styleTheme.inputPrimary]}
-                placeholder="Senha:"
-                placeholderTextColor={styleTheme.textSecundary.color}
-                secureTextEntry={true}
-              />
-
-              {errors.senha && submitCount ? (
-                <Text style={styles.labelError}>{errors.senha}</Text>
-              ) : null}
-            </View>
-
-            <View style={styles.containerButtonNext}>
-              <TouchableOpacity
-                style={[styles.buttonNext, styleTheme.buttonPress]}
-                onPress={handleSubmit}
-              >
-                <Text style={[styles.textNext, styleTheme.buttonText]}>
-                  Próximo
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </Formik>
-
-      <View style={styles.containerButtonBack}>
-        <TouchableOpacity
-          style={[
-            styles.buttonBack,
-            {
-              backgroundColor:
-                theme === "light"
-                  ? "#000"
-                  : styleTheme.containerSecundary.backgroundColor,
-            },
-          ]}
-          onPress={voltar}
+        <Formik
+          validationSchema={yupSchema}
+          initialValues={{
+            email: "",
+            telefone: "",
+            senha: "",
+          }}
+          onSubmit={(values) => handleSubmit(values)}
         >
-          <MaterialCommunityIcons
-            name="keyboard-backspace"
-            size={40}
-            color={theme === "light" ? "#FFF" : styleTheme.textPrimary.color}
-          />
-        </TouchableOpacity>
+          {({ handleChange, handleSubmit, values, errors, submitCount }) => (
+            <>
+              <View style={styles.containerInputs}>
+                <TextInput
+                  onChangeText={handleChange("email")}
+                  value={values.email}
+                  keyboardType="email-address"
+                  style={[styles.inputs, styleTheme.inputPrimary]}
+                  placeholder="E-mail:"
+                  placeholderTextColor={styleTheme.textSecundary.color}
+                />
+                {errors.email && submitCount ? (
+                  <Text style={styles.labelError}>{errors.email}</Text>
+                ) : null}
+
+                <TextInput
+                  onChangeText={handleChange("telefone")}
+                  value={values.telefone}
+                  keyboardType="number-pad"
+                  style={[styles.inputs, styleTheme.inputPrimary]}
+                  placeholder="Telefone:"
+                  placeholderTextColor={styleTheme.textSecundary.color}
+                  maxLength={11}
+                />
+
+                {errors.telefone && submitCount ? (
+                  <Text style={styles.labelError}>{errors.telefone}</Text>
+                ) : null}
+
+                <TextInput
+                  onChangeText={handleChange("senha")}
+                  value={values.senha}
+                  style={[styles.inputs, styleTheme.inputPrimary]}
+                  placeholder="Senha:"
+                  placeholderTextColor={styleTheme.textSecundary.color}
+                  secureTextEntry={true}
+                />
+
+                {errors.senha && submitCount ? (
+                  <Text style={styles.labelError}>{errors.senha}</Text>
+                ) : null}
+              </View>
+
+              <View style={styles.containerButtonNext}>
+                <TouchableOpacity
+                  style={[styles.buttonNext, styleTheme.buttonPress]}
+                  onPress={handleSubmit}
+                >
+                  <Text style={[styles.textNext, styleTheme.buttonText]}>
+                    Próximo
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </Formik>
+
+        <View style={styles.containerButtonBack}>
+          <TouchableOpacity
+            style={[
+              styles.buttonBack,
+              {
+                backgroundColor:
+                  theme === "light"
+                    ? "#000"
+                    : styleTheme.containerSecundary.backgroundColor,
+              },
+            ]}
+            onPress={voltar}
+          >
+            <MaterialCommunityIcons
+              name="keyboard-backspace"
+              size={40}
+              color={theme === "light" ? "#FFF" : styleTheme.textPrimary.color}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -160,6 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
+    paddingBottom: 20,
   },
   textCadastro: {
     fontSize: 36,

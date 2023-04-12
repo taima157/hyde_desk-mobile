@@ -27,7 +27,6 @@ export default function TabRoutes({ route }) {
   return (
     <>
       <Navigator
-        initialRouteName="Home"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {

@@ -1,5 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useFonts, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+} from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { api } from "../../services/api";
@@ -7,13 +11,16 @@ import ModalLoading from "../../components/ModalLoading";
 import { AuthContext } from "../../context/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from "../../context/theme";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { sendNotification } from "../../utils";
 
 export default function CadastrarFoto({ navigation }) {
   const { errorToast, successToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
   const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   useEffect(() => {
     async function getStorage() {
@@ -60,6 +67,14 @@ export default function CadastrarFoto({ navigation }) {
       successToast("Cadastro", response.data.message);
 
       navigation.navigate("Login");
+
+      await sendNotification({
+        title: "Boas-vindas.",
+        body: "Seja bem-vindo ao nosso aplicativo! Estamos felizes em tê-lo conosco.",
+        time: {
+          seconds: 1,
+        },
+      });
     } catch (error) {
       setModalVisible(false);
 
@@ -73,13 +88,39 @@ export default function CadastrarFoto({ navigation }) {
     }
   }
 
-  async function ObterImage() {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  async function ObterImage(tipo) {
+    let result = null;
+
+    if (tipo === "galeria") {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 4],
+        quality: 1,
+      });
+    } else {
+      try {
+        const permission =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!permission.granted) {
+          return;
+        }
+
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 4],
+          quality: 1,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (result === null) {
+      return;
+    }
 
     if (!result.canceled) {
       let imageName = result.assets[0].uri.split("/");
@@ -93,7 +134,7 @@ export default function CadastrarFoto({ navigation }) {
         name: imageName,
       });
     }
-  };
+  }
 
   function voltar() {
     navigation.navigate("CadastroContato");
@@ -101,6 +142,7 @@ export default function CadastrarFoto({ navigation }) {
 
   let [fontsLoaded] = useFonts({
     Poppins_700Bold,
+    Poppins_400Regular,
   });
   if (!fontsLoaded) {
     return null;
@@ -117,18 +159,34 @@ export default function CadastrarFoto({ navigation }) {
       <View style={styles.container_card}>
         <View style={[styles.card_AdicionarUsuarios, styleTheme.inputPrimary]}>
           <View style={styles.container_ImageCard}>
+            <Image
+              style={styles.ImgCamera}
+              source={
+                image.uri.length != 0
+                  ? { uri: image.uri }
+                  : require("../../../assets/image.png")
+              }
+            />
+          </View>
+
+          <View style={styles.viewButtonsFoto}>
             <TouchableOpacity
-              style={styles.container_foto}
-              onPress={() => ObterImage()}
+              onPress={() => ObterImage("galeria")}
+              style={[styles.buttonFoto, styleTheme.buttonPress]}
             >
-              <Image
-                style={styles.ImgCamera}
-                source={
-                  image.uri.length != 0
-                    ? { uri: image.uri }
-                    : require("../../../assets/image.png")
-                }
-              />
+              <MaterialIcons name="photo-library" size={24} color="white" />
+              <Text style={[styles.buttonFotoText, styleTheme.buttonText]}>
+                Galeria
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => ObterImage("camera")}
+              style={[styles.buttonFoto, styleTheme.buttonPress]}
+            >
+              <MaterialIcons name="camera-alt" size={24} color="white" />
+              <Text style={[styles.buttonFotoText, styleTheme.buttonText]}>
+                Câmera
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -190,12 +248,15 @@ const styles = StyleSheet.create({
   },
   card_AdicionarUsuarios: {
     width: "80%",
-    height: "80%",
+    paddingTop: 40,
+    paddingBottom: 20,
     borderRadius: 10,
     borderWidth: 2,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 30,
+    marginTop: 20,
   },
   container_ImageCard: {
     backgroundColor: "#D9D9D9",
@@ -251,5 +312,28 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: "center",
     justifyContent: "center",
+  },
+  viewButtonsFoto: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 40,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  buttonFoto: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+    display: "flex",
+    flexDirection: "row",
+  },
+  buttonFotoText: {
+    fontFamily: "Poppins_400Regular",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });

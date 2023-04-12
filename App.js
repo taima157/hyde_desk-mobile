@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { StackRoutes } from "./src/routes/stack.routes";
 import { cancelNotification, sendNotification } from "./src/utils";
+import { AuthProvider } from "./src/context/auth";
 
 export default function App() {
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StackRoutes />
+       <StackRoutes />
     </SafeAreaView>
   );
 }

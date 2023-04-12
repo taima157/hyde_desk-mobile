@@ -34,6 +34,10 @@ function Header({ route }) {
     return null;
   }
 
+  if (route.name === "Autenticar") {
+    return <View></View>;
+  }
+
   return (
     <View style={[styles.container, styleTheme.container]}>
       <View style={styles.viewThemeMode}>
