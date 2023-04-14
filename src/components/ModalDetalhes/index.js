@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,6 +15,7 @@ import {
 import { ThemeContext } from "../../context/theme";
 import ModalImagem from "../ModalImagem";
 import { API_URL } from "@env";
+import { api } from "../../services/api";
 
 export default function ModalDetalhes({
   chamado,
@@ -24,10 +25,34 @@ export default function ModalDetalhes({
 }) {
   const { styleTheme } = useContext(ThemeContext);
   const [modalImage, setModalImage] = useState(false);
+  const [conclusao, setConclusao] = useState(null);
 
   function toggleModalImage() {
     setModalImage(!modalImage);
   }
+
+  useEffect(() => {
+    async function getDetalhesConclusao() {
+      if (estaConcluido) {
+        const response = await api.get(
+          `/conclusoes?chamado_id=${chamado.id_chamado}`
+        );
+
+        const dataTermino = await response.data[0].data_termino;
+
+        const dataHora = dataTermino.split("T");
+        let data = dataHora[0];
+        let hora = dataHora[1];
+        data = data.split("-");
+        const horaChamado = hora.split(".")[0];
+        const dataChamado = `${data[2]}/${data[1]}/${data[0]}`;
+
+        setConclusao({ horaChamado, dataChamado });
+      }
+    }
+
+    getDetalhesConclusao();
+  }, []);
 
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
@@ -81,12 +106,22 @@ export default function ModalDetalhes({
           </View>
           <View style={styles.field}>
             <Text style={[styles.label, styleTheme.textPrimary]}>
-              Data do chamado:
+              Data de abertura:
             </Text>
             <Text style={[styles.valorField, styleTheme.textPrimary]}>
               {chamado.dataChamado} - {chamado.horaChamado}
             </Text>
           </View>
+          {conclusao !== null && (
+            <View style={styles.field}>
+              <Text style={[styles.label, styleTheme.textPrimary]}>
+                Data de encerramento:
+              </Text>
+              <Text style={[styles.valorField, styleTheme.textPrimary]}>
+                {conclusao.dataChamado} - {conclusao.horaChamado}
+              </Text>
+            </View>
+          )}
           <View style={styles.field}>
             <Text style={[styles.label, styleTheme.textPrimary]}>
               Problema:
