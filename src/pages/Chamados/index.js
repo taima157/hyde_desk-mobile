@@ -25,6 +25,7 @@ export default function Chamados({ navigation }) {
   const { user, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
   const [prioridade, setPrioridade] = useState("1");
+  const [canBack, setCanBack] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -123,6 +124,10 @@ export default function Chamados({ navigation }) {
       getChamados();
       getChamadosAndamento();
     });
+
+    navigation.addListener("blur", (e) => {
+      setPrioridade("1");
+    });
   }, [navigation]);
 
   useEffect(() => {
@@ -151,6 +156,21 @@ export default function Chamados({ navigation }) {
     genPagination(0, totalItems);
   }, [chamados]);
 
+  useEffect(() => {
+    function canGoBack() {
+      if (chamadosAndamento === null) return;
+
+      if (chamadosAndamento.length !== 0) {
+        if (!canBack) {
+          setCanBack(true);
+          navigation.navigate("Home");
+        }
+      }
+    }
+
+    canGoBack();
+  }, [chamadosAndamento]);
+
   let [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
     Poppins_400Regular,
@@ -166,48 +186,45 @@ export default function Chamados({ navigation }) {
         <Text style={[styles.titulo, styleTheme.textPrimary]}>Chamados</Text>
       </View>
       <View style={styles.viewFiltro}>
-        {chamados !== null
-          ? chamados.length !== 0 && (
-              <View style={styles.fieldFiltro}>
-                <Text style={[styles.textPrioridade, styleTheme.textPrimary]}>
-                  Prioridade:
-                </Text>
-                <SelectList
-                  data={filtroItem}
-                  value={prioridade}
-                  setSelected={(e) => setPrioridade(e)}
-                  placeholder="Tudo"
-                  search={false}
-                  boxStyles={[
-                    {
-                      borderWidth: 2,
-                      borderColor: "#23AFFF",
-                      height: 50,
-                      width: 150,
-                    },
-                    styleTheme.containerSecundary,
-                  ]}
-                  fontFamily="Poppins_400Regular"
-                  inputStyles={{
-                    color: styleTheme.textPrimary.color,
-                    fontSize: 15,
-                    marginLeft: -10,
-                  }}
-                  dropdownStyles={{
-                    width: 150,
-                    position: "absolute",
-                    backgroundColor:
-                      styleTheme.containerSecundary.backgroundColor,
-                    zIndex: 10,
-                    top: 50,
-                    borderWidth: 2,
-                    borderColor: "#23AFFF",
-                  }}
-                  dropdownTextStyles={styleTheme.textPrimary}
-                />
-              </View>
-            )
-          : null}
+        {chamados !== null && (
+          <View style={styles.fieldFiltro}>
+            <Text style={[styles.textPrioridade, styleTheme.textPrimary]}>
+              Prioridade:
+            </Text>
+            <SelectList
+              data={filtroItem}
+              value={prioridade}
+              setSelected={(e) => setPrioridade(e)}
+              placeholder={filtroItem[Number(prioridade) - 1].value}
+              search={false}
+              boxStyles={[
+                {
+                  borderWidth: 2,
+                  borderColor: "#23AFFF",
+                  height: 50,
+                  width: 150,
+                },
+                styleTheme.containerSecundary,
+              ]}
+              fontFamily="Poppins_400Regular"
+              inputStyles={{
+                color: styleTheme.textPrimary.color,
+                fontSize: 15,
+                marginLeft: -10,
+              }}
+              dropdownStyles={{
+                width: 150,
+                position: "absolute",
+                backgroundColor: styleTheme.containerSecundary.backgroundColor,
+                zIndex: 10,
+                top: 50,
+                borderWidth: 2,
+                borderColor: "#23AFFF",
+              }}
+              dropdownTextStyles={styleTheme.textPrimary}
+            />
+          </View>
+        )}
       </View>
 
       <View style={styles.viewChamados}>
