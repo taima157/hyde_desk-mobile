@@ -149,7 +149,7 @@ export default function Home({ navigation }) {
       console.log(error);
     }
   }
-  
+
   useEffect(() => {
     navigation.addListener("focus", () => {
       getChamadoAndamento();

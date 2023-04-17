@@ -73,7 +73,7 @@ function Perfil({ navigation }) {
                   borderWidth: 2,
                 }}
                 source={{
-                  uri: `${API_URL}` + data.foto,
+                  uri: API_URL + data.foto,
                 }}
               />
             </View>
