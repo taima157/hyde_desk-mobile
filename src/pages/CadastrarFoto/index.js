@@ -20,8 +20,6 @@ export default function CadastrarFoto({ navigation }) {
   const [data, setData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [status, requestPermission] = ImagePicker.useCameraPermissions();
-
   useEffect(() => {
     async function getStorage() {
       const cadastroLocal = await AsyncStorage.getItem("cadastro");
