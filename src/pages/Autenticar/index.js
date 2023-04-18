@@ -1,36 +1,20 @@
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { Alert } from "react-native";
 import { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from "../../context/theme";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-  Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
+import { AuthContext } from "../../context/auth";
 
 export default function Autenticar() {
   const navigation = useNavigation();
   const { styleTheme } = useContext(ThemeContext);
+  const { estaLogado } = useContext(AuthContext);
 
   async function biometria() {
-    const biometricExist = await LocalAuthentication.hasHardwareAsync();
+    if (await estaLogado()) {
+      const biometricExist = await LocalAuthentication.hasHardwareAsync();
 
-    if (!biometricExist) {
-      const auth = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Login com senha",
-        fallbackLabel: "Senha errada.",
-      });
-
-      if (auth.success) {
-        navigation.navigate("Logado");
-      }
-    } else {
-      const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-      if (!isBiometricEnrolled) {
+      if (!biometricExist) {
         const auth = await LocalAuthentication.authenticateAsync({
           promptMessage: "Login com senha",
           fallbackLabel: "Senha errada.",
@@ -39,32 +23,37 @@ export default function Autenticar() {
         if (auth.success) {
           navigation.navigate("Logado");
         }
-      }
+      } else {
+        const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
 
-      const auth = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Login com Biometria",
-        fallbackLabel: "Biometria nâo encontrada.",
-      });
+        if (!isBiometricEnrolled) {
+          const auth = await LocalAuthentication.authenticateAsync({
+            promptMessage: "Login com senha",
+            fallbackLabel: "Senha errada.",
+          });
 
-      if (auth.success) {
-        navigation.navigate("Logado");
+          if (auth.success) {
+            navigation.navigate("Logado");
+          }
+        }
+
+        const auth = await LocalAuthentication.authenticateAsync({
+          promptMessage: "Login com Biometria",
+          fallbackLabel: "Biometria nâo encontrada.",
+        });
+
+        if (auth.success) {
+          navigation.navigate("Logado");
+        }
       }
+    } else {
+      navigation.navigate("Login");
     }
   }
 
   useEffect(() => {
     biometria();
   }, []);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={[styles.container, styleTheme.container]}>

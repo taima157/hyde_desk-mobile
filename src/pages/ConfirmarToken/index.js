@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,6 @@ import {
 } from "react-native";
 import { ThemeContext } from "../../context/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  Poppins_400Regular,
-  Poppins_700Bold,
-  Poppins_600SemiBold,
-  useFonts,
-} from "@expo-google-fonts/poppins";
 
 export default function ConfirmarToken({ route, navigation }) {
   const { theme, styleTheme } = useContext(ThemeContext);
@@ -29,16 +23,6 @@ export default function ConfirmarToken({ route, navigation }) {
     { value: "", ref: useRef(null) },
     { value: "", ref: useRef(null) },
   ]);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   function voltar() {
     navigation.navigate("Recuperar Senha");

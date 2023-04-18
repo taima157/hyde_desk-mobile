@@ -6,16 +6,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Modal from "react-native-modal";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-  Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
 import { useContext, useState } from "react";
 var bcrypt = require("bcryptjs");
 import { api } from "../../services/api";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ModalLoading from "../ModalLoading";
 import { ThemeContext } from "../../context/theme";
 import { AuthContext } from "../../context/auth";
@@ -89,16 +82,6 @@ export default function ConfirmarSenha({
         setVisivel(false);
       }
     });
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

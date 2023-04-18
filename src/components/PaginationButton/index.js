@@ -1,23 +1,9 @@
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../../context/theme";
-import {
-  useFonts,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 
 export default function PaginationButton({ index, select, handleChangePage }) {
   const { styleTheme } = useContext(ThemeContext);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <TouchableOpacity

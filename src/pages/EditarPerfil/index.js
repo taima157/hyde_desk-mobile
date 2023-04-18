@@ -12,12 +12,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
 import * as yup from "yup";
 import { Formik } from "formik";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ConfirmarSenha from "../../components/ConfirmarSenha";
 import { ThemeContext } from "../../context/theme";
@@ -102,16 +96,6 @@ export default function EditarPerfil({ route, navigation }) {
 
   function goBack() {
     navigation.navigate("Perfil");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

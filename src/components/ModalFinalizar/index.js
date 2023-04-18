@@ -7,11 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
 import Modal from "react-native-modal";
 import { ThemeContext } from "../../context/theme";
@@ -65,15 +60,6 @@ export default function ModalFinalizar({
     } else {
       setErroDescricao("A descrição é obrigatória!");
     }
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

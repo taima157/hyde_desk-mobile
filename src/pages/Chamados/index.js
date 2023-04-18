@@ -10,11 +10,6 @@ import {
 } from "react-native";
 import { api } from "../../services/api";
 import CardChamados from "../../components/CardChamados";
-import {
-  useFonts,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import { ThemeContext } from "../../context/theme";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -170,15 +165,6 @@ export default function Chamados({ navigation }) {
 
     canGoBack();
   }, [chamadosAndamento]);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={[styles.container, styleTheme.container]}>

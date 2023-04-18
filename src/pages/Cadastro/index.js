@@ -6,11 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { SelectList } from "react-native-dropdown-select-list";
 import * as yup from "yup";
 import { Formik } from "formik";
@@ -99,15 +94,6 @@ function Cadastro({ navigation }) {
 
   function voltar() {
     navigation.navigate("Login");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

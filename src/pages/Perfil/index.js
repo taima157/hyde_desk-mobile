@@ -7,12 +7,6 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { api } from "../../services/api";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/auth";
@@ -42,16 +36,6 @@ function Perfil({ navigation }) {
 
   function goToEditar() {
     navigation.navigate("Editar Perfil", data);
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

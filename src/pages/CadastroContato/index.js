@@ -7,11 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import * as yup from "yup";
 import { Formik } from "formik";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -46,15 +41,6 @@ function CadastroContato({ navigation }) {
 
   function voltar() {
     navigation.navigate("Cadastro");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (
