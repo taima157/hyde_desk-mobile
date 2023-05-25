@@ -93,7 +93,15 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, estaLogado, successToast, errorToast, estaLogado }}
+      value={{
+        user,
+        login,
+        logout,
+        estaLogado,
+        successToast,
+        errorToast,
+        estaLogado,
+      }}
     >
       {children}
       <Toast />
