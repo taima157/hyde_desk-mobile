@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import { ThemeContext } from "../../context/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ModalLoading from "../../components/ModalLoading";
+var bcrypt = require("bcryptjs");
 
 export default function ConfirmarToken({ route, navigation }) {
   const { theme, styleTheme } = useContext(ThemeContext);
   const [aviso, setAviso] = useState(false);
-
+  const [visivel, setVisivel] = useState(false)
   const data = route.params;
 
   const [inputValues, setInputValues] = useState([
@@ -29,16 +31,24 @@ export default function ConfirmarToken({ route, navigation }) {
   }
 
   async function comparar() {
+    setVisivel(true);
     let tokenCompare = "";
     inputValues.forEach((item) => {
       tokenCompare += item.value;
     });
 
-    if (tokenCompare === data.token) {
-      navigation.navigate("TrocarSenha", data.email);
-    } else {
-      setAviso(true);
-    }
+
+    bcrypt.compare(tokenCompare, data.token, async (error, valid) => {
+      if (error) {
+        return;
+      }
+      if (valid) {
+        setVisivel(false);
+        navigation.navigate("TrocarSenha", data.email);
+      } else {
+        setAviso(true);
+      }
+    });
   }
 
   return (
@@ -126,6 +136,7 @@ export default function ConfirmarToken({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      <ModalLoading isVisible={visivel} />
     </View>
   );
 }
