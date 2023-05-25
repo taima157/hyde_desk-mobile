@@ -27,6 +27,7 @@ export default function TabRoutes({ route }) {
   return (
     <>
       <Navigator
+        initialRouteName="Chamados"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
@@ -80,8 +81,8 @@ export default function TabRoutes({ route }) {
       <ModalConfirmar
         isVisible={isModalVisible}
         fecharModal={toggleModal}
-        confirmarAcao={logout}
-        mensagem="Deseja mesmo sair?"
+        confirmarAcao={() => BackHandler.exitApp()}
+        mensagem="Deseja sair do aplicativo?"
       />
     </>
   );

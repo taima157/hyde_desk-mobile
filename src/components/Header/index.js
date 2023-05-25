@@ -54,7 +54,7 @@ function Header({ route }) {
         isVisible={isModalVisible}
         fecharModal={toggleModal}
         confirmarAcao={logout}
-        mensagem="Deseja mesmo sair?"
+        mensagem="Deseja encerrar a sessão da conta?"
       />
       <StatusBar
         barStyle={theme === "light" ? "dark-content" : "light-content"}
