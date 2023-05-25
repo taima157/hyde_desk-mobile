@@ -4,13 +4,7 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { useContext, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { getDetalhesChamados, cancelNotification } from "../../utils";
@@ -162,15 +156,6 @@ export default function Home({ navigation }) {
     getChamadosConcluidos();
   }, [cancelar]);
 
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <View style={[styles.container, styleTheme.container]}>
       <View style={styles.viewTitulo}>
@@ -232,7 +217,7 @@ export default function Home({ navigation }) {
                     <Text
                       style={[styles.textSemConcluidos, styleTheme.textPrimary]}
                     >
-                      Você não possui chamados concluidos.
+                      Você não possui chamados concluídos.
                     </Text>
                     <Text
                       style={[styles.textSemConcluidos, styleTheme.textPrimary]}

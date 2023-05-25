@@ -12,12 +12,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import * as ImagePicker from "expo-image-picker";
 import * as yup from "yup";
 import { Formik } from "formik";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_600SemiBold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ConfirmarSenha from "../../components/ConfirmarSenha";
 import { ThemeContext } from "../../context/theme";
@@ -82,7 +76,7 @@ export default function EditarPerfil({ route, navigation }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
 
@@ -102,16 +96,6 @@ export default function EditarPerfil({ route, navigation }) {
 
   function goBack() {
     navigation.navigate("Perfil");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

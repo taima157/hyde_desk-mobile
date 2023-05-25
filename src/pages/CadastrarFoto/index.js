@@ -1,9 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { api } from "../../services/api";
@@ -136,14 +131,6 @@ export default function CadastrarFoto({ navigation }) {
 
   function voltar() {
     navigation.navigate("CadastroContato");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (

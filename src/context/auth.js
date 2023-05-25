@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
             setUser(userDecode);
             api.defaults.headers.Authorization = `Basic ${userLocal[0]}`;
 
-            navigation.navigate("Autenticar");
+            return true;
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));
           }
@@ -91,13 +91,17 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    estaLogado();
-  }, []);
-
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, estaLogado, successToast, errorToast }}
+      value={{
+        user,
+        login,
+        logout,
+        estaLogado,
+        successToast,
+        errorToast,
+        estaLogado,
+      }}
     >
       {children}
       <Toast />

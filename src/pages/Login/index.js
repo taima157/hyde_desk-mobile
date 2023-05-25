@@ -6,11 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { AuthContext } from "../../context/auth";
 import ModalLoading from "../../components/ModalLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -66,15 +61,6 @@ export default function Login({ navigation }) {
       await AsyncStorage.setItem("cadastro", JSON.stringify({}));
     });
   }, [navigation]);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={[styles.container, styleTheme.container]}>

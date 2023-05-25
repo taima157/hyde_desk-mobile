@@ -8,11 +8,6 @@ import {
 } from "react-native";
 import { api } from "../../services/api";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  useFonts,
-  Poppins_400Regular,
-  Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
 import Modal from "react-native-modal";
 import ModalDetalhes from "../ModalDetalhes";
 import { getDetalhesChamados, sendNotification } from "../../utils";
@@ -87,17 +82,6 @@ export default function CardChamados({
 
     getDetalhes();
   }, []);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  console.log;
 
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={toggleModal}>

@@ -5,11 +5,6 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/auth";
@@ -23,15 +18,6 @@ function Header({ route }) {
 
   function toggleModal() {
     setModalVisible(!isModalVisible);
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   if (route.name === "Autenticar") {

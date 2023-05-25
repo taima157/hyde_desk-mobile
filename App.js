@@ -1,8 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
-import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import { StackRoutes } from "./src/routes/stack.routes";
 import { cancelNotification, sendNotification } from "./src/utils";
+import {
+  useFonts,
+  Poppins_700Bold,
+  Poppins_400Regular,
+  Poppins_600SemiBold,
+} from "@expo-google-fonts/poppins";
 
 export default function App() {
   useEffect(() => {
@@ -47,6 +53,16 @@ export default function App() {
 
     notification();
   }, []);
+
+  let [fontsLoaded] = useFonts({
+    Poppins_700Bold,
+    Poppins_400Regular,
+    Poppins_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

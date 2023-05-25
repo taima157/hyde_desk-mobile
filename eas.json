@@ -5,7 +5,7 @@
         "buildType": "apk"
       },
       "env": {
-        "API_URL": "https://hydedesk-api.azurewebsites.net/"
+        "API_URL": "https://rei0mqdqxi.execute-api.us-east-1.amazonaws.com/"
       }
     },
     "preview2": {

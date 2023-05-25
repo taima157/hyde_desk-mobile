@@ -79,13 +79,11 @@ export async function compartilharChamado(chamado) {
           <p><strong>Descrição: </strong>${chamado.descricao}</p>
           <p><strong>Patrimônio: </strong>${chamado.patrimonio}</p>
           <p><strong>Protocolo: </strong>${chamado.cod_verificacao}</p>
-          ${
-            chamado.anexo !== null
-              ? ` <p><strong>Anexo:</stron></p>
-          <img src='https://hydedesk-api.azurewebsites.net/${chamado.anexo}' style="width: 100vw;"/>`
-              : null
+          ${chamado.anexo !== null ? (
+              `<p><strong>Anexo:</stron></p>
+              <img src='https://hydedesk-api.azurewebsites.net/${chamado.anexo}' style="width: 100vw;"/>`
+            ) : "" 
           }
-         
         </body>
       </html>
   `;

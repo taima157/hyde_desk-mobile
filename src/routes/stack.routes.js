@@ -25,6 +25,7 @@ export function StackRoutes() {
               header: (props) => <Header {...props} />,
             }}
           >
+            <Screen name="Autenticar" component={Autenticar} />
             <Screen name="Login" component={Login} />
             <Screen name="Cadastro" component={Cadastro} />
             <Screen name="CadastroContato" component={CadastroContato} />
@@ -34,7 +35,6 @@ export function StackRoutes() {
             <Screen name="Recuperar Senha" component={RecuperarSenha} />
             <Screen name="ConfirmarToken" component={ConfirmarToken} />
             <Screen name="TrocarSenha" component={TrocarSenha} />
-            <Screen name="Autenticar" component={Autenticar} />
           </Navigator>
         </AuthProvider>
       </ThemeProvider>

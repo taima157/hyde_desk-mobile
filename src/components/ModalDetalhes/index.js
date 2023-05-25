@@ -7,11 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_400Regular,
-  Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
 import { ThemeContext } from "../../context/theme";
 import ModalImagem from "../ModalImagem";
 import { API_URL } from "@env";
@@ -53,15 +48,6 @@ export default function ModalDetalhes({
 
     getDetalhesConclusao();
   }, []);
-
-  let [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={[styles.modalView, styleTheme.containerSecundary]}>

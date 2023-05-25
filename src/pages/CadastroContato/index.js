@@ -7,11 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import {
-  useFonts,
-  Poppins_700Bold,
-  Poppins_400Regular,
-} from "@expo-google-fonts/poppins";
 import * as yup from "yup";
 import { Formik } from "formik";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -40,21 +35,19 @@ function CadastroContato({ navigation }) {
       .required("Digite seu telefone"),
     senha: yup
       .string()
-      .min(6, "A senha deve conter no mínimo 6 dígitos")
-      .required("Digite sua senha"),
+      .required("Informe sua senha")
+      .min(8, "A senha precisa conter no mínimo 8 caracteres.")
+      .matches(/[a-z]/, "Senha precisa conter letras minusculas.")
+      .matches(/[A-Z]/, "Senha precisa conter letras maísculas.")
+      .matches(/[0-9]/, "Senha precisa conter números.")
+      .matches(
+        /[}{,.^?~=+\-_\/*\-+.\|@]/,
+        "Senha precisa conter caracteres especiais."
+      ),
   });
 
   function voltar() {
     navigation.navigate("Cadastro");
-  }
-
-  let [fontsLoaded] = useFonts({
-    Poppins_700Bold,
-    Poppins_400Regular,
-  });
-
-  if (!fontsLoaded) {
-    return null;
   }
 
   return (
