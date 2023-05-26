@@ -8,11 +8,11 @@ import { AuthContext } from "../../context/auth";
 export default function Autenticar() {
   const navigation = useNavigation();
   const { styleTheme } = useContext(ThemeContext);
-  const { estaLogado } = useContext(AuthContext);
+  const { estaLogado, logout } = useContext(AuthContext);
+
+  function handleEncerrarSessao() {}
 
   async function biometria() {
-    // navigation.navigate("Logado")
-    // return;
     if (await estaLogado()) {
       const biometricExist = await LocalAuthentication.hasHardwareAsync();
 
@@ -75,6 +75,13 @@ export default function Autenticar() {
           </Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.encerrarSessao}>
+        <TouchableOpacity onPress={logout}>
+          <Text style={[styles.textoSessao, styleTheme.textPrimary]}>
+            Encerrar sessão?
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -114,5 +121,15 @@ const styles = StyleSheet.create({
   botaoTexto: {
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
+  },
+  encerrarSessao: {
+    paddingBottom: 10,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+  },
+  textoSessao: {
+    fontFamily: "Poppins_400Regular",
+    fontSize: 16,
   },
 });

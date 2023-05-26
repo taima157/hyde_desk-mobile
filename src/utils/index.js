@@ -2,6 +2,7 @@ import axios from "axios";
 import * as Notifications from "expo-notifications";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import { API_URL } from "@env";
 
 export async function getDetalhesChamados(chamado) {
   const dataHora = chamado.data.split("T");
@@ -81,7 +82,7 @@ export async function compartilharChamado(chamado) {
           <p><strong>Protocolo: </strong>${chamado.cod_verificacao}</p>
           ${chamado.anexo !== null ? (
               `<p><strong>Anexo:</stron></p>
-              <img src='https://hydedesk-api.azurewebsites.net/${chamado.anexo}' style="width: 100vw;"/>`
+              <img src='${API_URL}${chamado.anexo}' style="width: 100vw;"/>`
             ) : "" 
           }
         </body>
