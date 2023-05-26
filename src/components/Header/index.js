@@ -11,8 +11,8 @@ import { AuthContext } from "../../context/auth";
 import ModalConfirmar from "../ModalConfirmar";
 import { ThemeContext } from "../../context/theme";
 
-function Header({ route }) {
-  const { user, logout } = useContext(AuthContext);
+function Header({ route, navigation }) {
+  const { user, logout, setCanBack } = useContext(AuthContext);
   const { toggleTheme, styleTheme, theme } = useContext(ThemeContext);
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -53,8 +53,12 @@ function Header({ route }) {
       <ModalConfirmar
         isVisible={isModalVisible}
         fecharModal={toggleModal}
-        confirmarAcao={logout}
-        mensagem="Deseja mesmo sair?"
+        confirmarAcao={() => {
+          setCanBack(false)
+          navigation.goBack("initialRoute")
+          logout();
+        }}
+        mensagem="Deseja encerrar a sessão da conta?"
       />
       <StatusBar
         barStyle={theme === "light" ? "dark-content" : "light-content"}

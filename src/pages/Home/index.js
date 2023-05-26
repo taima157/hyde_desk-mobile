@@ -145,13 +145,6 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      getChamadoAndamento();
-      getChamadosConcluidos();
-    });
-  }, [navigation]);
-
-  useEffect(() => {
     getChamadoAndamento();
     getChamadosConcluidos();
   }, [cancelar]);

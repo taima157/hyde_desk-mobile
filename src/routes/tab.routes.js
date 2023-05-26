@@ -5,9 +5,10 @@ import Home from "../pages/Home";
 import NavigationButton from "../components/NavigationButton";
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../context/theme";
-import { BackHandler } from "react-native";
+import { BackHandler, Alert } from "react-native";
 import ModalConfirmar from "../components/ModalConfirmar";
 import { AuthContext } from "../context/auth";
+import Header from "../components/Header";
 
 const { Screen, Navigator } = createBottomTabNavigator();
 
@@ -21,12 +22,23 @@ export default function TabRoutes({ route }) {
   }
 
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", toggleModal);
+    function backAction() {
+      toggleModal();
+      return true;
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   return (
     <>
       <Navigator
+        initialRouteName="Chamados"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
@@ -36,7 +48,9 @@ export default function TabRoutes({ route }) {
             backgroundColor: styleTheme.containerSecundary.backgroundColor,
             marginBottom: -1,
           },
+          unmountOnBlur: true,
         }}
+        backBehavior="none"
       >
         <Screen
           name="Chamados"
@@ -80,8 +94,8 @@ export default function TabRoutes({ route }) {
       <ModalConfirmar
         isVisible={isModalVisible}
         fecharModal={toggleModal}
-        confirmarAcao={logout}
-        mensagem="Deseja mesmo sair?"
+        confirmarAcao={() => BackHandler.exitApp()}
+        mensagem="Deseja sair do aplicativo?"
       />
     </>
   );

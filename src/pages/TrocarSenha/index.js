@@ -30,7 +30,7 @@ export default function TrocarSenha({ navigation, route }) {
       .matches(/[A-Z]/, "Senha precisa conter letras maísculas.")
       .matches(/[0-9]/, "Senha precisa conter números.")
       .matches(
-        /[}{,.^?~=+\-_\/*\-+.\|@]/,
+        /[}{,.^?~=+\-_\/*\-+.\|@!$#%&();:'"]/,
         "Senha precisa conter caracteres especiais."
       ),
   });

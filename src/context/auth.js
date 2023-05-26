@@ -11,6 +11,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
 
+  const [canBack, setCanBack] = useState(false);
+
   function errorToast(text1, text2) {
     Toast.show({
       type: "error",
@@ -36,7 +38,6 @@ export function AuthProvider({ children }) {
       const response = await api.post("/tecnicos/login", user);
 
       const decodeUser = jwtDecode(response.data.token);
-
       setUser(decodeUser);
 
       await AsyncStorage.setItem("user", JSON.stringify([response.data.token]));
@@ -53,8 +54,8 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await AsyncStorage.setItem("user", JSON.stringify([]));
     setUser(null);
+    await AsyncStorage.setItem("user", JSON.stringify([]));
     navigation.navigate("Login");
   }
 
@@ -95,6 +96,8 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        canBack,
+        setCanBack,
         login,
         logout,
         estaLogado,
