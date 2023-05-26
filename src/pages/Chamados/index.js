@@ -17,10 +17,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PaginationButton from "../../components/PaginationButton";
 
 export default function Chamados({ navigation }) {
-  const { user, errorToast } = useContext(AuthContext);
+  const { user, errorToast, canBack, setCanBack } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
   const [prioridade, setPrioridade] = useState("1");
-  const [canBack, setCanBack] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -115,12 +114,11 @@ export default function Chamados({ navigation }) {
   }
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      getChamados();
-      getChamadosAndamento();
-    });
-
     navigation.addListener("blur", (e) => {
+      if (!canBack) {
+        setCanBack(true);
+      }
+
       setPrioridade("1");
     });
   }, [navigation]);
@@ -164,7 +162,7 @@ export default function Chamados({ navigation }) {
     }
 
     canGoBack();
-  }, [chamadosAndamento]);
+  }, [chamadosAndamento, canBack]);
 
   return (
     <View style={[styles.container, styleTheme.container]}>

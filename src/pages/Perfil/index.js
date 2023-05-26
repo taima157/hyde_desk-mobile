@@ -16,20 +16,20 @@ import { API_URL } from "@env";
 function Perfil({ navigation }) {
   const { user, errorToast } = useContext(AuthContext);
   const { styleTheme } = useContext(ThemeContext);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
+
+  async function getDados() {
+    try {
+      const response = await api.get(`/tecnicos/${user.id_tecnico}`);
+      setData(response.data);
+    } catch (error) {
+      errorToast("Erro", "Houve um erro.");
+    }
+  }
 
   useEffect(() => {
-    async function getDados() {
-      try {
-        const response = await api.get(`/tecnicos/${user.id_tecnico}`);
-        setData(response.data);
-      } catch (error) {
-        errorToast("Erro", "Houve um erro.");
-      }
-    }
-
     navigation.addListener("focus", (e) => {
-      setData([]);
+      setData(null);
       getDados();
     });
   }, [navigation]);
@@ -41,7 +41,7 @@ function Perfil({ navigation }) {
   return (
     <ScrollView style={[{ flex: 1 }, styleTheme.container]}>
       <View style={[styles.container, styleTheme.container]}>
-        {data.length === 0 ? (
+        {data === null ? (
           <View style={styles.activityStyle}>
             <ActivityIndicator size="large" color="#23AFFF" />
           </View>

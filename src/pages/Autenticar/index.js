@@ -11,6 +11,8 @@ export default function Autenticar() {
   const { estaLogado } = useContext(AuthContext);
 
   async function biometria() {
+    // navigation.navigate("Logado")
+    // return;
     if (await estaLogado()) {
       const biometricExist = await LocalAuthentication.hasHardwareAsync();
 
