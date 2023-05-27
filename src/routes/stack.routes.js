@@ -12,31 +12,32 @@ import { ThemeProvider } from "../context/theme";
 import RecuperarSenha from "../pages/RecuperarSenha";
 import ConfirmarToken from "../pages/ConfirmarToken";
 import TrocarSenha from "../pages/TrocarSenha";
-import Autenticar from "../pages/Autenticar";
+import Disponibilidade from "../pages/Disponibilidade";
 
 const { Screen, Navigator } = createNativeStackNavigator();
 export function StackRoutes() {
   return (
     <NavigationContainer>
       <ThemeProvider>
-        <AuthProvider>
-          <Navigator
-            screenOptions={{
-              header: (props) => <Header {...props} />,
-            }}
-          >
-            <Screen name="Autenticar" component={Autenticar} />
-            <Screen name="Login" component={Login} />
-            <Screen name="Cadastro" component={Cadastro} />
-            <Screen name="CadastroContato" component={CadastroContato} />
-            <Screen name="CadastrarFoto" component={CadastrarFoto} />
-            <Screen name="Logado" component={TabRoutes} />
-            <Screen name="Editar Perfil" component={EditarPerfil} />
-            <Screen name="Recuperar Senha" component={RecuperarSenha} />
-            <Screen name="ConfirmarToken" component={ConfirmarToken} />
-            <Screen name="TrocarSenha" component={TrocarSenha} />
-          </Navigator>
-        </AuthProvider>
+        <Disponibilidade>
+          <AuthProvider>
+            <Navigator
+              screenOptions={{
+                header: (props) => <Header {...props} />,
+              }}
+            >
+              <Screen name="Login" component={Login} />
+              <Screen name="Cadastro" component={Cadastro} />
+              <Screen name="CadastroContato" component={CadastroContato} />
+              <Screen name="CadastrarFoto" component={CadastrarFoto} />
+              <Screen name="Logado" component={TabRoutes} />
+              <Screen name="Editar Perfil" component={EditarPerfil} />
+              <Screen name="Recuperar Senha" component={RecuperarSenha} />
+              <Screen name="ConfirmarToken" component={ConfirmarToken} />
+              <Screen name="TrocarSenha" component={TrocarSenha} />
+            </Navigator>
+          </AuthProvider>
+        </Disponibilidade>
       </ThemeProvider>
     </NavigationContainer>
   );

@@ -38,11 +38,11 @@ export default function Chamados({ navigation }) {
     setChamados(null);
     try {
       let endpoint = "/chamados?status_chamado=pendente";
-      let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
+      // let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
 
-      if (prioridadeTexto !== "Tudo") {
-        endpoint += `&prioridade=${prioridadeTexto}`;
-      }
+      // if (prioridadeTexto !== "Tudo") {
+      //   endpoint += `&prioridade=${prioridadeTexto}`;
+      // }
 
       const response = await api.get(endpoint);
 
@@ -73,16 +73,23 @@ export default function Chamados({ navigation }) {
   const [paginationButtons, setPaginationButtons] = useState(null);
 
   function genPagination(from, to) {
+    let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
+
     setPagination(
       chamados?.map((chamado, index) => {
         if (index >= from && index < to) {
-          return (
-            <CardChamados
-              key={chamado.id_chamado}
-              chamado={chamado}
-              setRefreshing={(e) => setRefreshing(e)}
-            />
-          );
+          if (
+            chamado.prioridade === prioridadeTexto ||
+            prioridadeTexto === "Tudo"
+          ) {
+            return (
+              <CardChamados
+                key={chamado.id_chamado}
+                chamado={chamado}
+                setRefreshing={(e) => setRefreshing(e)}
+              />
+            );
+          }
         }
       })
     );
@@ -126,7 +133,7 @@ export default function Chamados({ navigation }) {
   useEffect(() => {
     getChamados();
     getChamadosAndamento();
-  }, [refreshing, prioridade]);
+  }, [refreshing]);
 
   useEffect(() => {
     setPagination(null);
@@ -134,7 +141,18 @@ export default function Chamados({ navigation }) {
     setCurrentPage(0);
 
     function calcPagination() {
-      let pages = Math.ceil(chamados?.length / totalItems);
+      let prioridadeTexto = filtroItem[Number(prioridade) - 1].value;
+
+      const chamadosFiltrados = chamados?.filter((chamado) => {
+        if (
+          chamado.prioridade === prioridadeTexto ||
+          prioridadeTexto === "Tudo"
+        ) {
+          return chamado;
+        }
+      });
+
+      let pages = Math.ceil(chamadosFiltrados?.length / totalItems);
       setTotalPages(pages);
       let buttons = [];
 
@@ -147,7 +165,7 @@ export default function Chamados({ navigation }) {
 
     calcPagination();
     genPagination(0, totalItems);
-  }, [chamados]);
+  }, [chamados, prioridade]);
 
   useEffect(() => {
     function canGoBack() {
@@ -204,6 +222,7 @@ export default function Chamados({ navigation }) {
                 top: 50,
                 borderWidth: 2,
                 borderColor: "#23AFFF",
+                elevation: 10
               }}
               dropdownTextStyles={styleTheme.textPrimary}
             />
