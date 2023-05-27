@@ -21,7 +21,7 @@ export default function App() {
         await cancelNotification(notificationJSON.notificationLogin);
 
         const trigger = new Date(Date.now() + 60 * 60 * 1000 * 48);
-        
+
         const idNotification = await sendNotification({
           title: "Notificação de ausência no sistema",
           body: "Faz mais de dois dias que você não acessa nosso sistema. Lembre-se de se conectar para  garantir um melhor desempenho em suas atividades.",

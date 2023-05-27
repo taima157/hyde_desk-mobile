@@ -4,12 +4,18 @@ import { api } from "../services/api";
 import jwtDecode from "jwt-decode";
 import { useNavigation } from "@react-navigation/native";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
+import LoadingScreen from "../pages/LoadingScreen";
+import Autenticar from "../pages/Autenticar";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
+
+  const [logado, setLogado] = useState(false);
+  const [autenticado, setAutenticado] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [canBack, setCanBack] = useState(false);
 
@@ -79,6 +85,7 @@ export function AuthProvider({ children }) {
             setUser(userDecode);
             api.defaults.headers.Authorization = `Basic ${userLocal[0]}`;
 
+            setLogado(true);
             return true;
           } else {
             await AsyncStorage.setItem("user", JSON.stringify([]));
@@ -90,6 +97,19 @@ export function AuthProvider({ children }) {
     } catch (error) {
       errorToast("Erro", "Houve um erro.");
     }
+  }
+
+  async function handleStates() {
+    await estaLogado();
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    handleStates();
+  }, []);
+
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   return (
@@ -106,7 +126,18 @@ export function AuthProvider({ children }) {
         estaLogado,
       }}
     >
-      {children}
+      {logado ? (
+        autenticado ? (
+          children
+        ) : (
+          <Autenticar
+            logout={logout}
+            setAutenticado={(e) => setAutenticado(e)}
+          />
+        )
+      ) : (
+        children
+      )}
       <Toast />
     </AuthContext.Provider>
   );
