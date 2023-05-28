@@ -222,7 +222,7 @@ export default function Chamados({ navigation }) {
                 top: 50,
                 borderWidth: 2,
                 borderColor: "#23AFFF",
-                elevation: 10
+                elevation: 10,
               }}
               dropdownTextStyles={styleTheme.textPrimary}
             />
@@ -231,7 +231,9 @@ export default function Chamados({ navigation }) {
       </View>
 
       <View style={styles.viewChamados}>
-        {chamadosAndamento === null || chamados === null ? (
+        {chamadosAndamento === null ||
+        chamados === null ||
+        pagination === null ? (
           <View
             style={{
               justifyContent: "center",
@@ -255,94 +257,111 @@ export default function Chamados({ navigation }) {
           </View>
         ) : (
           <View style={styles.viewFlatList}>
-            {chamados.length === 0 ? (
-              <View style={styles.viewSemChamados}>
-                <Text style={[styles.textoSemChamados, styleTheme.textPrimary]}>
-                  Não há chamados pendentes.
-                </Text>
-              </View>
-            ) : (
-              <ScrollView
-                ref={scrollRef}
-                style={styles.flatlist}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={() => {
-                      setRefreshing(true);
-                    }}
-                  />
+            {(function () {
+              let totalElementos = pagination.length;
+              let totalUndefined = 0;
+
+              pagination.forEach((element) => {
+                if (element === undefined) {
+                  totalUndefined += 1;
                 }
-              >
-                {pagination}
-                {totalPages > 1 && (
-                  <View
-                    style={[
-                      styles.viewPaginationButtons,
-                      styleTheme.containerSecundary,
-                    ]}
-                  >
-                    <TouchableOpacity onPress={prevPage}>
-                      <MaterialCommunityIcons
-                        name="chevron-left"
-                        size={30}
-                        color="#23AFFF"
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.pageButtons}>
-                      {paginationButtons?.map((button, index) => {
-                        if (currentPage < 2) {
-                          if (index >= 0 && index < 5) {
-                            return (
-                              <PaginationButton
-                                key={index}
-                                index={index}
-                                handleChangePage={(e) => handleChangePage(e)}
-                                select={index === currentPage ? true : false}
-                              />
-                            );
-                          }
-                        }
+              });
 
-                        if (currentPage > totalPages - 3) {
-                          if (index >= totalPages - 5 && index < totalPages) {
-                            return (
-                              <PaginationButton
-                                key={index}
-                                index={index}
-                                handleChangePage={(e) => handleChangePage(e)}
-                                select={index === currentPage ? true : false}
-                              />
-                            );
-                          }
-                        }
-
-                        if (
-                          index >= currentPage - 2 &&
-                          index < currentPage + 3
-                        ) {
-                          return (
-                            <PaginationButton
-                              key={index}
-                              index={index}
-                              handleChangePage={(e) => handleChangePage(e)}
-                              select={index === currentPage ? true : false}
-                            />
-                          );
-                        }
-                      })}
-                    </View>
-                    <TouchableOpacity onPress={nextPage}>
-                      <MaterialCommunityIcons
-                        name="chevron-right"
-                        size={30}
-                        color="#23AFFF"
-                      />
-                    </TouchableOpacity>
+              if (totalElementos === totalUndefined) {
+                return (
+                  <View style={styles.viewSemChamados}>
+                    <Text
+                      style={[styles.textoSemChamados, styleTheme.textPrimary]}
+                    >
+                      Não há chamados pendentes.
+                    </Text>
                   </View>
-                )}
-              </ScrollView>
-            )}
+                );
+              }
+
+              return (
+                <ScrollView
+                  ref={scrollRef}
+                  style={styles.flatlist}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={() => {
+                        setRefreshing(true);
+                      }}
+                    />
+                  }
+                >
+                  {pagination}
+                  {totalPages > 1 && (
+                    <View
+                      style={[
+                        styles.viewPaginationButtons,
+                        styleTheme.containerSecundary,
+                      ]}
+                    >
+                      <TouchableOpacity onPress={prevPage}>
+                        <MaterialCommunityIcons
+                          name="chevron-left"
+                          size={30}
+                          color="#23AFFF"
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.pageButtons}>
+                        {paginationButtons?.map((button, index) => {
+                          if (currentPage < 2) {
+                            if (index >= 0 && index < 5) {
+                              return (
+                                <PaginationButton
+                                  key={index}
+                                  index={index}
+                                  handleChangePage={(e) => handleChangePage(e)}
+                                  select={index === currentPage ? true : false}
+                                />
+                              );
+                            }
+                          }
+
+                          if (currentPage > totalPages - 3) {
+                            if (index >= totalPages - 5 && index < totalPages) {
+                              return (
+                                <PaginationButton
+                                  key={index}
+                                  index={index}
+                                  handleChangePage={(e) => handleChangePage(e)}
+                                  select={index === currentPage ? true : false}
+                                />
+                              );
+                            }
+                          }
+
+                          if (
+                            index >= currentPage - 2 &&
+                            index < currentPage + 3
+                          ) {
+                            return (
+                              <PaginationButton
+                                key={index}
+                                index={index}
+                                handleChangePage={(e) => handleChangePage(e)}
+                                select={index === currentPage ? true : false}
+                              />
+                            );
+                          }
+                        })}
+                      </View>
+                      <TouchableOpacity onPress={nextPage}>
+                        <MaterialCommunityIcons
+                          name="chevron-right"
+                          size={30}
+                          color="#23AFFF"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </ScrollView>
+              );
+            })()}
           </View>
         )}
       </View>
