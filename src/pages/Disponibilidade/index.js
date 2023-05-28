@@ -15,7 +15,7 @@ export default function Disponibilidade({ children }) {
   async function getNetworkStatus() {
     const networkStatus = await Network.getNetworkStateAsync();
 
-    setIsConnected(networkStatus.isConnected);
+    setIsConnected(networkStatus.isInternetReachable);
   }
 
   async function getApiStatus() {

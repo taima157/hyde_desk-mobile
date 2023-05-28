@@ -3,7 +3,7 @@
     "owner": "hyde_desk",
     "name": "Hyde Desk",
     "slug": "hyde-desk",
-    "version": "1.9.3",
+    "version": "1.10.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
