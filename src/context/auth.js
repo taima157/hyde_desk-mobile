@@ -62,7 +62,11 @@ export function AuthProvider({ children }) {
   async function logout() {
     setUser(null);
     await AsyncStorage.setItem("user", JSON.stringify([]));
-    navigation.navigate("Login");
+    setLogado(false);
+
+    setTimeout(() => {
+      navigation.navigate("Login");
+    }, 100);
   }
 
   async function estaLogado() {
