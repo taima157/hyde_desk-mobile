@@ -60,10 +60,6 @@ function Header({ route, navigation }) {
         }}
         mensagem="Deseja encerrar a sessão da conta?"
       />
-      <StatusBar
-        barStyle={theme === "light" ? "dark-content" : "light-content"}
-        backgroundColor={theme === "light" ? "#FFF" : "#0d1117"}
-      />
     </View>
   );
 }
