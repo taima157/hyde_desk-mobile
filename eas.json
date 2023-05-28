@@ -3,9 +3,6 @@
     "preview": {
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "API_URL": "https://rei0mqdqxi.execute-api.us-east-1.amazonaws.com/"
       }
     },
     "preview2": {
